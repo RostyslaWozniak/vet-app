@@ -4,12 +4,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/server/db";
 
-type FullUser = Exclude<
+export type FullUser = Exclude<
   Awaited<ReturnType<typeof getUserFromDb>>,
   undefined | null
 >;
 
-type User = Exclude<
+export type User = Exclude<
   Awaited<ReturnType<typeof getUserFromSession>>,
   undefined | null
 >;
@@ -57,6 +57,6 @@ export const getCurrentUser = cache(_getCurrentUser);
 function getUserFromDb(id: string) {
   return db.user.findUnique({
     where: { id },
-    select: { id: true, email: true, role: true, name: true, photo: true },
+    select: { id: true, email: true, roles: true, name: true, photo: true },
   });
 }

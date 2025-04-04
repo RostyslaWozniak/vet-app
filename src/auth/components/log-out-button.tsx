@@ -3,9 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { logOut } from "../actions/logout-action";
 
-export function LogOutButton() {
+export function LogOutButton({ className }: { className?: string }) {
   return (
-    <Button variant="destructive" onClick={async () => await logOut()}>
+    <Button
+      variant="destructive"
+      onClick={async () => await logOut()}
+      className={className}
+    >
       Log Out
     </Button>
   );

@@ -44,18 +44,6 @@ export function SignInForm() {
           >
             Google
           </Button>
-          <Button
-            type="button"
-            onClick={async () => await oAuthSignIn("github")}
-          >
-            GitHub
-          </Button>
-          <Button
-            type="button"
-            onClick={async () => await oAuthSignIn("facebook")}
-          >
-            Facebook
-          </Button>
         </div>
         <FormField
           control={form.control}

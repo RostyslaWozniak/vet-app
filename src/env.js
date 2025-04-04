@@ -14,12 +14,11 @@ export const env = createEnv({
 
     // OAUTH
     OAUTH_REDIRECT_URL: z.string().url(),
-    GITHUB_CLIENT_ID: z.string().min(1),
-    GITHUB_CLIENT_SECRET: z.string().min(1),
-    GOOGLE_CLIENT_ID: z.string().min(1),
-    GOOGLE_CLIENT_SECRET: z.string().min(1),
-    FACEBOOK_CLIENT_ID: z.string().min(1),
-    FACEBOOK_CLIENT_SECRET: z.string().min(1),
+    GOOGLE_AUTH_CLIENT_ID: z.string().min(1),
+    GOOGLE_AUTH_CLIENT_SECRET: z.string().min(1),
+    GOOGLE_CALENDAR_CLIENT_ID: z.string().min(1),
+    GOOGLE_CALENDAR_CLIENT_SECRET: z.string().min(1),
+    GOOGLE_CALENDAR_REDIRECT_URI: z.string().url(),
   },
 
   client: {},
@@ -32,12 +31,12 @@ export const env = createEnv({
     REDIS_TOKEN: process.env.REDIS_TOKEN,
     // OAUTH
     OAUTH_REDIRECT_URL: process.env.OAUTH_REDIRECT_URL,
-    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
-    FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+
+    GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
+    GOOGLE_AUTH_CLIENT_SECRET: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+    GOOGLE_CALENDAR_CLIENT_ID: process.env.GOOGLE_CALENDAR_CLIENT_ID,
+    GOOGLE_CALENDAR_CLIENT_SECRET: process.env.GOOGLE_CALENDAR_CLIENT_SECRET,
+    GOOGLE_CALENDAR_REDIRECT_URI: process.env.GOOGLE_CALENDAR_REDIRECT_URI,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

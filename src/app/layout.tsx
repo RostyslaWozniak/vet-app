@@ -4,6 +4,8 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { Toaster } from "@/components/ui/sonner";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -21,8 +23,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pl" className={`${geist.variable} dark`}>
-      <body className="bg-background min-h-screen">
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+      <body className="bg-background flex min-h-screen flex-col">
+        <TRPCReactProvider>
+          <Header />
+          <main className="flex-grow">{children}</main>
+        </TRPCReactProvider>
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );

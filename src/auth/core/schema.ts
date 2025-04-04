@@ -9,5 +9,5 @@ const userRoles = [
 
 export const sessionSchema = z.object({
   id: z.string(),
-  role: z.enum(userRoles),
+  roles: z.array(z.enum(userRoles)),
 });

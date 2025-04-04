@@ -1,0 +1,117 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id            String             @id @default(uuid())
+    name          String
+    email         String             @unique
+    password      String?
+    salt          String?
+    role          Roles              @default(CLIENT)
+    photo         String?
+    oauthAccounts UserOAuthAccount[]
+    createdAt     DateTime           @default(now()) @map("created_at")
+    updatedAt     DateTime           @updatedAt @map("updated_at")
+
+    vetProfile VetProfile?
+
+    @@map("users")
+}
+
+model UserOAuthAccount {
+    userId            String   @map("user_id")
+    provider          String
+    providerAccountId String   @unique() @map("provider_account_id")
+    createdAt         DateTime @default(now()) @map("created_at")
+    updatedAt         DateTime @updatedAt @map("updated_at")
+    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@id([providerAccountId, provider])
+    @@map("user_oauth_accounts")
+}
+
+model VetProfile {
+    id        String   @id @default(uuid())
+    userId    String   @unique @map("user_id")
+    user      User     @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    schedules VetSchedule[]
+
+    services VetService[]
+
+    @@map("vet_profiles")
+}
+
+model Service {
+    id                String       @id @default(uuid())
+    name              String
+    description       String?
+    durationInMinutes Int          @map("duration_in_minutes")
+    vetServices       VetService[]
+    isActive          Boolean      @default(true) @map("is_active")
+    createdAt         DateTime     @default(now()) @map("created_at")
+    updatedAt         DateTime     @updatedAt @map("updated_at")
+
+    @@map("services")
+}
+
+model VetService {
+    id        String     @id @default(uuid())
+    vetId     String     @map("vet_id")
+    vet       VetProfile @relation(fields: [vetId], references: [id])
+    serviceId String     @map("service_id")
+    service   Service    @relation(fields: [serviceId], references: [id])
+
+    @@map("vet_services")
+}
+
+model VetSchedule {
+    id             String                    @id @default(uuid())
+    vetId          String                    @unique @map("vet_id")
+    vet            VetProfile                @relation(fields: [vetId], references: [id])
+    createdAt      DateTime                  @default(now()) @map("created_at")
+    updatedAt      DateTime                  @updatedAt @map("updated_at")
+    availabilities VetScheduleAvailability[]
+
+    @@map("vet_schedules")
+}
+
+model VetScheduleAvailability {
+    id            String            @id @default(uuid())
+    vetScheduleId String            @map("vet_schedule_id")
+    vetSchedule   VetSchedule       @relation(fields: [vetScheduleId], references: [id], onDelete: Cascade)
+    startTime     String            @map("start_time")
+    endTime       String            @map("end_time")
+    dayOfWeek     ScheduleDayOfWeek @map("day_of_week")
+
+    @@index([vetScheduleId], name: "vet_schedule_id_index")
+    @@map("vet_schedule_availabilities")
+}
+
+enum ScheduleDayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+
+    @@map("schedule_day_of_week")
+}
+
+enum Roles {
+    ADMIN
+    VET
+    CLIENT
+
+    @@map("roles")
+}

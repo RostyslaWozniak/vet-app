@@ -1,11 +1,9 @@
 import { env } from "@/env";
 import { z } from "zod";
 import crypto from "crypto";
-import { createGithubOAuthClient } from "./github";
 import type { Cookies } from "../types";
 import type { OAuthProvider } from "./providers";
 import { createGoogleOAuthClient } from "./google";
-import { createFacebookOAuthClient } from "./facebook";
 
 const STATE_COOKIE_KEY = "oAuthState";
 const CODE_VERIFIER_COOKIE_KEY = "oAuthCodeVerifier";
@@ -146,12 +144,8 @@ export class OAuthClient<T> {
 
 export function getOAuthClient(provider: OAuthProvider) {
   switch (provider) {
-    case "github":
-      return createGithubOAuthClient();
     case "google":
       return createGoogleOAuthClient();
-    case "facebook":
-      return createFacebookOAuthClient();
     default:
       throw new Error(`Invalid provider: ${provider as string}`);
   }

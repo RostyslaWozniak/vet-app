@@ -1,6 +1,23 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
+}
+
+export function timeToInt(time: string) {
+  return parseFloat(time.replace(":", "."));
+}
+
+export function groupBy<T>(
+  array: T[],
+  key: (item: T) => string,
+): Record<string, T[]> {
+  const result: Record<string, T[]> = {};
+  array.forEach((item) => {
+    const keyVal = key(item);
+    result[keyVal] ??= [];
+    result[keyVal].push(item);
+  });
+  return result;
 }
