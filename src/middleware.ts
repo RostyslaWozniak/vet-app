@@ -4,8 +4,8 @@ import {
   updateUserSessionExpiration,
 } from "./auth/core/session";
 
-const vetRoutes = ["/vet"];
-const adminRoutes = ["/admin"];
+const vetRoutes = "/vet";
+const adminRoutes = "/admin";
 
 export async function middleware(request: NextRequest) {
   const response = (await middlewareAuth(request)) ?? NextResponse.next();
@@ -21,7 +21,8 @@ export async function middleware(request: NextRequest) {
 }
 
 async function middlewareAuth(request: NextRequest) {
-  if (vetRoutes.includes(request.nextUrl.pathname)) {
+  if (request.nextUrl.pathname.startsWith(vetRoutes)) {
+    console.log("HERE");
     const user = await getUserFromSession(request.cookies);
     if (user == null) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
@@ -32,7 +33,7 @@ async function middlewareAuth(request: NextRequest) {
     }
   }
 
-  if (adminRoutes.includes(request.nextUrl.pathname)) {
+  if (request.nextUrl.pathname.startsWith(adminRoutes)) {
     const user = await getUserFromSession(request.cookies);
     if (user == null) {
       return NextResponse.redirect(new URL("/sign-in", request.url));

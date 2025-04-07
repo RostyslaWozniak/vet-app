@@ -1,8 +1,10 @@
 import { db } from "@/server/db";
-import { RolesToggleForm } from "../_componetns/forms/roles-toggle-form";
+import { TableWrapper } from "@/components/table-wrapper";
+import { vetsTableColumns } from "./_components/vets-table/vets-table-columns";
+import { H2 } from "@/components/typography";
 
 export default async function AdminClientsPage() {
-  const clients = await db.user.findMany({
+  const vets = await db.user.findMany({
     where: {
       roles: {
         has: "VET",
@@ -10,19 +12,9 @@ export default async function AdminClientsPage() {
     },
   });
   return (
-    <div className="my-12">
-      <h2 className="mb-4 text-4xl">Vets</h2>
-      <div>
-        {clients.map((client) => (
-          <div key={client.id} className="mb-4 flex border-b py-2">
-            <div className="flex flex-grow items-center gap-8">
-              <p>Name: {client.name}</p>
-              <p>Email: {client.email}</p>
-            </div>
-            <RolesToggleForm user={{ id: client.id, roles: client.roles }} />
-          </div>
-        ))}
-      </div>
+    <div className="space-y-8">
+      <H2>Weterynarze ({vets.length})</H2>
+      <TableWrapper columns={vetsTableColumns} data={vets} />
     </div>
   );
 }

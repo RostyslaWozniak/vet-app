@@ -6,20 +6,17 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { signInSchema, type SignInSchema } from "../schemas/sign-in-schema";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "@/auth/actions/sign-in-action";
-import { oAuthSignIn } from "../actions/oauth-sign-in";
+import { PasswordInput } from "./password-input";
+import LoadingButton from "@/components/loading-button";
+import { toast } from "sonner";
 
 export function SignInForm() {
-  const [error, setError] = useState<string>();
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -30,31 +27,33 @@ export function SignInForm() {
 
   async function onSubmit(data: SignInSchema) {
     const error = await signIn(data);
-    setError(error);
+    toast.error(error);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {error && <p className="text-destructive">{error}</p>}
-        <div className="flex gap-4">
-          <Button
-            type="button"
-            onClick={async () => await oAuthSignIn("google")}
-          >
-            Google
-          </Button>
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                Email{" "}
+                {form.formState.errors.email && (
+                  <p className="text-destructive text-xs">
+                    ( {form.formState.errors.email.message} )
+                  </p>
+                )}
+              </FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input
+                  placeholder="Wpisz swój email"
+                  type="email"
+                  autoComplete="email"
+                  {...field}
+                />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -63,20 +62,31 @@ export function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>
+                Hasło{" "}
+                {form.formState.errors.password && (
+                  <p className="text-destructive text-xs">
+                    ( {form.formState.errors.password.message} )
+                  </p>
+                )}
+              </FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <PasswordInput
+                  placeholder="Wpisz swoje hasło"
+                  autoComplete="current-password"
+                  {...field}
+                />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-end gap-4">
-          <Button asChild variant="link">
-            <Link href="/sign-up">Sign Up</Link>
-          </Button>
-          <Button type="submit">Sign In</Button>
-        </div>
+        <LoadingButton
+          loading={form.formState.isSubmitting}
+          type="submit"
+          className="w-full"
+        >
+          Log in
+        </LoadingButton>
       </form>
     </Form>
   );

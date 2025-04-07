@@ -3,10 +3,13 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@/server/db";
+import { getCurrentUser } from "@/auth/current-user";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const user = await getCurrentUser({ redirectIfNotFound: true });
   return {
     db,
+    user,
     ...opts,
   };
 };

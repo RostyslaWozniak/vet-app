@@ -1,7 +1,8 @@
 import { getCurrentUser } from "@/auth/current-user";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { SidebarNav } from "./_componetns/sidebar-nav";
+import { AdminNav } from "./_components/admin-nav";
+import { Header } from "@/components/header";
 
 export default async function AdminLayout({
   children,
@@ -13,9 +14,12 @@ export default async function AdminLayout({
   if (!user.roles.includes("ADMIN")) return notFound();
 
   return (
-    <main className="relative container mx-auto my-6 flex min-h-[calc(100vh-240px)] w-full flex-grow justify-between">
-      <SidebarNav />
-      <div className="relative grow px-10 py-16">{children}</div>
+    <main>
+      <Header />
+      <div className="relative container mx-auto my-6 flex min-h-[calc(100vh-200px)] w-full flex-grow justify-between">
+        <AdminNav />
+        <div className="relative grow">{children}</div>
+      </div>
     </main>
   );
 }

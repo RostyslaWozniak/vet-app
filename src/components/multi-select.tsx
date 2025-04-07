@@ -26,7 +26,7 @@ import {
  * Uses class-variance-authority (cva) to define different styles based on "variant" prop.
  */
 const multiSelectVariants = cva(
-  "m-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300",
+  "m-1 transition ease-in-out delay-150  duration-300",
   {
     variants: {
       variant: {
@@ -122,10 +122,8 @@ export const MultiSelect = React.forwardRef<
       variant,
       defaultValue = [],
       placeholder = "Select options",
-      animation = 0,
       maxCount = 3,
       modalPopover = false,
-      //   asChild = false,
       className,
       ...props
     },
@@ -198,20 +196,23 @@ export const MultiSelect = React.forwardRef<
             )}
           >
             {selectedValues.length > 0 ? (
-              <div className="flex w-full items-center justify-between">
-                <div className="flex flex-wrap items-center gap-2">
+              <div className="flex w-full items-start justify-between">
+                <div className="flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((value) => {
                     const option = options.find((o) => o.value === value);
                     const IconComponent = option?.icon;
                     return (
-                      <Badge key={value}>
+                      <Badge
+                        key={value}
+                        className={cn(multiSelectVariants({ variant }))}
+                      >
                         {IconComponent && (
                           <IconComponent className="mr-2 h-4 w-4" />
                         )}
                         {option?.label}
                         <div>
                           <XCircle
-                            className="z-40 ml-2 h-4 w-4 cursor-pointer"
+                            className="ml-2 h-4 w-4 cursor-pointer"
                             onClick={(event) => {
                               event.stopPropagation();
                               toggleOption(value);
@@ -227,9 +228,17 @@ export const MultiSelect = React.forwardRef<
                         "text-foreground border-foreground/1 bg-transparent hover:bg-transparent",
                         multiSelectVariants({ variant }),
                       )}
-                      style={{ animationDuration: `${animation}s` }}
                     >
-                      {`+ ${selectedValues.length - maxCount} more`}
+                      {`+ ${selectedValues.length - maxCount} więcej`}
+                      <div>
+                        <XCircle
+                          className="ml-2 h-4 w-4 cursor-pointer"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            clearExtraOptions();
+                          }}
+                        />
+                      </div>
                     </Badge>
                   )}
                 </div>
@@ -286,7 +295,7 @@ export const MultiSelect = React.forwardRef<
                   >
                     <CheckIcon className="h-4 w-4" />
                   </div>
-                  <span>(Select All)</span>
+                  <span>(Wybierz wszystkie)</span>
                 </CommandItem>
                 {options.map((option) => {
                   const isSelected = selectedValues.includes(option.value);
@@ -317,25 +326,11 @@ export const MultiSelect = React.forwardRef<
               <CommandSeparator />
               <CommandGroup>
                 <div className="flex items-center justify-between">
-                  {selectedValues.length > 0 && (
-                    <>
-                      <CommandItem
-                        onSelect={handleClear}
-                        className="flex-1 cursor-pointer justify-center"
-                      >
-                        Clear
-                      </CommandItem>
-                      <Separator
-                        orientation="vertical"
-                        className="flex h-full min-h-6"
-                      />
-                    </>
-                  )}
                   <CommandItem
                     onSelect={() => setIsPopoverOpen(false)}
                     className="max-w-full flex-1 cursor-pointer justify-center"
                   >
-                    Close
+                    Zamknij
                   </CommandItem>
                 </div>
               </CommandGroup>

@@ -1,5 +1,7 @@
 import { db } from "@/server/db";
-import { RolesToggleForm } from "../_componetns/forms/roles-toggle-form";
+import { TableWrapper } from "@/components/table-wrapper";
+import { clientsTableColumns } from "./_components/clients-table/clients-table-columns";
+import { H2 } from "@/components/typography";
 
 export default async function AdminClientsPage() {
   const clients = await db.user.findMany({
@@ -10,19 +12,9 @@ export default async function AdminClientsPage() {
     },
   });
   return (
-    <div className="my-12">
-      <h2 className="mb-4 text-4xl">Clients</h2>
-      <div>
-        {clients.map((client) => (
-          <div key={client.id} className="mb-4 flex border-b py-2">
-            <div className="flex flex-grow items-center gap-8">
-              <p>Name: {client.name}</p>
-              <p>Email: {client.email}</p>
-            </div>
-            <RolesToggleForm user={{ id: client.id, roles: client.roles }} />
-          </div>
-        ))}
-      </div>
+    <div className="space-y-8">
+      <H2>Klienci zarejestrowani ({clients.length})</H2>
+      <TableWrapper columns={clientsTableColumns} data={clients} />
     </div>
   );
 }

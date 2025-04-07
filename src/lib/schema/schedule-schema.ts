@@ -3,7 +3,6 @@ import { timeToInt } from "@/lib/utils";
 import { z } from "zod";
 
 export const scheduleFormSchema = z.object({
-  timezone: z.string().min(1, "Required"),
   availabilities: z
     .array(
       z.object({

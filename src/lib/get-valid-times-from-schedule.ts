@@ -17,33 +17,54 @@ import {
 } from "date-fns";
 import { groupBy } from "./utils";
 import type { $Enums } from "@prisma/client";
-import { getCalendarEventTimes } from "@/server/google-calendar";
 
 export async function getValidTimesFromSchedule(
   timesInOrder: Date[],
-  event: { userId: string; durationInMinutes: number },
+  service: { durationInMinutes: number },
 ) {
+  if (!timesInOrder.length) return [];
+
   const start = timesInOrder[0];
   const end = timesInOrder.at(-1);
 
   if (start == null || end == null) return [];
 
-  const schedule = await db.schedule.findFirst({
-    where: { userId: event.userId },
+  const schedule = await db.vetSchedule.findMany({
     include: { availabilities: true },
   });
-
   if (schedule == null) return [];
 
+  const mergedAvailabilities = schedule.reduce(
+    (
+      acc: {
+        id: string;
+        vetScheduleId: string;
+        startTime: string;
+        endTime: string;
+        dayOfWeek: $Enums.ScheduleDayOfWeek;
+      }[],
+      item,
+    ) => {
+      return acc.concat(item.availabilities);
+    },
+    [],
+  );
+
   const groupedAvailabilities = groupBy(
-    schedule.availabilities,
+    mergedAvailabilities,
     (a) => a.dayOfWeek,
   );
 
-  const eventTimes = await getCalendarEventTimes(event.userId, {
-    start,
-    end,
+  const appointments = await db.appointment.findMany({
+    select: {
+      startTime: true,
+      endTime: true,
+    },
   });
+  const appointmentTimes = appointments.map((a) => ({
+    start: a.startTime,
+    end: a.endTime,
+  }));
 
   return timesInOrder.filter((intervalDate) => {
     const availabilities = getAvailabilities(
@@ -52,12 +73,12 @@ export async function getValidTimesFromSchedule(
     );
     const eventInterval = {
       start: intervalDate,
-      end: addMinutes(intervalDate, event.durationInMinutes),
+      end: addMinutes(intervalDate, service.durationInMinutes),
     };
 
     return availabilities.some((availability) => {
       return (
-        eventTimes.every((eventTime) => {
+        appointmentTimes.every((eventTime) => {
           return !areIntervalsOverlapping(eventTime, eventInterval);
         }) &&
         isWithinInterval(eventInterval.start, availability) &&
@@ -72,8 +93,6 @@ function getAvailabilities(
     Record<
       (typeof DAYS_OF_WEEK_IN_ORDER)[number],
       {
-        id: string;
-        scheduleId: string;
         startTime: string;
         endTime: string;
         dayOfWeek: $Enums.ScheduleDayOfWeek;
@@ -84,8 +103,6 @@ function getAvailabilities(
 ) {
   let availabilities:
     | {
-        id: string;
-        scheduleId: string;
         startTime: string;
         endTime: string;
         dayOfWeek: $Enums.ScheduleDayOfWeek;

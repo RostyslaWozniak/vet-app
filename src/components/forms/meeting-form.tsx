@@ -31,16 +31,13 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { isSameDay } from "date-fns";
 import { cn } from "@/lib/utils";
-import { createMeeting } from "@/server/actions/meetings";
 
 export function MeetingForm({
   validTimes,
-  eventId,
-  userId,
+  serviceId,
 }: {
   validTimes: Date[];
-  eventId: string;
-  userId: string;
+  serviceId: string;
 }) {
   const form = useForm<MeetingFormSchema>({
     resolver: zodResolver(meetingFormSchema),
@@ -56,17 +53,7 @@ export function MeetingForm({
   const validTimesInTimezone = validTimes;
 
   async function onSubmit(values: MeetingFormSchema) {
-    const data = await createMeeting({
-      ...values,
-      eventId,
-      userId,
-    });
-
-    if (data?.error) {
-      form.setError("root", {
-        message: "There was an error saving your event",
-      });
-    }
+    console.log("values", values);
   }
 
   return (
@@ -81,7 +68,7 @@ export function MeetingForm({
           </div>
         )}
 
-        <div className="flex flex-col gap-4 md:flex-row">
+        <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="date"
@@ -101,7 +88,7 @@ export function MeetingForm({
                         {field.value ? (
                           formatDate(field.value)
                         ) : (
-                          <span>Pick a date</span>
+                          <span>Wybierz datę</span>
                         )}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
@@ -129,7 +116,7 @@ export function MeetingForm({
             control={form.control}
             name="startTime"
             render={({ field }) => (
-              <FormItem className="flex-1">
+              <FormItem>
                 <FormLabel>Time</FormLabel>
                 <Select
                   disabled={date == null || timezone == null}
@@ -138,13 +125,13 @@ export function MeetingForm({
                   }
                   defaultValue={field.value?.toISOString()}
                 >
-                  <FormControl>
+                  <FormControl className="w-full">
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
                           date == null || timezone == null
-                            ? "Select a date/timezone first"
-                            : "Select a meeting time"
+                            ? "Wybierz najpierw datę"
+                            : "Wybierz godzinę"
                         }
                       />
                     </SelectTrigger>
@@ -217,7 +204,7 @@ export function MeetingForm({
             asChild
             variant="outline"
           >
-            <Link href={`/book/${userId}`}>Cancel</Link>
+            <Link href={`/book/`}>Cancel</Link>
           </Button>
           <Button disabled={form.formState.isSubmitting} type="submit">
             Schedule

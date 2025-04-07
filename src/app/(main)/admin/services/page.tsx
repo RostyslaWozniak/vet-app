@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { api } from "@/trpc/server";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { ServiceTable } from "./_components/services-table";
 import { columns } from "./_components/services-table/columns";
+import { TableWrapper } from "@/components/table-wrapper";
 
 export default async function AdminServicesPage() {
   const services = await api.admin.services.getAll();
@@ -18,9 +18,7 @@ export default async function AdminServicesPage() {
       >
         <Plus /> Dodaj usługe
       </Link>
-      <div>
-        <ServiceTable columns={columns} data={services} />
-      </div>
+      <TableWrapper columns={columns} data={services} />
     </div>
   );
 }

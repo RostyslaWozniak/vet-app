@@ -5,7 +5,6 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
-import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -24,11 +23,8 @@ export default function RootLayout({
   return (
     <html lang="pl" className={`${geist.variable} dark`}>
       <body className="bg-background flex min-h-screen flex-col">
-        <TRPCReactProvider>
-          <Header />
-          <main className="flex-grow">{children}</main>
-        </TRPCReactProvider>
-        <Toaster position="bottom-center" />
+        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

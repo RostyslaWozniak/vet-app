@@ -6,21 +6,17 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import Link from "next/link";
 import { signUpSchema, type SignUpSchema } from "../schemas/sign-up-schema";
 import { signUp } from "@/auth/actions/sign-up-action";
-import { oAuthSignIn } from "../actions/oauth-sign-in";
+import { toast } from "sonner";
+import { PasswordInput } from "./password-input";
+import LoadingButton from "@/components/loading-button";
 
 export function SignUpForm() {
-  const [error, setError] = useState<string>();
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -32,31 +28,28 @@ export function SignUpForm() {
 
   async function onSubmit(data: SignUpSchema) {
     const error = await signUp(data);
-    setError(error);
+    toast.error(error);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {error && <p className="text-destructive">{error}</p>}
-        <div className="flex gap-4">
-          <Button
-            type="button"
-            onClick={async () => await oAuthSignIn("google")}
-          >
-            Google
-          </Button>
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>
+                Imię{" "}
+                {form.formState.errors.name && (
+                  <p className="text-destructive text-xs">
+                    ( {form.formState.errors.name.message} )
+                  </p>
+                )}
+              </FormLabel>
               <FormControl>
-                <Input type="text" {...field} />
+                <Input type="text" placeholder="Wpisz swoje imie" {...field} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -65,11 +58,21 @@ export function SignUpForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                Email{" "}
+                {form.formState.errors.email && (
+                  <p className="text-destructive text-xs">
+                    ( {form.formState.errors.email.message} )
+                  </p>
+                )}
+              </FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input
+                  type="email"
+                  placeholder="Wpisz swój adres email"
+                  {...field}
+                />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -78,20 +81,31 @@ export function SignUpForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>
+                Hasło{" "}
+                {form.formState.errors.password && (
+                  <p className="text-destructive text-xs">
+                    ( {form.formState.errors.password.message} )
+                  </p>
+                )}
+              </FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <PasswordInput
+                  placeholder="Wpisz biezpieczne hasło"
+                  autoComplete="current-password"
+                  {...field}
+                />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-end gap-4">
-          <Button asChild variant="link">
-            <Link href="/sign-in">Sign In</Link>
-          </Button>
-          <Button type="submit">Sign Up</Button>
-        </div>
+        <LoadingButton
+          loading={form.formState.isSubmitting}
+          type="submit"
+          className="w-full"
+        >
+          Log in
+        </LoadingButton>
       </form>
     </Form>
   );
