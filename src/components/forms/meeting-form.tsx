@@ -14,10 +14,7 @@ import { Input } from "../ui/input";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import {
-  meetingFormSchema,
-  type MeetingFormSchema,
-} from "@/lib/schema/meetings-schema";
+import { toZonedTime } from "date-fns-tz";
 import {
   Select,
   SelectContent,
@@ -31,6 +28,11 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { isSameDay } from "date-fns";
 import { cn } from "@/lib/utils";
+import {
+  appointmentFromSchema,
+  type AppointmentFormSchema,
+} from "@/lib/schema/appointment-schema";
+import { createAppointment } from "@/server/actions/appointment";
 
 export function MeetingForm({
   validTimes,
@@ -39,20 +41,23 @@ export function MeetingForm({
   validTimes: Date[];
   serviceId: string;
 }) {
-  const form = useForm<MeetingFormSchema>({
-    resolver: zodResolver(meetingFormSchema),
+  const form = useForm<AppointmentFormSchema>({
+    resolver: zodResolver(appointmentFromSchema),
     defaultValues: {
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       guestName: "",
       guestEmail: "",
     },
   });
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const timezone = form.watch("timezone");
+  // const timezone = form.watch("timezone");
   const date = form.watch("date");
-  const validTimesInTimezone = validTimes;
+  const validTimesInTimezone = validTimes.map((date) =>
+    toZonedTime(date, timezone),
+  );
 
-  async function onSubmit(values: MeetingFormSchema) {
+  async function onSubmit(values: AppointmentFormSchema) {
+    await createAppointment({ ...values, serviceId });
     console.log("values", values);
   }
 

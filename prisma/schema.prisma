@@ -42,7 +42,7 @@ model VetProfile {
     id       String       @id @default(uuid())
     userId   String       @unique @map("user_id")
     user     User         @relation(fields: [userId], references: [id])
-    services VetService[]
+    services VetService[] @relation("VetProfileServices")
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
@@ -84,7 +84,7 @@ model Service {
     createdAt         DateTime @default(now()) @map("created_at")
     updatedAt         DateTime @updatedAt @map("updated_at")
 
-    vetServices  VetService[]
+    vetServices  VetService[]  @relation("VetServices")
     appointments Appointment[]
 
     @@map("services")
@@ -94,26 +94,34 @@ model VetService {
     id String @id @default(uuid())
 
     vetId     String     @map("vet_id")
-    vet       VetProfile @relation(fields: [vetId], references: [id])
+    vet       VetProfile @relation(fields: [vetId], references: [id], name: "VetProfileServices")
     serviceId String     @map("service_id")
-    service   Service    @relation(fields: [serviceId], references: [id])
+    service   Service    @relation(fields: [serviceId], references: [id], name: "VetServices")
 
     @@map("vet_services")
 }
 
 model Appointment {
-    id            String            @id @default(uuid())
-    userId        String            @map("user_id")
-    user          User              @relation(fields: [userId], references: [id])
-    vetScheduleId String            @map("vet_schedule_id")
-    vetSchedule   VetSchedule       @relation(fields: [vetScheduleId], references: [id])
-    serviceId     String            @map("service_id")
-    service       Service           @relation(fields: [serviceId], references: [id])
-    startTime     DateTime          @map("start_time")
-    endTime       DateTime          @map("end_time")
-    status        AppointmentStatus @default(PENDING)
-    createdAt     DateTime          @default(now()) @map("created_at")
-    updatedAt     DateTime          @updatedAt @map("updated_at")
+    id     String  @id @default(uuid())
+    userId String? @map("user_id")
+    user   User?   @relation(fields: [userId], references: [id])
+
+    contactName  String? @map("contact_name")
+    contactEmail String? @map("contact_email")
+    contactPhone String? @map("contact_phone")
+
+    vetScheduleId String      @map("vet_schedule_id")
+    vetSchedule   VetSchedule @relation(fields: [vetScheduleId], references: [id])
+
+    serviceId String  @map("service_id")
+    service   Service @relation(fields: [serviceId], references: [id])
+
+    startTime DateTime @map("start_time")
+    endTime   DateTime @map("end_time")
+
+    status    AppointmentStatus @default(PENDING)
+    createdAt DateTime          @default(now()) @map("created_at")
+    updatedAt DateTime          @updatedAt @map("updated_at")
 
     @@map("appointments")
 }

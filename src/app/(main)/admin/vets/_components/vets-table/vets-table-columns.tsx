@@ -5,6 +5,7 @@ import { Settings, User as UserIcon } from "lucide-react";
 import { VetsTableSettings } from "./vets-table-settings";
 import type { User } from "@prisma/client";
 import { mapRoles } from "@/lib/map-roles";
+import Link from "next/link";
 
 export const vetsTableColumns: ColumnDef<User>[] = [
   {
@@ -40,6 +41,15 @@ export const vetsTableColumns: ColumnDef<User>[] = [
     header: "Rola",
     cell: ({ row }) => (
       <div className="w-100">{mapRoles(row.original.roles)}</div>
+    ),
+  },
+  {
+    accessorKey: "schedule",
+    header: "Grafik",
+    cell: ({ row }) => (
+      <Link href={`/admin/schedule/${row.original.id}`} className="w-100">
+        Zobacz grafik
+      </Link>
     ),
   },
 

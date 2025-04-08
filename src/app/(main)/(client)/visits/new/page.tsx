@@ -7,6 +7,13 @@ export default async function NewVisitPage() {
   const services = await db.service.findMany({
     where: {
       isActive: true,
+      vetServices: {
+        some: {
+          vetId: {
+            not: undefined,
+          },
+        },
+      },
     },
   });
   return (

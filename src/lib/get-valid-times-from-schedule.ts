@@ -20,7 +20,7 @@ import type { $Enums } from "@prisma/client";
 
 export async function getValidTimesFromSchedule(
   timesInOrder: Date[],
-  service: { durationInMinutes: number },
+  service: { id: string; durationInMinutes: number },
 ) {
   if (!timesInOrder.length) return [];
 
@@ -29,42 +29,46 @@ export async function getValidTimesFromSchedule(
 
   if (start == null || end == null) return [];
 
-  const schedule = await db.vetSchedule.findMany({
-    include: { availabilities: true },
-  });
-  if (schedule == null) return [];
-
-  const mergedAvailabilities = schedule.reduce(
-    (
-      acc: {
-        id: string;
-        vetScheduleId: string;
-        startTime: string;
-        endTime: string;
-        dayOfWeek: $Enums.ScheduleDayOfWeek;
-      }[],
-      item,
-    ) => {
-      return acc.concat(item.availabilities);
+  const availabilities = await db.vetScheduleAvailability.findMany({
+    where: {
+      vetSchedule: {
+        user: {
+          vetProfile: {
+            services: {
+              some: {
+                serviceId: service.id,
+              },
+            },
+          },
+        },
+      },
     },
-    [],
-  );
+    select: {
+      dayOfWeek: true,
+      startTime: true,
+      endTime: true,
+    },
+  });
+  if (availabilities == null) return [];
 
-  const groupedAvailabilities = groupBy(
-    mergedAvailabilities,
-    (a) => a.dayOfWeek,
-  );
+  const groupedAvailabilities = groupBy(availabilities, (a) => a.dayOfWeek);
 
   const appointments = await db.appointment.findMany({
+    // where: {
+    //   serviceId: service.id,
+    // },
     select: {
       startTime: true,
       endTime: true,
     },
   });
   const appointmentTimes = appointments.map((a) => ({
+    // start: "2025-04-10T10:30:00.000Z",
+    // end: "2025-04-10T10:45:00.000Z",
     start: a.startTime,
     end: a.endTime,
   }));
+  console.log({ appointmentTimes });
 
   return timesInOrder.filter((intervalDate) => {
     const availabilities = getAvailabilities(

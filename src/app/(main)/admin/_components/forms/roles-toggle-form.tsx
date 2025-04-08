@@ -18,7 +18,7 @@ import {
   toggleRoleSchema,
   type ToggleRoleSchema,
 } from "@/lib/schema/toggle-role-schema";
-import { toggleRole } from "@/server/actions/admin/toggle-role";
+// import { toggleRole } from "@/server/actions/admin/toggle-role";
 import LoadingButton from "@/components/loading-button";
 import { useRouter } from "next/navigation";
 
@@ -42,18 +42,19 @@ export function RolesToggleForm({
   });
 
   async function onSubmit(data: ToggleRoleSchema) {
-    try {
-      const error = await toggleRole(data);
-      if (error) {
-        toast.error("Wystąpił błąd. Spróbuj ponownie.");
-      } else {
-        toast.success("Uprawnienia zaktualizowane");
-        router.refresh();
-      }
-      setIsEditOpen(false);
-    } catch {
-      toast.error("Wystąpił błąd. Spróbuj ponownie.");
-    }
+    console.log(data);
+    // try {
+    //   const error = await toggleRole(data);
+    //   if (error) {
+    //     toast.error("Wystąpił błąd. Spróbuj ponownie.");
+    //   } else {
+    //     toast.success("Uprawnienia zaktualizowane");
+    //     router.refresh();
+    //   }
+    //   setIsEditOpen(false);
+    // } catch {
+    //   toast.error("Wystąpił błąd. Spróbuj ponownie.");
+    // }
   }
 
   return (

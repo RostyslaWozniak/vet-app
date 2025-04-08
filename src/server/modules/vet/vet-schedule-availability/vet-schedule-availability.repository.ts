@@ -3,7 +3,6 @@ import type { VetScheduleAvailabilityCreateType } from "./vet-schedule-availabil
 
 export class VetScheduleAvailabilityRepository {
   public static async createMany(data: VetScheduleAvailabilityCreateType) {
-    console.log({ data });
     await db.vetScheduleAvailability.createMany({
       data: data.availabilities.map((availability) => ({
         ...availability,
