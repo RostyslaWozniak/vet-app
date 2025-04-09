@@ -32,18 +32,20 @@ export function UserButton({ user }: { user: FullUser | null }) {
           <DropdownMenuContent className="min-w-60" align="end">
             <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href={`/me`}>
-              <DropdownMenuItem
-                variant={pathname.includes("me") ? "active" : "default"}
-              >
-                <UserIcon className="mr-2 size-4" />
-                Profile
-              </DropdownMenuItem>
-            </Link>
+            {user.roles.includes("CLIENT") && (
+              <Link href={`/me`}>
+                <DropdownMenuItem
+                  variant={pathname.startsWith("/me") ? "active" : "default"}
+                >
+                  <UserIcon className="mr-2 size-4" />
+                  Profile
+                </DropdownMenuItem>
+              </Link>
+            )}
             {user.roles.includes("VET") && (
               <Link href="/vet">
                 <DropdownMenuItem
-                  variant={pathname.includes("vet") ? "active" : "default"}
+                  variant={pathname.startsWith("/vet") ? "active" : "default"}
                 >
                   <CatIcon className="mr-2 size-4" />
                   Vet
@@ -53,7 +55,7 @@ export function UserButton({ user }: { user: FullUser | null }) {
             {user.roles.includes("ADMIN") && (
               <Link href="/admin">
                 <DropdownMenuItem
-                  variant={pathname.includes("admin") ? "active" : "default"}
+                  variant={pathname.startsWith("/admin") ? "active" : "default"}
                 >
                   <Lock className="mr-2 size-4" />
                   Admin

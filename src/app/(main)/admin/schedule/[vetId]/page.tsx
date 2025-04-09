@@ -1,5 +1,5 @@
 import { db } from "@/server/db";
-import { Schedule } from "../_components/schedule";
+import { ScheduleCalendar } from "@/components/schelule-calendar";
 
 export default async function SchedulePage({
   params,
@@ -12,13 +12,17 @@ export default async function SchedulePage({
       userId: vetId,
     },
     select: {
-      appointments: true,
+      appointments: {
+        include: {
+          service: true,
+        },
+      },
     },
   });
 
   return (
     <div>
-      <Schedule appointments={schedule?.appointments ?? []} />
+      <ScheduleCalendar appointments={schedule?.appointments ?? []} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { db } from "@/server/db";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getOAuthClient } from "../core/oauth/base";
+import type { OAuthProvider } from "../core/oauth/providers";
 
 export async function signIn(unsafeData: unknown) {
   const { success, error, data } =
@@ -25,7 +26,7 @@ export async function signIn(unsafeData: unknown) {
       },
     });
     if (oAuthUser) {
-      const oAuthClient = getOAuthClient(oAuthUser.provider);
+      const oAuthClient = getOAuthClient(oAuthUser.provider as OAuthProvider);
       redirect(oAuthClient.createAuthUrl(await cookies()));
     }
     return "User not found";

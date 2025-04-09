@@ -1,0 +1,92 @@
+import {
+  format,
+  startOfWeek,
+  addDays,
+  isSameDay,
+  getHours,
+  getMinutes,
+} from "date-fns";
+import type {
+  AppointmentType,
+  WeekDayInfo,
+  AppointmentPosition,
+} from "../types/appointment";
+import { CALENDAR_CONFIG } from "../configs/config";
+import { pl } from "date-fns/locale";
+
+/**
+ * Generates an array of week days starting from the given date
+ */
+export function generateWeekDays(currentDate: Date): WeekDayInfo[] {
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Start from Monday
+
+  return Array.from({ length: 7 }).map((_, index) => {
+    const date = addDays(weekStart, index);
+    return {
+      name: format(date, "EEEE", { locale: pl }),
+      date: date,
+      dayOfMonth: format(date, "d"),
+      isToday: isSameDay(date, new Date()),
+    };
+  });
+}
+
+/**
+ * Generates time slot labels for the calendar
+ */
+export function generateTimeSlots(): string[] {
+  return Array.from({ length: CALENDAR_CONFIG.VISIBLE_HOURS }).map(
+    (_, hourIndex) => {
+      const hour = CALENDAR_CONFIG.START_HOUR + hourIndex;
+      return `${hour.toString().padStart(2, "0")}:00`;
+    },
+  );
+}
+
+/**
+ * Filters appointments that fall within the current week view
+ */
+export function filterAppointmentsForWeek(
+  appointments: AppointmentType[],
+  weekDays: WeekDayInfo[],
+): AppointmentType[] {
+  return appointments.filter((appointment) => {
+    const appointmentDate = new Date(appointment.startTime);
+    return weekDays.some((day) => isSameDay(day.date, appointmentDate));
+  });
+}
+
+/**
+ * Calculates the position and height of an appointment in the calendar grid
+ */
+export function calculateAppointmentPosition(
+  startTime: Date,
+  endTime: Date,
+  cellSize: number,
+): AppointmentPosition {
+  const startHour = getHours(startTime);
+  const startMinute = getMinutes(startTime);
+  const endHour = getHours(endTime);
+  const endMinute = getMinutes(endTime);
+
+  // Calculate position based on time and cell size
+  const minutesSinceCalendarStart =
+    (startHour - CALENDAR_CONFIG.START_HOUR) * 60 + startMinute;
+  const durationInMinutes =
+    (endHour - startHour) * 60 + (endMinute - startMinute);
+
+  const topPosition = minutesSinceCalendarStart * (cellSize / 60);
+  const appointmentHeight = durationInMinutes * (cellSize / 60);
+
+  return {
+    top: `${topPosition}px`,
+    height: `${appointmentHeight}px`,
+  };
+}
+
+/**
+ * Formats a time range for display
+ */
+export function formatTimeRange(startTime: Date, endTime: Date): string {
+  return `${format(startTime, "HH:mm")} - ${format(endTime, "HH:mm")}`;
+}

@@ -8,7 +8,9 @@ export class VetServicesService {
     return await VetServicesRepository.findAll();
   }
   public static async getAllOwn(userId: string) {
-    const vetProfile = await VetProfileService.getByUserIdOrThrow(userId);
+    const vetProfile = await VetProfileService.getByUserId(userId);
+
+    if (!vetProfile) return [];
 
     return await VetServicesRepository.findAllByVetId(vetProfile.id);
   }
@@ -37,7 +39,7 @@ export class VetServicesService {
 
   // Private methods
   private static async getVetProfile(userId: string) {
-    const vetProfile = await VetProfileService.getByUserIdOrThrow(userId);
+    const vetProfile = await VetProfileService.getByUserIdOrCreate(userId);
     return vetProfile;
   }
 }
