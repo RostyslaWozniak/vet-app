@@ -8,7 +8,7 @@ const textVariants = cva("leading-7 text-pretty font-manrope ", {
       default: "text-base font-normal leading-relaxed tracking-wide",
       sm: "text-sm font-normal leading-relaxed  tracking-wider",
       lg: "text-lg font-semibold md:text-lg/relaxed tracking-wider",
-      subtitle: "text-lg font-semibold md:text-xl tracking-[2px] ",
+      subtitle: "text-xl font-semibold md:text-2xl tracking-[2px] ",
     },
     variant: {
       default: "text-foreground",
