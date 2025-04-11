@@ -1,22 +1,19 @@
 import { HydrateClient } from "@/trpc/server";
-
-import { getCurrentUser } from "@/auth/current-user";
-import Link from "next/link";
-import { Edit } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
 import { HomeHeroSection } from "@/components/sections/home-hero-section";
+import { ServicesSection } from "@/components/sections/services-section";
+import { SpecialOffersSection } from "@/components/sections/special-offers-section";
+import { TestemonialsSection } from "@/components/sections/testemonials-section";
+import { FAQSection } from "@/components/sections/faq-section";
 
 export default async function Home() {
-  const fullUser = await getCurrentUser({ withFullUser: true });
-
   return (
     <HydrateClient>
-      <div className="container mx-auto md:p-4">
-        <Link href="/visits/new" className={buttonVariants()}>
-          <Edit /> Umów wizytę
-        </Link>
-        <HomeHeroSection />
-      </div>
+      <HomeHeroSection />
+      <ServicesSection />
+      <SpecialOffersSection />
+      <TestemonialsSection />
+      <FAQSection />
+      <div className="min-h-screen"></div>
     </HydrateClient>
   );
 }

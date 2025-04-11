@@ -104,7 +104,7 @@ export function SignUpForm() {
           type="submit"
           className="w-full"
         >
-          Log in
+          Zarejestruj
         </LoadingButton>
       </form>
     </Form>

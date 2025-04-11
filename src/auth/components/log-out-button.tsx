@@ -10,7 +10,7 @@ export function LogOutButton({ className }: { className?: string }) {
       onClick={async () => await logOut()}
       className={className}
     >
-      Log Out
+      Wyloguj{" "}
     </Button>
   );
 }

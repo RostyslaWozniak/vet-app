@@ -9,12 +9,7 @@ export function H3({
   className?: string;
 }) {
   return (
-    <h3
-      className={cn(
-        "font-philosopher text-3xl font-semibold text-primary",
-        className,
-      )}
-    >
+    <h3 className={cn("font-montserrat text-3xl font-semibold", className)}>
       {children}
     </h3>
   );

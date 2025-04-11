@@ -1,6 +1,8 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { adminRouter } from "./routers/admin";
 import { vetRouter } from "./routers/vet";
+import { publicRouter } from "./routers/public";
+import { privateRouter } from "./routers/private";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +12,8 @@ import { vetRouter } from "./routers/vet";
 export const appRouter = createTRPCRouter({
   admin: adminRouter,
   vet: vetRouter,
+  public: publicRouter,
+  private: privateRouter,
 });
 
 // export type definition of API

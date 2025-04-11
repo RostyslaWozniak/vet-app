@@ -15,8 +15,8 @@ import {
 } from "./ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
 import { CatIcon, Lock, UserIcon } from "lucide-react";
-import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
+import { LinkButton } from "./link-button";
 
 export function UserButton({ user }: { user: FullUser | null }) {
   const pathname = usePathname();
@@ -32,7 +32,8 @@ export function UserButton({ user }: { user: FullUser | null }) {
           <DropdownMenuContent className="min-w-60" align="end">
             <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {user.roles.includes("CLIENT") && (
+            {(user.roles.includes("CLIENT") ||
+              user.roles.includes("ADMIN")) && (
               <Link href={`/me`}>
                 <DropdownMenuItem
                   variant={pathname.startsWith("/me") ? "active" : "default"}
@@ -48,7 +49,7 @@ export function UserButton({ user }: { user: FullUser | null }) {
                   variant={pathname.startsWith("/vet") ? "active" : "default"}
                 >
                   <CatIcon className="mr-2 size-4" />
-                  Vet
+                  Profil weterynarza
                 </DropdownMenuItem>
               </Link>
             )}
@@ -58,7 +59,7 @@ export function UserButton({ user }: { user: FullUser | null }) {
                   variant={pathname.startsWith("/admin") ? "active" : "default"}
                 >
                   <Lock className="mr-2 size-4" />
-                  Admin
+                  Administrator
                 </DropdownMenuItem>
               </Link>
             )}
@@ -70,9 +71,11 @@ export function UserButton({ user }: { user: FullUser | null }) {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button asChild>
-          <Link href="/sign-in">Sign In</Link>
-        </Button>
+        <div className="">
+          <LinkButton variant="outline" href="/sign-in">
+            Zaloguj
+          </LinkButton>
+        </div>
       )}
     </>
   );

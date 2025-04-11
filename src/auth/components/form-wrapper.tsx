@@ -39,14 +39,15 @@ export const FormContainer = ({
           </Link>
         </div>
       </div>
-      <div className="hidden aspect-[9/10] w-[40%] bg-gray-300 duration-300 md:block">
+      <div className="relative hidden aspect-[9/10] w-[40%] bg-gray-300 md:block">
+        <div className="bg-primary/10 absolute inset-0 z-20"></div>
         <motion.img
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           src={imageUrl}
-          className="h-full w-full object-cover object-[10%]"
-          alt="nice tea image"
+          className="h-full w-full object-cover object-[10%] duration-300"
+          alt={`Vet App ${title} image`}
           loading="lazy"
         />
       </div>

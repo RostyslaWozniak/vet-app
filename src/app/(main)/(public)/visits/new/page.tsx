@@ -1,6 +1,6 @@
 import { H2 } from "@/components/typography";
 import { db } from "@/server/db";
-import { ServiceCard } from "../../_components/service-card";
+import { ServiceCard } from "../../../../../components/cards/service-card";
 import Link from "next/link";
 
 export default async function NewVisitPage() {

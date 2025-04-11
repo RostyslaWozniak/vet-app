@@ -11,7 +11,8 @@ export default async function MePage() {
     withFullUser: true,
   });
 
-  if (!user.roles.includes("CLIENT")) return notFound();
+  if (!user.roles.includes("CLIENT") && !user.roles.includes("ADMIN"))
+    return notFound();
   return (
     <div className="relative container mx-auto my-6 flex min-h-[calc(100vh-200px)] w-full flex-grow flex-col items-center">
       <H1>Mój profile</H1>

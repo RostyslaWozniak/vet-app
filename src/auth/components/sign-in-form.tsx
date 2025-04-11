@@ -85,7 +85,7 @@ export function SignInForm() {
           type="submit"
           className="w-full"
         >
-          Log in
+          Zaloguj
         </LoadingButton>
       </form>
     </Form>
