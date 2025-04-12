@@ -24,7 +24,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
-          <CardTitle className="line-clamp-2 text-xl font-bold">
+          <CardTitle className="text-xl font-bold">
             <H3>{service.name}</H3>
           </CardTitle>
         </div>

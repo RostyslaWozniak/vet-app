@@ -4,6 +4,7 @@ import { ServicesSection } from "@/components/sections/services-section";
 import { SpecialOffersSection } from "@/components/sections/special-offers-section";
 import { TestemonialsSection } from "@/components/sections/testemonials-section";
 import { FAQSection } from "@/components/sections/faq-section";
+import { ContactSection } from "@/components/sections/contact-section";
 
 export default async function Home() {
   return (
@@ -13,7 +14,7 @@ export default async function Home() {
       <SpecialOffersSection />
       <TestemonialsSection />
       <FAQSection />
-      <div className="min-h-screen"></div>
+      <ContactSection />
     </HydrateClient>
   );
 }

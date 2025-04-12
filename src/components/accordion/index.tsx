@@ -7,6 +7,7 @@ import { useState } from "react";
 import { MotionWrapper } from "@/components/motion-wrapper";
 import Markdown from "react-markdown";
 import { PawsBgCard } from "../sections/components/paws-bg-card";
+import { Text } from "../typography";
 
 type AccorderonProps = {
   questions: { question: string; answer: string }[];
@@ -23,10 +24,15 @@ export function Accordion({ questions, className }: AccorderonProps) {
           transition={{ duration: 0.5, delay: 0.2 * index }}
         >
           <PawsBgCard
-            className="relative flex items-center justify-between rounded-2xl"
-            childrenClassName="flex items-center justify-between"
+            className="relative flex items-center justify-between rounded-2xl !p-0 shadow transition-all duration-300 hover:scale-101 hover:shadow-md"
+            childrenClassName="flex items-center justify-between w-full p-4 py-4 md:p-6 gap-x-4"
           >
-            <p className="text-primary-foreground flex-grow">{question}</p>
+            <Text
+              size="subtitle"
+              className="text-primary-foreground dark-text-shadow flex-grow"
+            >
+              {question}
+            </Text>
             <button
               aria-label="toggle question"
               onClick={() =>
@@ -64,9 +70,9 @@ export function Accordion({ questions, className }: AccorderonProps) {
           >
             <div
               className={cn(
-                "text-foreground overflow-hidden py-2 opacity-1 transition-all duration-300 md:px-8",
+                "overflow-hidden py-2 text-transparent transition-all duration-300 md:px-8",
                 {
-                  "pb-8 opacity-1": index === activeIndex,
+                  "text-foreground pb-8": index === activeIndex,
                 },
               )}
             >

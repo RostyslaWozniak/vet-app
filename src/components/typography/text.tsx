@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
-const textVariants = cva("leading-7 text-pretty font-manrope ", {
+const textVariants = cva("leading-7 font-manrope", {
   variants: {
     size: {
       default: "text-base font-normal leading-relaxed tracking-wide",

@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { Star } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
-import { SectionHeading } from "./components/section-heading";
 import { MaxWidthWrapper } from "../max-width-wrapper";
+import Image from "next/image";
+import { SectionHeadingSubtitle } from "./components/section-heading-subtitle";
 
 const testimonials = [
   {
@@ -38,12 +39,28 @@ type TestemonialType = (typeof testimonials)[number];
 export function TestemonialsSection() {
   return (
     <section className="my-8 space-y-8 lg:my-20 lg:space-y-14">
-      <SectionHeading>Opinie naszych klientów</SectionHeading>
-      <MaxWidthWrapper className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {testimonials.map((testimonial) => (
-          <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-        ))}
+      {/* <SectionHeading>Opinie naszych klientów</SectionHeading> */}
+      <MaxWidthWrapper className="space-y-12">
+        <SectionHeadingSubtitle
+          title="Opinie"
+          subtitle="Zobacz co mówią o nas nasi klienci"
+          subtitleClassName="sm:min-w-lg"
+        />
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map((testimonial) => (
+            <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+          ))}
+        </div>
       </MaxWidthWrapper>
+      <div className="relative mt-12 h-60 w-full md:h-140">
+        <Image
+          src="/images/service.jpg"
+          fill
+          alt="banner image"
+          className="object-cover"
+        />
+        <div className="bg-primary/20 absolute inset-0"></div>
+      </div>
     </section>
   );
 }

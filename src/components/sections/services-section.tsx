@@ -2,19 +2,22 @@ import { ArrowRight } from "lucide-react";
 import { ServiceCard } from "../cards/service-card";
 import { LinkButton } from "../link-button";
 import { MaxWidthWrapper } from "../max-width-wrapper";
-import { SectionHeading } from "./components/section-heading";
 import { api } from "@/trpc/server";
-import Image from "next/image";
+import { SectionHeadingSubtitle } from "./components/section-heading-subtitle";
 
 export async function ServicesSection() {
   const services = await api.public.services.getAll({
     take: 6,
   });
   return (
-    <section className="my-8 lg:my-20">
-      <SectionHeading>Nasze usługi </SectionHeading>
-      <MaxWidthWrapper className="flex flex-col sm:items-center">
-        <div className="mt-16 mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <section className="my-8 lg:my-28">
+      <MaxWidthWrapper className="flex flex-col gap-y-16 sm:items-center">
+        <SectionHeadingSubtitle
+          title="Nasze usługi"
+          subtitle="Pełny serwis weterynaryjny z wyjątkową opieką dla fizycznego i mentalnego zdrowia twojeka pupila."
+          titleClassName="text-nowrap"
+        />
+        <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
@@ -23,15 +26,6 @@ export async function ServicesSection() {
           Zobacz wszystkie <ArrowRight />
         </LinkButton>
       </MaxWidthWrapper>
-      <div className="relative mt-12 h-60 w-full md:h-140">
-        <Image
-          src="/images/service.jpg"
-          fill
-          alt="banner image"
-          className="object-cover"
-        />
-        <div className="bg-primary/20 absolute inset-0"></div>
-      </div>
     </section>
   );
 }

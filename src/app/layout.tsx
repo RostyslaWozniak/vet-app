@@ -22,7 +22,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pl" className={`${montserrat.variable} `}>
-      <body className="bg-background flex min-h-screen flex-col">
+      <body className="bg-background flex min-h-screen flex-col overflow-x-hidden">
         <TRPCReactProvider>{children}</TRPCReactProvider>
         <Toaster position="top-center" richColors />
       </body>

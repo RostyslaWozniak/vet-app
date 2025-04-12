@@ -8,7 +8,7 @@ import { Edit } from "lucide-react";
 export function HomeHeroSection() {
   return (
     <section className="isolate">
-      <MaxWidthWrapper className="relative flex flex-col-reverse items-center gap-4 py-4 lg:flex-row lg:items-stretch lg:py-20">
+      <MaxWidthWrapper className="relative flex flex-col items-center gap-4 py-4 lg:flex-row lg:items-stretch lg:py-20">
         <PawsBgCard
           className="flex w-[min(800px,100%)] flex-col items-start justify-center gap-4 lg:py-12 2xl:aspect-[16/10] 2xl:translate-y-20"
           childrenClassName="space-y-6 lg:space-y-12"

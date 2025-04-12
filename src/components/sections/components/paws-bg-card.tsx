@@ -30,7 +30,7 @@ export function PawsBgCard({
         className={cn(bgPaws, "absolute inset-0")}
         style={{ opacity: `${pawsOpacity}%` }}
       />
-      <div className={cn("relative z-10", childrenClassName)}>{children}</div>
+      <div className={cn("z-10", childrenClassName)}>{children}</div>
     </div>
   );
 }
