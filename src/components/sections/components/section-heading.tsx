@@ -10,7 +10,7 @@ export function SectionHeading({
   return (
     <div className="flex w-full items-center">
       <div className="bg-paws-primary h-full min-h-10.5 w-full flex-grow"></div>
-      <Heading className="px-2 text-3xl font-bold sm:text-nowrap md:px-8">
+      <Heading className="px-2 text-center text-3xl font-bold sm:text-nowrap md:px-8">
         {children}
       </Heading>
       <div className="bg-paws-primary h-full min-h-10.5 w-full flex-grow"></div>

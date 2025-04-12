@@ -6,7 +6,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-full flex-grow flex-col">
       <Header />
-      <main className="my-16 flex-grow lg:my-20">{children}</main>
+      <main className="my-4 flex-grow lg:my-20">{children}</main>
       <Footer />
     </div>
   );

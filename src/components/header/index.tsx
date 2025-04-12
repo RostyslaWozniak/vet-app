@@ -22,7 +22,7 @@ export async function Header() {
             orientation="vertical"
             className="bg-foreground/50 hidden min-h-8 lg:flex"
           />
-          <div className="hidden lg:flex">
+          <div className="">
             <UserButton user={fullUser} />
           </div>
         </div>
