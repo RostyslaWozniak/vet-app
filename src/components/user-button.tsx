@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
-import { CatIcon, Lock, UserIcon } from "lucide-react";
+import { Calendar, CatIcon, Lock, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
 
@@ -40,6 +40,19 @@ export function UserButton({ user }: { user: FullUser | null }) {
                 >
                   <UserIcon className="mr-2 size-4" />
                   Profile
+                </DropdownMenuItem>
+              </Link>
+            )}
+            {(user.roles.includes("CLIENT") ||
+              user.roles.includes("ADMIN")) && (
+              <Link href={`/appointments`}>
+                <DropdownMenuItem
+                  variant={
+                    pathname.startsWith("/appointments") ? "active" : "default"
+                  }
+                >
+                  <Calendar className="mr-2 size-4" />
+                  Wizyty
                 </DropdownMenuItem>
               </Link>
             )}

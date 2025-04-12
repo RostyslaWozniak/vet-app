@@ -57,12 +57,8 @@ export async function createAppointment(unsafeData: AppointmentActionSchema) {
   );
 
   if (!isAvailable) {
-    // Handle the case when the appointment is not available
-    console.log("ERROR");
     return "The requested time is not available.";
   }
-
-  console.log({ availabilities });
 
   const currentUser = await getCurrentUser();
   if (!currentUser) {

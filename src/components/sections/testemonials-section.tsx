@@ -4,6 +4,7 @@ import { Card, CardContent } from "../ui/card";
 import { MaxWidthWrapper } from "../max-width-wrapper";
 import Image from "next/image";
 import { SectionHeadingSubtitle } from "./components/section-heading-subtitle";
+import { MotionWrapper } from "../motion-wrapper";
 
 const testimonials = [
   {
@@ -42,17 +43,25 @@ export function TestemonialsSection() {
       {/* <SectionHeading>Opinie naszych klientów</SectionHeading> */}
       <MaxWidthWrapper className="space-y-12">
         <SectionHeadingSubtitle
-          title="Opinie"
-          subtitle="Zobacz co mówią o nas nasi klienci"
-          subtitleClassName="sm:min-w-lg"
+          title="Opinie naszych klientów"
+          titleClassName="sm:text-nowrap"
         />
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((testimonial) => (
-            <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+          {testimonials.map((testimonial, i) => (
+            <MotionWrapper
+              key={testimonial.id}
+              transition={{ duration: 0.3, delay: i * 0.2 }}
+            >
+              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+            </MotionWrapper>
           ))}
         </div>
       </MaxWidthWrapper>
-      <div className="relative mt-12 h-60 w-full md:h-140">
+      <MotionWrapper
+        viewport={{ once: true, margin: "0px 0px -200px 0px" }}
+        transition={{ duration: 0.5 }}
+        className="relative mt-12 h-60 w-full md:h-140"
+      >
         <Image
           src="/images/service.jpg"
           fill
@@ -60,7 +69,7 @@ export function TestemonialsSection() {
           className="object-cover"
         />
         <div className="bg-primary/20 absolute inset-0"></div>
-      </div>
+      </MotionWrapper>
     </section>
   );
 }

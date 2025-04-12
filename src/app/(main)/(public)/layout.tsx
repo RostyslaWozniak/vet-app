@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
-    <div>
+    <div className="flex h-full flex-grow flex-col">
       <Header />
-      <main className="flex-grow">{children}</main>
+      <main className="my-16 flex-grow lg:my-20">{children}</main>
       <Footer />
     </div>
   );

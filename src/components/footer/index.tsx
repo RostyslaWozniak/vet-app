@@ -43,7 +43,7 @@ const contactLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-card bg-card-gradient text-card-foreground w-screen px-4 pt-12 pb-24 md:pb-8 xl:px-6">
+    <footer className="bg-secondary text-secondary-foreground dark-text-shadow font-montserrat w-screen px-4 pt-12 pb-24 md:pb-8 xl:px-6">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-8 md:flex-row md:items-center md:justify-between">
         <div>
           {/* <SubscribeForm /> */}
@@ -81,7 +81,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="text-foreground/90 border-muted-foreground mx-auto mt-12 flex max-w-[1400px] flex-col-reverse items-center justify-between gap-y-3 border-t pt-6 text-center text-sm md:flex-row">
+      <div className="text-secondary-foreground border-secondary-foreground/80 mx-auto mt-12 flex max-w-[1400px] flex-col-reverse items-center justify-between gap-y-3 border-t pt-6 text-center text-sm md:flex-row">
         <span>
           &copy; {new Date().getFullYear()}. Wszystkie prawa zastrzeżone
         </span>

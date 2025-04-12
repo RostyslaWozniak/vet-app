@@ -1,8 +1,9 @@
 import { getCurrentUser } from "@/auth/current-user";
+import { LinkButton } from "@/components/link-button";
+import { MaxWidthWrapper } from "@/components/max-width-wrapper";
+import { SectionHeading } from "@/components/sections/components/section-heading";
 import { H1 } from "@/components/typography";
-import { buttonVariants } from "@/components/ui/button";
-import { Edit } from "lucide-react";
-import Link from "next/link";
+import { Calendar, Edit } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default async function MePage() {
@@ -14,17 +15,22 @@ export default async function MePage() {
   if (!user.roles.includes("CLIENT") && !user.roles.includes("ADMIN"))
     return notFound();
   return (
-    <div className="relative container mx-auto my-6 flex min-h-[calc(100vh-200px)] w-full flex-grow flex-col items-center">
-      <H1>Mój profile</H1>
-      <div className="w-full space-y-4">
+    <>
+      <SectionHeading heading={H1}>Mój profile</SectionHeading>
+      <MaxWidthWrapper className="my-12 w-full space-y-4">
         <p className="text-2xl">
           {" "}
           Cześć <span className="text-primary font-bold">{user.name}</span>
         </p>
-        <Link href="/visits/new" className={buttonVariants()}>
-          <Edit /> Umów wizytę
-        </Link>
-      </div>
-    </div>
+        <div className="flex gap-4">
+          <LinkButton href="/appointments/new">
+            <Edit /> Umów wizytę
+          </LinkButton>
+          <LinkButton href="/appointments">
+            <Calendar /> Zobacz moje wizyty
+          </LinkButton>
+        </div>
+      </MaxWidthWrapper>
+    </>
   );
 }

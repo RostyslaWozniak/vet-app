@@ -1,12 +1,18 @@
-import { H2 } from "@/components/typography";
+import { type H1, H2, type H3 } from "@/components/typography";
 
-export function SectionHeading({ children }: { children: React.ReactNode }) {
+export function SectionHeading({
+  children,
+  heading: Heading = H2,
+}: {
+  children: React.ReactNode;
+  heading?: typeof H1 | typeof H2 | typeof H3;
+}) {
   return (
     <div className="flex w-full items-center">
       <div className="bg-paws-primary h-full min-h-10.5 w-full flex-grow"></div>
-      <H2 className="px-2 text-3xl font-bold sm:text-nowrap md:px-8">
+      <Heading className="px-2 text-3xl font-bold sm:text-nowrap md:px-8">
         {children}
-      </H2>
+      </Heading>
       <div className="bg-paws-primary h-full min-h-10.5 w-full flex-grow"></div>
     </div>
   );

@@ -33,19 +33,27 @@ import {
   type AppointmentFormSchema,
 } from "@/lib/schema/appointment-schema";
 import { createAppointment } from "@/server/actions/appointment";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function MeetingForm({
   validTimes,
   serviceId,
+  user,
 }: {
   validTimes: Date[];
   serviceId: string;
+  user: {
+    name: string;
+    email: string;
+  } | null;
 }) {
+  const router = useRouter();
   const form = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFromSchema),
     defaultValues: {
-      guestName: "",
-      guestEmail: "",
+      guestName: user?.name ?? "",
+      guestEmail: user?.email ?? "",
     },
   });
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -57,8 +65,18 @@ export function MeetingForm({
   );
 
   async function onSubmit(values: AppointmentFormSchema) {
-    await createAppointment({ ...values, serviceId });
-    console.log("values", values);
+    try {
+      const error = await createAppointment({ ...values, serviceId });
+      if (error) {
+        toast.error(error);
+        return;
+      }
+
+      toast.success("Pomyślnie zapisano wizytę.");
+      router.push(user ? "/appointments" : "/");
+    } catch {
+      toast.error("Wystąpił błąd. Spróbuj ponownie.");
+    }
   }
 
   return (
@@ -73,20 +91,20 @@ export function MeetingForm({
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start">
           <FormField
             control={form.control}
             name="date"
             render={({ field }) => (
               <Popover>
                 <FormItem className="flex-1">
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>Data*</FormLabel>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
                         variant="outline"
                         className={cn(
-                          "flex w-full pl-3 text-left font-normal",
+                          "border-foreground flex w-full pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground",
                         )}
                       >
@@ -121,8 +139,8 @@ export function MeetingForm({
             control={form.control}
             name="startTime"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Time</FormLabel>
+              <FormItem className="flex-1">
+                <FormLabel>Godzina*</FormLabel>
                 <Select
                   disabled={date == null || timezone == null}
                   onValueChange={(value) =>
@@ -160,13 +178,13 @@ export function MeetingForm({
             )}
           />
         </div>
-        <div className="flex flex-col gap-4 md:flex-row">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start">
           <FormField
             control={form.control}
             name="guestName"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Your Name</FormLabel>
+                <FormLabel>Imię*</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -179,7 +197,7 @@ export function MeetingForm({
             name="guestEmail"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Your Email</FormLabel>
+                <FormLabel>Email*</FormLabel>
                 <FormControl>
                   <Input type="email" {...field} />
                 </FormControl>
@@ -193,9 +211,9 @@ export function MeetingForm({
           name="guestNotes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>Opis (opcjonalne)</FormLabel>
               <FormControl>
-                <Textarea className="resize-none" {...field} />
+                <Textarea className="h-32 resize-none" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -209,10 +227,10 @@ export function MeetingForm({
             asChild
             variant="outline"
           >
-            <Link href={`/book/`}>Cancel</Link>
+            <Link href={`/`}>Anuluj</Link>
           </Button>
           <Button disabled={form.formState.isSubmitting} type="submit">
-            Schedule
+            Potwierdź
           </Button>
         </div>
       </form>

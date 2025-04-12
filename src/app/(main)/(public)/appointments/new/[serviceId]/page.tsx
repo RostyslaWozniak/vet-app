@@ -18,13 +18,18 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MeetingForm } from "@/components/forms/meeting-form";
+import { MaxWidthWrapper } from "@/components/max-width-wrapper";
+import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
+import { getCurrentUser } from "@/auth/current-user";
 
-export default async function DatePage({
-  searchParams,
+export default async function ServiceIdPage({
+  params,
 }: {
-  searchParams: Promise<{ serviceId: string }>;
+  params: Promise<{ serviceId: string }>;
 }) {
-  const { serviceId } = await searchParams;
+  const { serviceId } = await params;
+
+  const user = await getCurrentUser({ withFullUser: true });
 
   const service = await db.service.findUnique({
     where: {
@@ -52,31 +57,42 @@ export default async function DatePage({
   }
 
   return (
-    <div>
-      <Card className="mx-auto max-w-4xl">
-        <CardHeader>
-          <CardTitle>{service.name}</CardTitle>
-          {service.description && (
-            <CardDescription>{service.description}</CardDescription>
-          )}
-          <CardDescription>
-            Czas trwania:{" "}
-            <span className="text-foreground font-bold">
-              {service.durationInMinutes} min.
-            </span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <MeetingForm validTimes={validTimes} serviceId={service.id} />
-        </CardContent>
-      </Card>
-    </div>
+    <section className="my-16 lg:my-28">
+      <MaxWidthWrapper className="space-y-12 lg:space-y-16">
+        <SectionHeadingSubtitle
+          title="Data i godzina wizyty"
+          titleClassName="sm:text-nowrap"
+        />
+        <div>
+          <Card className="mx-auto max-w-4xl">
+            <CardHeader>
+              <CardTitle className="text-2xl">{service.name}</CardTitle>
+              {service.description && (
+                <CardDescription>{service.description}</CardDescription>
+              )}
+              <CardDescription>
+                Czas trwania:{" "}
+                <span className="text-foreground font-bold">
+                  {service.durationInMinutes} min.
+                </span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <MeetingForm
+                validTimes={validTimes}
+                serviceId={service.id}
+                user={user}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </MaxWidthWrapper>
+    </section>
   );
 }
 
 function NoTimeSlots({
   service,
-  //   calendarUser,
 }: {
   service: { id: string; name: string; description: string | null };
 }) {

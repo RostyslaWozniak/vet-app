@@ -30,9 +30,8 @@ export function ContactSection() {
     <section className="my-20">
       <MaxWidthWrapper className="space-y-12">
         <SectionHeadingSubtitle
-          title="Kontakt"
-          subtitle="Masz jakieś pytanie lub interesuje cie oferta specjalna? Skontaktuj się z nami!"
-          titleClassName="text-nowrap"
+          title="Skontaktuj się z nami"
+          titleClassName="sm:text-nowrap"
         />
         <div className="!text-secondary-foreground flex flex-col gap-8 lg:grid-cols-2 lg:flex-row">
           <PawsBgCard className="bg-secondary isolate min-h-110 w-full lg:w-1/2">

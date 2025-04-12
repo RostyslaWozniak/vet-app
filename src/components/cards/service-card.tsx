@@ -20,9 +20,9 @@ export function ServiceCard({ service }: ServiceCardProps) {
   return (
     <Card
       key={service.id}
-      className="hover:border-primary/50 overflow-hidden border-2 border-transparent pb-0 transition-all duration-200 hover:shadow-md"
+      className="hover:border-primary/50 overflow-hidden border-2 border-transparent transition-all duration-200 hover:shadow-md"
     >
-      <CardHeader className="pb-3">
+      <CardHeader>
         <div className="flex items-start justify-between">
           <CardTitle className="text-xl font-bold">
             <H3>{service.name}</H3>
@@ -34,9 +34,9 @@ export function ServiceCard({ service }: ServiceCardProps) {
           {service.description}
         </CardDescription>
       </CardContent>
-      <CardFooter className="bg-muted/30 flex justify-between border-t pb-6">
+      <CardFooter className="bg-muted/30 flex justify-between border-t">
         <div className="text-muted-foreground flex items-center text-sm">
-          <Clock className="mr-1 h-4 w-4" />
+          <Clock className="mr-1 w-4" />
           {service.durationInMinutes} min
         </div>
       </CardFooter>
