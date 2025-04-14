@@ -24,6 +24,7 @@ export default async function NewVisitPage() {
           title="Nowa wizyta"
           titleClassName="text-nowrap"
         />
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
             <Link
