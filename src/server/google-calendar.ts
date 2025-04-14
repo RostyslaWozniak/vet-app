@@ -2,7 +2,6 @@ import "use-server";
 import { google } from "googleapis";
 import { addMinutes, endOfDay, startOfDay } from "date-fns";
 import { db } from "./db";
-import { createGoogleOAuthClient } from "@/auth/core/oauth/google";
 import { env } from "@/env";
 
 export async function getCalendarEventTimes(

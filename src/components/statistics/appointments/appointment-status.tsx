@@ -1,7 +1,22 @@
 import { CalendarCheck, CheckCircle, Clock, XCircle } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Appointment } from "./appointments-statistics-view";
+import type { $Enums } from "@prisma/client";
+type Appointment = {
+  vetSchedule: {
+    user: {
+      name: string;
+    };
+  };
+  status: $Enums.AppointmentStatus;
+  id: string;
+  service: {
+    name: string;
+    description: string | null;
+    durationInMinutes: number;
+  };
+  startTime: Date;
+};
 
 type AppointmentStatsProps = {
   appointments: Appointment[];

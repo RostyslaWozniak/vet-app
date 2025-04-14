@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -20,7 +20,7 @@ import {
 } from "@/lib/schema/toggle-role-schema";
 // import { toggleRole } from "@/server/actions/admin/toggle-role";
 import LoadingButton from "@/components/loading-button";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 export function RolesToggleForm({
   user,
@@ -32,7 +32,7 @@ export function RolesToggleForm({
   };
   setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const router = useRouter();
+  // const router = useRouter();
   const form = useForm<ToggleRoleSchema>({
     resolver: zodResolver(toggleRoleSchema),
     defaultValues: {
@@ -43,6 +43,7 @@ export function RolesToggleForm({
 
   async function onSubmit(data: ToggleRoleSchema) {
     console.log(data);
+    setIsEditOpen(false);
     // try {
     //   const error = await toggleRole(data);
     //   if (error) {

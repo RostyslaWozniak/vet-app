@@ -7,7 +7,7 @@ export default async function SignIn({
   searchParams: Promise<{ oauthError?: string }>;
 }) {
   const { oauthError } = await searchParams;
-
+  console.log(oauthError);
   return (
     <div className="mt-16 flex justify-center">
       <FormContainer
