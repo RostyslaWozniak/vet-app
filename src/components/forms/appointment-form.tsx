@@ -36,7 +36,7 @@ import { createAppointment } from "@/server/actions/appointment";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function MeetingForm({
+export function AppointmentForm({
   validTimes,
   serviceId,
   user,
@@ -58,7 +58,6 @@ export function MeetingForm({
   });
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  // const timezone = form.watch("timezone");
   const date = form.watch("date");
   const validTimesInTimezone = validTimes.map((date) =>
     toZonedTime(date, timezone),

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { MeetingForm } from "@/components/forms/meeting-form";
+import { AppointmentForm } from "@/components/forms/appointment-form";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
 import { getCurrentUser } from "@/auth/current-user";
@@ -78,7 +78,7 @@ export default async function ServiceIdPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <MeetingForm
+              <AppointmentForm
                 validTimes={validTimes}
                 serviceId={service.id}
                 user={user}

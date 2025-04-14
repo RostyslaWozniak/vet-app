@@ -16,10 +16,13 @@ export function HomeHeroSection() {
             childrenClassName="space-y-6 lg:space-y-12"
           >
             <div className="space-y-4">
-              <H1 className="text-background max-w-2xl">
+              <H1 className="text-primary-foreground max-w-2xl">
                 Kompleksowa opieka dla Twojego zwierzaka
               </H1>
-              <Text className="text-background max-w-xl" size="subtitle">
+              <Text
+                className="text-primary-foreground max-w-xl"
+                size="subtitle"
+              >
                 Specjalistyczne usługi weterynaryjne i rezerwacja online 24/7
               </Text>
             </div>

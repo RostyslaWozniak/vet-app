@@ -4,7 +4,6 @@ import { LogOutButton } from "@/auth/components/log-out-button";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { type FullUser } from "@/auth/current-user";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +16,16 @@ import UserAvatar from "./user-avatar";
 import { Calendar, CatIcon, Lock, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
+import { api } from "@/trpc/react";
 
-export function UserButton({ user }: { user: FullUser | null }) {
+export function UserButton() {
   const pathname = usePathname();
+  const { data: user, isLoading } = api.public.user.getCurrentUser.useQuery();
   return (
     <>
-      {user ? (
+      {isLoading ? (
+        <div className="bg-background h-10 w-10 animate-pulse rounded-full" />
+      ) : user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className={cn("flex-none cursor-pointer rounded-full")}>

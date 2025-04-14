@@ -90,14 +90,16 @@ function TestimonialCard({ testimonial }: { testimonial: TestemonialType }) {
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-5 w-5 ${i < testimonial.rate ? "fill-yellow-500 text-yellow-500" : "text-gray-300"}`}
+                  className={`h-5 w-5 ${i < testimonial.rate ? "fill-yellow-500 text-yellow-500" : "text-card-foreground"}`}
                 />
               ))}
             </div>
           </div>
         </div>
         <div className="p-6">
-          <p className="mb-4 text-gray-700 italic">{testimonial.value}</p>
+          <p className="text-card-foreground mb-4 italic">
+            {testimonial.value}
+          </p>
         </div>
       </CardContent>
     </Card>

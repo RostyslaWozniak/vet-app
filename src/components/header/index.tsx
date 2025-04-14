@@ -1,4 +1,3 @@
-import { getCurrentUser } from "@/auth/current-user";
 import { UserButton } from "../user-button";
 import Link from "next/link";
 import { MaxWidthWrapper } from "../max-width-wrapper";
@@ -7,7 +6,6 @@ import { Edit } from "lucide-react";
 import { Separator } from "../ui/separator";
 
 export async function Header() {
-  const fullUser = await getCurrentUser({ withFullUser: true });
   return (
     <header className="bg-card text-card-foreground sticky top-0 z-30 h-16 w-full">
       <MaxWidthWrapper className="flex h-full items-center justify-between">
@@ -23,7 +21,7 @@ export async function Header() {
             className="bg-foreground/50 hidden min-h-8 lg:flex"
           />
           <div className="">
-            <UserButton user={fullUser} />
+            <UserButton />
           </div>
         </div>
       </MaxWidthWrapper>
