@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { AdminNav } from "./_components/admin-nav";
 import { Header } from "@/components/header";
+import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 
 export default async function AdminLayout({
   children,
@@ -14,12 +15,12 @@ export default async function AdminLayout({
   if (!user.roles.includes("ADMIN")) return notFound();
 
   return (
-    <main>
+    <main className="w-screen">
       <Header />
-      <div className="relative container mx-auto my-6 flex min-h-[calc(100vh-200px)] w-full flex-grow justify-between">
+      <MaxWidthWrapper className="relative my-6 flex min-h-[calc(100vh-200px)] w-full flex-grow justify-between">
         <AdminNav />
         <div className="relative grow">{children}</div>
-      </div>
+      </MaxWidthWrapper>
     </main>
   );
 }

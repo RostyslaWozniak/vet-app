@@ -1,14 +1,21 @@
 import { db } from "@/server/db";
-import type { $Enums } from "@prisma/client";
+import type { $Enums, Prisma } from "@prisma/client";
+import { UserQueries } from "./user.queries";
 
 export class UserRepository {
-  public static async findById(id: string) {
-    return await db.user.findUnique({ where: { id } });
+  public static async findById(id: string, select?: Prisma.UserSelect) {
+    return await db.user.findUnique({
+      where: { id },
+      select: select ?? UserQueries.selectFields,
+    });
   }
-  public static async findAllByRole(role: $Enums.Roles) {
+  public static async findAllByRole(
+    role: $Enums.Roles,
+    select?: Prisma.UserSelect,
+  ) {
     return await db.user.findMany({
       where: { roles: { has: role } },
-      select: { id: true, name: true, roles: true },
+      select: select ?? UserQueries.selectFields,
     });
   }
 }

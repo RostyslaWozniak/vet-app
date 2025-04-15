@@ -1,7 +1,7 @@
 "use client";
 
 import { SidebarNav } from "@/components/sidebar-nav";
-import { Calendar, Cat, Home, Package, Users } from "lucide-react";
+import { Cat, Home, Package, Users } from "lucide-react";
 
 const sidebarItems = [
   {
@@ -23,11 +23,6 @@ const sidebarItems = [
     href: "/admin/vets",
     label: "Weterynarze",
     icon: Cat,
-  },
-  {
-    href: "/admin/schedule",
-    label: "Grafiki",
-    icon: Calendar,
   },
 ];
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { Cell, Pie, PieChart } from "recharts";
+import { Cell, Pie, PieChart, Tooltip } from "recharts";
 
-import { ChartContainer } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import type { $Enums } from "@prisma/client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -77,6 +77,7 @@ export function AppointmentsByUserChart({
       <ChartContainer config={{}} className="h-[300px] w-full">
         <PieChart>
           <Pie
+            isAnimationActive={false}
             data={data}
             cx="50%"
             cy="50%"
@@ -85,8 +86,8 @@ export function AppointmentsByUserChart({
             paddingAngle={5}
             dataKey={activeChart}
             nameKey="name"
-            label={({ name, percent, value }) =>
-              `${name}: ${value} wizyt (${(percent * 100).toFixed(0)}%)`
+            label={({ name, percent }) =>
+              `${name}: ${(percent * 100).toFixed(0)}%`
             }
             labelLine={false}
           >
@@ -100,6 +101,7 @@ export function AppointmentsByUserChart({
               );
             })}
           </Pie>
+          <Tooltip content={<ChartTooltipContent />} />
         </PieChart>
       </ChartContainer>
     </>

@@ -7,22 +7,22 @@ import { Separator } from "../ui/separator";
 
 export async function Header() {
   return (
-    <header className="bg-card text-card-foreground sticky top-0 z-30 h-16 w-full">
+    <header className="bg-card text-card-foreground top-0 z-30 h-16 w-full md:sticky">
       <MaxWidthWrapper className="flex h-full items-center justify-between">
         <Link href="/" className="font-montserrat text-3xl font-bold">
           <span className="text-primary">Vet</span>App
         </Link>
-        <div className="flex items-center gap-4">
-          <LinkButton href="/appointments/new">
-            <Edit /> Umów wizytę
-          </LinkButton>
-          <Separator
-            orientation="vertical"
-            className="bg-foreground/50 hidden min-h-8 lg:flex"
-          />
-          <div className="">
-            <UserButton />
+        <div className="flex items-center">
+          <div className="mr-4 hidden items-center gap-4 md:flex">
+            <LinkButton href="/appointments/new">
+              <Edit /> Umów wizytę
+            </LinkButton>
+            <Separator
+              orientation="vertical"
+              className="bg-foreground/50 hidden min-h-8 lg:flex"
+            />
           </div>
+          <UserButton />
         </div>
       </MaxWidthWrapper>
     </header>

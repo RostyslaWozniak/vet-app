@@ -72,10 +72,10 @@ export function AppointmentStatusChart({
               key={`cell-${index}`}
               fill={
                 {
-                  completed: "var(--color-emerald-500)",
-                  pending: "var(--color-amber-500)",
-                  confirmed: "var(--color-cyan-500)",
-                  cancelled: "var(--color-red-500)",
+                  completed: "var(--color-completed)",
+                  pending: "var(--color-pending)",
+                  confirmed: "var(--color-confirmed)",
+                  cancelled: "var(--color-cancelled)",
                 }[entry.status]
               }
             />

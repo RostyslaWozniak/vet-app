@@ -6,7 +6,8 @@ import { OAuthButtons } from "./oauth-buttons";
 type FormContainerProps = {
   children: React.ReactNode;
   title: string;
-  description: string;
+  description?: string;
+  error?: string;
   href: string;
   imageUrl: string;
   linkLabel: string;
@@ -16,20 +17,31 @@ export const FormContainer = ({
   children,
   title,
   description,
+  error,
   href,
   imageUrl,
   linkLabel,
 }: FormContainerProps) => {
   return (
-    <div className="bg-card flex h-[40rem] w-full max-w-[64rem] overflow-hidden rounded-2xl md:shadow-2xl">
+    <div className="md:bg-card flex w-full max-w-[64rem] overflow-hidden rounded-2xl md:h-[40rem] md:shadow-2xl">
       <div className="mx-auto w-full max-w-[400px] space-y-10 overflow-y-auto px-5 md:py-10">
         <div className="space-y-3">
           <h1 className="text-center text-2xl font-bold md:text-3xl">
-            {title} do <span className="text-primary">Vet App</span>
+            {title} do{" "}
+            <Link href="/" className="text-primary">
+              Vet App
+            </Link>
           </h1>
-          <p className="text-muted-foreground text-center text-sm md:text-base">
-            {description}
-          </p>
+          {description && (
+            <p className="text-muted-foreground text-center text-sm md:text-base">
+              {description}
+            </p>
+          )}
+          {error && (
+            <p className="text-destructive text-center text-sm md:text-base">
+              {error}
+            </p>
+          )}
         </div>
         <div className="space-y-5">
           <OAuthButtons />

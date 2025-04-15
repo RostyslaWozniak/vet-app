@@ -39,14 +39,13 @@ type TestemonialType = (typeof testimonials)[number];
 
 export function TestemonialsSection() {
   return (
-    <section className="my-8 space-y-8 lg:my-20 lg:space-y-14">
-      {/* <SectionHeading>Opinie naszych klientów</SectionHeading> */}
-      <MaxWidthWrapper className="space-y-12">
+    <section className="my-8 lg:my-20">
+      <MaxWidthWrapper className="space-y-4 md:space-y-14">
         <SectionHeadingSubtitle
           title="Opinie naszych klientów"
           titleClassName="sm:text-nowrap"
         />
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial, i) => (
             <MotionWrapper
               key={testimonial.id}
@@ -76,9 +75,9 @@ export function TestemonialsSection() {
 
 function TestimonialCard({ testimonial }: { testimonial: TestemonialType }) {
   return (
-    <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="h-full overflow-hidden p-4 transition-all duration-300 hover:shadow-lg md:p-6">
       <CardContent className="p-0">
-        <div className="flex items-center justify-center gap-4 px-4">
+        <div className="flex items-center justify-center gap-4">
           <img
             src={testimonial.image}
             alt={testimonial.name}
@@ -96,10 +95,8 @@ function TestimonialCard({ testimonial }: { testimonial: TestemonialType }) {
             </div>
           </div>
         </div>
-        <div className="p-6">
-          <p className="text-card-foreground mb-4 italic">
-            {testimonial.value}
-          </p>
+        <div className="p-2">
+          <p className="text-card-foreground italic">{testimonial.value}</p>
         </div>
       </CardContent>
     </Card>

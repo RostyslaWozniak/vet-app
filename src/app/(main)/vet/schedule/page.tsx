@@ -1,26 +1,41 @@
 import { getCurrentUser } from "@/auth/current-user";
+import { LinkButton } from "@/components/link-button";
+import { ScheduleCalendar } from "@/components/schelule-calendar";
 import { db } from "@/server/db";
-import { notFound } from "next/navigation";
-import { VetScheduleForm } from "./_components/vet-schedule-form";
-import { H2 } from "@/components/typography";
-import { api } from "@/trpc/server";
+import { ArrowRight } from "lucide-react";
 
 export default async function SchedulePage() {
-  const fullUser = await getCurrentUser({
-    withFullUser: true,
-    redirectIfNotFound: true,
+  const vet = await getCurrentUser({ redirectIfNotFound: true });
+  const schedule = await db.vetSchedule.findUnique({
+    where: {
+      userId: vet.id,
+    },
+    select: {
+      appointments: {
+        include: {
+          service: true,
+        },
+      },
+      availabilities: {
+        select: {
+          startTime: true,
+          endTime: true,
+          dayOfWeek: true,
+        },
+      },
+    },
   });
-  const vet = await db.user.findUnique({ where: { id: fullUser.id } });
-  if (!vet) return notFound();
-
-  const schedule = await api.vet.schedule.getSchedule();
 
   return (
     <div>
-      <div className="space-y-8">
-        <H2>Twoja dostępność</H2>
-        <VetScheduleForm schedule={schedule ?? undefined} />
-      </div>
+      <LinkButton href="/vet/schedule/availability" variant="link">
+        Edytuj dostępność
+        <ArrowRight />
+      </LinkButton>
+      <ScheduleCalendar
+        appointments={schedule?.appointments ?? []}
+        availabilities={schedule?.availabilities ?? []}
+      />
     </div>
   );
 }

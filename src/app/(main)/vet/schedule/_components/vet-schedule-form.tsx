@@ -22,6 +22,7 @@ import { mapDayOfWeek } from "@/lib/schema/map-day-of-week";
 import LoadingButton from "@/components/loading-button";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 
 type Availability = {
   startTime: string;
@@ -36,6 +37,7 @@ export function VetScheduleForm({
     availabilities: Availability[];
   };
 }) {
+  const router = useRouter();
   const form = useForm<ScheduleFormSchema>({
     resolver: zodResolver(scheduleFormSchema),
     defaultValues: {
@@ -60,6 +62,7 @@ export function VetScheduleForm({
     api.vet.schedule.saveSchedule.useMutation({
       onSuccess: () => {
         toast.success("Grafik został zapisany");
+        router.push("/vet/schedule");
       },
       onError: () => {
         toast.error(

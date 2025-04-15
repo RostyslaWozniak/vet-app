@@ -4,18 +4,25 @@ import { cn } from "@/lib/utils";
 export function SectionHeadingSubtitle({
   title,
   subtitle,
+  className,
   titleClassName,
   subtitleClassName,
 }: {
   title: string;
   subtitle?: string;
+  className?: string;
   titleClassName?: string;
   subtitleClassName?: string;
 }) {
   return (
-    <div className="flex w-full flex-col items-center gap-4 md:flex-row">
-      <H2 className={cn(titleClassName)}>{title}</H2>
-      <div className="bg-paws-primary h-full min-h-10.5 w-full flex-grow"></div>
+    <div
+      className={cn(
+        "flex w-full flex-col gap-4 md:flex-row md:items-center",
+        className,
+      )}
+    >
+      <H2 className={cn("text-start text-2xl", titleClassName)}>{title}</H2>
+      <div className="bg-paws-primary hidden h-full min-h-10.5 w-full flex-grow md:block"></div>
       {subtitle && (
         <Text className={cn(subtitleClassName)} size="subtitle">
           {subtitle}

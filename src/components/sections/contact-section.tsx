@@ -27,8 +27,8 @@ const contactLinks = [
 
 export function ContactSection() {
   return (
-    <section className="my-20">
-      <MaxWidthWrapper className="space-y-12">
+    <section className="my-6 md:my-20">
+      <MaxWidthWrapper className="space-y-4 md:space-y-12">
         <SectionHeadingSubtitle
           title="Skontaktuj się z nami"
           titleClassName="sm:text-nowrap"

@@ -13,20 +13,30 @@ import type {
 } from "../types/appointment";
 import { CALENDAR_CONFIG } from "../configs/config";
 import { pl } from "date-fns/locale";
+import type { AvailabilityType } from "../types/availability";
+import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 
 /**
  * Generates an array of week days starting from the given date
  */
-export function generateWeekDays(currentDate: Date): WeekDayInfo[] {
+export function generateWeekDays(
+  currentDate: Date,
+  availabilities: AvailabilityType[],
+): WeekDayInfo[] {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Start from Monday
 
   return Array.from({ length: 7 }).map((_, index) => {
     const date = addDays(weekStart, index);
+    const availability = availabilities.find(
+      (availability) => availability.dayOfWeek === DAYS_OF_WEEK_IN_ORDER[index],
+    );
     return {
       name: format(date, "EEEE", { locale: pl }),
       date: date,
       dayOfMonth: format(date, "d"),
       isToday: isSameDay(date, new Date()),
+      startTime: availability?.startTime,
+      endTime: availability?.endTime,
     };
   });
 }
@@ -34,13 +44,14 @@ export function generateWeekDays(currentDate: Date): WeekDayInfo[] {
 /**
  * Generates time slot labels for the calendar
  */
-export function generateTimeSlots(): string[] {
-  return Array.from({ length: CALENDAR_CONFIG.VISIBLE_HOURS }).map(
-    (_, hourIndex) => {
-      const hour = CALENDAR_CONFIG.START_HOUR + hourIndex;
-      return `${hour.toString().padStart(2, "0")}:00`;
-    },
-  );
+export function generateTimeSlots(
+  visibleHours: number,
+  startHour: number,
+): string[] {
+  return Array.from({ length: visibleHours }).map((_, hourIndex) => {
+    const hour = startHour + hourIndex;
+    return `${hour.toString().padStart(2, "0")}:00`;
+  });
 }
 
 /**

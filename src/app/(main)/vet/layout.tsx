@@ -11,7 +11,7 @@ export default async function VetLayout({ children }: { children: ReactNode }) {
     return notFound();
 
   return (
-    <main>
+    <main className="w-screen">
       <Header />
       <div className="relative container mx-auto my-6 flex min-h-[calc(100vh-200px)] w-full flex-grow justify-between">
         <VetNav />

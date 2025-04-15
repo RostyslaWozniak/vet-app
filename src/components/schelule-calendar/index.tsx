@@ -5,7 +5,6 @@ import { format, addDays, isSameDay } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import AppointmentDialog from "./appointment-dialog";
 
 // Import types, config and helpers
@@ -19,12 +18,19 @@ import {
   formatTimeRange,
 } from "./utils/helpers";
 import { pl } from "date-fns/locale";
+import { $Enums } from "@prisma/client";
+import { mapAppointmentStatus } from "@/lib/map-appointment-status";
+import type { AvailabilityType } from "./types/availability";
 
 type ScheduleProps = {
   appointments: AppointmentType[];
+  availabilities: AvailabilityType[];
 };
 
-export function ScheduleCalendar({ appointments }: ScheduleProps) {
+export function ScheduleCalendar({
+  appointments,
+  availabilities,
+}: ScheduleProps) {
   // State management
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedAppointment, setSelectedAppointment] =
@@ -37,10 +43,20 @@ export function ScheduleCalendar({ appointments }: ScheduleProps) {
   const navigateToNextWeek = () => setCurrentDate(addDays(currentDate, 7));
 
   // Generate week days data
-  const weekDays = useMemo(() => generateWeekDays(currentDate), [currentDate]);
+  const weekDays = useMemo(
+    () => generateWeekDays(currentDate, availabilities),
+    [currentDate, availabilities],
+  );
 
   // Generate time slots
-  const timeSlots = useMemo(() => generateTimeSlots(), []);
+  const timeSlots = useMemo(
+    () =>
+      generateTimeSlots(
+        CALENDAR_CONFIG.VISIBLE_HOURS,
+        CALENDAR_CONFIG.START_HOUR,
+      ),
+    [],
+  );
 
   // Filter appointments for the current week view
   const visibleAppointments = useMemo(
@@ -49,10 +65,10 @@ export function ScheduleCalendar({ appointments }: ScheduleProps) {
   );
 
   return (
-    <div className="relative h-full min-h-screen w-full p-4">
-      <Card className="h-full min-h-[calc(100vh-2rem)]">
+    <div className="relative h-full w-full p-4">
+      <div className="h-full min-h-[calc(100vh-2rem)]">
         {/* Calendar Header */}
-        <CardHeader className="border-b p-4">
+        <div className="p-4">
           <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
             {/* Navigation Controls */}
             <div className="flex items-center gap-4">
@@ -83,6 +99,20 @@ export function ScheduleCalendar({ appointments }: ScheduleProps) {
                 })}
               </h2>
             </div>
+            <div className="flex items-center gap-4">
+              {Object.values($Enums.AppointmentStatus).map((status) => {
+                const { color, label } = mapAppointmentStatus(status);
+
+                return (
+                  <div key={status} className="flex items-center gap-2">
+                    <div
+                      className={cn("aspect-square h-4 rounded-full", color)}
+                    />
+                    <p className="font-semibold">{label}</p>
+                  </div>
+                );
+              })}
+            </div>
 
             {/* Cell Size Controls */}
             <div className="flex items-center gap-4">
@@ -101,11 +131,11 @@ export function ScheduleCalendar({ appointments }: ScheduleProps) {
               </div>
             </div>
           </div>
-        </CardHeader>
+        </div>
 
         {/* Calendar Content */}
-        <CardContent className="flex-1 p-4">
-          <div className="h-full rounded-xl border shadow-sm">
+        <div className="flex-1 p-4">
+          <div className="h-full overflow-hidden rounded-xl border shadow-sm">
             {/* Week Header Row */}
             <WeekHeaderRow weekDays={weekDays} />
 
@@ -124,8 +154,8 @@ export function ScheduleCalendar({ appointments }: ScheduleProps) {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Appointment Details Dialog */}
       <AppointmentDialog
@@ -142,7 +172,12 @@ function WeekHeaderRow({ weekDays }: { weekDays: WeekDayInfo[] }) {
     <div className="grid grid-cols-[50px_repeat(7,1fr)] border-b">
       <div className="text-muted-foreground p-2 text-center text-xs"></div>
       {weekDays.map((day, index) => (
-        <div key={index} className={cn("border-l p-2 text-center")}>
+        <div
+          key={index}
+          className={cn("border-l p-2 text-center", {
+            "bg-muted": !day.startTime && !day.endTime,
+          })}
+        >
           <div className="text-muted-foreground text-xs font-medium">
             {day.name}
           </div>
@@ -153,6 +188,9 @@ function WeekHeaderRow({ weekDays }: { weekDays: WeekDayInfo[] }) {
             )}
           >
             {day.dayOfMonth}
+          </div>
+          <div>
+            {day.startTime} - {day.endTime}
           </div>
         </div>
       ))}
@@ -202,7 +240,12 @@ function DayColumns({
   return (
     <>
       {weekDays.map((day, dayIndex) => (
-        <div key={dayIndex} className="relative border-l">
+        <div
+          key={dayIndex}
+          className={cn("relative border-l", {
+            "bg-muted": !day.startTime && !day.endTime,
+          })}
+        >
           {/* Time Grid Cells */}
           {timeSlots.map((_, timeIndex) => (
             <div
@@ -223,12 +266,14 @@ function DayColumns({
                 new Date(appointment.endTime),
                 cellSize,
               );
+              const { color } = mapAppointmentStatus(appointment.status);
 
               return (
                 <div
                   key={index}
                   className={cn(
-                    "bg-primary/80 hover:bg-primary border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-all duration-200 ease-in-out hover:z-20 hover:scale-105 hover:shadow-lg",
+                    "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-all duration-200 ease-in-out hover:z-20 hover:scale-105 hover:shadow-lg",
+                    color,
                   )}
                   style={{
                     ...positionStyle,

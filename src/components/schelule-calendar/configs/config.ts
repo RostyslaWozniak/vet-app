@@ -13,7 +13,7 @@ export const CALENDAR_CONFIG = {
   // Number of hours visible in the calendar
   VISIBLE_HOURS: 8,
   // Starting hour of the calendar (24-hour format)
-  START_HOUR: 8, // 8 AM
+  START_HOUR: 9,
   // Time column width in pixels
   TIME_COLUMN_WIDTH: 50,
 };

@@ -23,6 +23,8 @@ export type WeekDayInfo = {
   date: Date;
   dayOfMonth: string;
   isToday: boolean;
+  startTime: string | undefined;
+  endTime: string | undefined;
 };
 
 export type AppointmentPosition = {

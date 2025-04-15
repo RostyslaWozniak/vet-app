@@ -1,13 +1,15 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { Settings, User as UserIcon } from "lucide-react";
+import { ArrowRight, Settings, User as UserIcon } from "lucide-react";
 import { VetsTableSettings } from "./vets-table-settings";
-import type { User } from "@prisma/client";
 import { mapRoles } from "@/lib/map-roles";
-import Link from "next/link";
+import { LinkButton } from "@/components/link-button";
+import type { RouterOutputs } from "@/trpc/react";
 
-export const vetsTableColumns: ColumnDef<User>[] = [
+export const vetsTableColumns: ColumnDef<
+  RouterOutputs["admin"]["user"]["getAllByRole"][number]
+>[] = [
   {
     accessorKey: "photo",
     header: "Zdjecie",
@@ -47,9 +49,13 @@ export const vetsTableColumns: ColumnDef<User>[] = [
     accessorKey: "schedule",
     header: "Grafik",
     cell: ({ row }) => (
-      <Link href={`/admin/schedule/${row.original.id}`} className="w-100">
-        Zobacz grafik
-      </Link>
+      <LinkButton
+        href={`/admin/vets/${row.original.id}/schedule`}
+        className="w-min"
+        variant="link"
+      >
+        Zobacz grafik <ArrowRight />
+      </LinkButton>
     ),
   },
 

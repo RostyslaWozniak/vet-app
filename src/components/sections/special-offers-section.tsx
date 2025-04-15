@@ -36,29 +36,36 @@ const data = [
 
 export function SpecialOffersSection() {
   return (
-    <section className="space-y-12 md:space-y-28">
-      <SectionHeading>Specjalne oferty</SectionHeading>
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-2.5 md:grid-cols-2">
-        {data.map((item, i) => (
-          <MotionWrapper
-            key={item.id}
-            transition={{ duration: 0.3, delay: i * 0.2 }}
-            className="flex items-start gap-2"
-          >
-            <div>
-              <CheckCircle className="stroke-primary h-8 w-8" />
-            </div>
-            <div>
-              <H3 className="text-2xl font-bold">{item.title}</H3>
-              <Text className="mt-2">{item.description}</Text>
-            </div>
-          </MotionWrapper>
-        ))}
-      </div>
+    <section className="space-y-4 md:space-y-28">
+      <MaxWidthWrapper>
+        <div className="bg-card text-card-foreground space-y-4 rounded-xl p-2">
+          <SectionHeading>Oferty specjalne</SectionHeading>
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-2.5 md:grid-cols-2">
+            {data.map((item, i) => (
+              <MotionWrapper
+                key={item.id}
+                transition={{ duration: 0.3, delay: i * 0.2 }}
+                className="flex items-start gap-2"
+              >
+                <div>
+                  <CheckCircle className="stroke-primary h-9 w-8" />
+                </div>
+                <div>
+                  <H3 className="text-card-foreground/80 text-xl font-bold">
+                    {item.title}
+                  </H3>
+                  <Text className="mt-2">{item.description}</Text>
+                </div>
+              </MotionWrapper>
+            ))}
+          </div>
+        </div>
+      </MaxWidthWrapper>
       <MaxWidthWrapper className="max-w-6xl">
         <MotionWrapper
           viewport={{ once: true, margin: "0px 0px -200px 0px" }}
           transition={{ duration: 0.5 }}
+          className="pt-4"
         >
           <PawsBgCard className="bg-secondary relative overflow-visible !p-0">
             <div className="flex flex-col-reverse py-8 md:grid md:grid-cols-9">

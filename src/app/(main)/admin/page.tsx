@@ -57,7 +57,7 @@ export default async function AdminDashboardPage({
   );
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex w-full flex-col">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="flex items-center justify-between space-y-2">
           <div className="flex items-center space-x-2">
