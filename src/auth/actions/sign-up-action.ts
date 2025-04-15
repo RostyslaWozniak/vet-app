@@ -6,7 +6,6 @@ import { signUpSchema } from "../schemas/sign-up-schema";
 import { db } from "@/server/db";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 export async function signUp(unsafeData: unknown) {
   const validData = signUpSchema.safeParse(unsafeData);
@@ -43,7 +42,5 @@ export async function signUp(unsafeData: unknown) {
     console.log(err);
     return "Failed to create user";
   }
-  revalidatePath("/me");
-
-  redirect("/me");
+  redirect("/profile");
 }

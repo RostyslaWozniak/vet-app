@@ -1,6 +1,8 @@
 import { createTRPCRouter } from "../../trpc";
-import { userRouter } from "./user";
+import { publicAppointmentsRouter } from "./appointments";
+import { publicUserRouter } from "./user";
 
 export const privateRouter = createTRPCRouter({
-  user: userRouter,
+  user: publicUserRouter,
+  appointments: publicAppointmentsRouter,
 });

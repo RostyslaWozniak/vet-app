@@ -54,21 +54,20 @@ export async function getValidTimesFromSchedule(
   const groupedAvailabilities = groupBy(availabilities, (a) => a.dayOfWeek);
 
   const appointments = await db.appointment.findMany({
-    // where: {
-    //   serviceId: service.id,
-    // },
+    where: {
+      status: {
+        not: "CANCELLED",
+      },
+    },
     select: {
       startTime: true,
       endTime: true,
     },
   });
   const appointmentTimes = appointments.map((a) => ({
-    // start: "2025-04-10T10:30:00.000Z",
-    // end: "2025-04-10T10:45:00.000Z",
     start: a.startTime,
     end: a.endTime,
   }));
-  console.log({ appointmentTimes });
 
   return timesInOrder.filter((intervalDate) => {
     const availabilities = getAvailabilities(

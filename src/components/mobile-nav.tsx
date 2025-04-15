@@ -13,11 +13,11 @@ export function MobileNav() {
         <Link href="/">
           <MobileNavItem label="Start" icon={HomeIcon} />
         </Link>
-        <Link href="/appointments">
+        <Link href="/profile/appointments">
           <MobileNavItem label="Wizyty" icon={Calendar} />
         </Link>
-        <Link href="/me">
-          <MobileNavItem label="Profile" icon={User} />
+        <Link href="/profile">
+          <MobileNavItem label="Profil" icon={User} />
         </Link>
 
         <Link href="/appointments/new">

@@ -77,7 +77,7 @@ export const DialogWrapper = ({
         </Dialog>
       ) : (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
-          <DrawerContent>
+          <DrawerContent className="px-2.5">
             <DrawerHeader className="text-left">
               <DrawerTitle>{title}</DrawerTitle>
               <DrawerDescription>{description}</DrawerDescription>

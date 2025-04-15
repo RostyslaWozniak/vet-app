@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getOAuthClient } from "../core/oauth/base";
 import type { OAuthProvider } from "../core/oauth/providers";
-import { revalidatePath } from "next/cache";
 
 export async function signIn(unsafeData: unknown) {
   const { success, error, data } =
@@ -47,8 +46,7 @@ export async function signIn(unsafeData: unknown) {
     ? "/admin"
     : user.roles.includes("VET")
       ? "/vet"
-      : "/me";
+      : "/profile";
 
-  revalidatePath(afterLoginRedirectUrl);
   redirect(afterLoginRedirectUrl);
 }

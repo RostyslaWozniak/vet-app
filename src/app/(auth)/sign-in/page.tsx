@@ -3,6 +3,7 @@ import { SignInForm } from "@/auth/components/sign-in-form";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileNav } from "@/components/mobile-nav";
+import { Suspense } from "react";
 
 export default async function SignIn({
   searchParams,
@@ -14,20 +15,22 @@ export default async function SignIn({
   return (
     <div className="flex h-full flex-grow flex-col">
       <Header />
-      <main className="my-4 flex-grow lg:my-20">
-        <div className="my-24 flex justify-center md:my-0">
-          <FormContainer
-            title="Logowanie"
-            description="Zaloguj się do swojego konta"
-            error={oauthError}
-            linkLabel="Nie masz jeszcze konta? Zarejestruj się!"
-            href={`/sign-up`}
-            imageUrl="/sign-in.jpg"
-          >
-            <SignInForm />
-          </FormContainer>
-        </div>
-      </main>
+      <Suspense fallback={<div className="min-h-[40rem]">Loading...</div>}>
+        <main className="my-4 flex-grow lg:my-20">
+          <div className="my-24 flex justify-center md:my-0">
+            <FormContainer
+              title="Logowanie"
+              description="Zaloguj się do swojego konta"
+              error={oauthError}
+              linkLabel="Nie masz jeszcze konta? Zarejestruj się!"
+              href={`/sign-up`}
+              imageUrl="/sign-in.jpg"
+            >
+              <SignInForm />
+            </FormContainer>
+          </div>
+        </main>
+      </Suspense>
       <MobileNav />
       <Footer />
     </div>

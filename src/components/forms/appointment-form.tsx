@@ -72,7 +72,7 @@ export function AppointmentForm({
       }
 
       toast.success("Pomyślnie zapisano wizytę.");
-      router.push(user ? "/appointments" : "/");
+      router.push(user ? "/profile/appointments" : "/");
     } catch {
       toast.error("Wystąpił błąd. Spróbuj ponownie.");
     }
