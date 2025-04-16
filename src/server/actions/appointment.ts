@@ -22,14 +22,11 @@ export async function createAppointment(unsafeData: AppointmentActionSchema) {
     },
   });
   if (!service) return "Brak usługi";
-  // console.log({ data });
 
   const startDate = data.startTime; // Appointment's start time
   const endDate = new Date(
     data.startTime.getTime() + service.durationInMinutes * 60000,
   ); // Appointment's end time
-
-  console.log({ startDate, endDate });
 
   const availabilities = await db.vetScheduleAvailability.findMany({
     where: {

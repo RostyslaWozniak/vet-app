@@ -66,8 +66,11 @@ export async function getValidTimesFromSchedule(
   });
 
   const appointmentTimes = appointments.map((a) => ({
-    start: a.startTime,
-    end: a.endTime,
+    start: a.startTime.toISOString(),
+    end: a.endTime.toISOString(),
+    // start:
+    //   env.NODE_ENV === "production" ? a.startTime.toISOString() : a.startTime,
+    // end: env.NODE_ENV === "production" ? a.endTime.toISOString() : a.endTime,
   }));
 
   return timesInOrder.filter((intervalDate) => {

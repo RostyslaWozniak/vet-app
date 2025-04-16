@@ -55,7 +55,7 @@ export default async function ServiceIdPage({
   if (validTimes.length === 0) {
     return <NoTimeSlots service={service} />;
   }
-  console.error({ validTimes });
+
   return (
     <section className="my-16 lg:my-28">
       <MaxWidthWrapper className="space-y-12 lg:space-y-16">
