@@ -1,12 +1,9 @@
-import { startOfDay } from "date-fns";
+// import { startOfDay } from "date-fns";
 import { z } from "zod";
-import { fromZonedTime } from "date-fns-tz";
+// import { fromZonedTime } from "date-fns-tz";
 
 const appointmentSchemaBase = z.object({
-  startTime: z
-    .date()
-    .min(fromZonedTime(new Date(), "Europe/Warsaw"), "Required"),
-
+  startTime: z.date(),
   guestEmail: z.string().email().min(1, "Required"),
   guestName: z.string().min(1, "Required"),
   guestNotes: z.string().optional(),
@@ -14,12 +11,11 @@ const appointmentSchemaBase = z.object({
 
 export const appointmentFromSchema = z
   .object({
-    date: z
-      .date()
-      .min(
-        startOfDay(fromZonedTime(new Date(), "Europe/Warsaw")),
-        "Must be in the future",
-      ),
+    date: z.date(),
+    // .min(
+    //   startOfDay(fromZonedTime(new Date(), "Europe/Warsaw")),
+    //   "Must be in the future",
+    // ),
   })
   .merge(appointmentSchemaBase);
 

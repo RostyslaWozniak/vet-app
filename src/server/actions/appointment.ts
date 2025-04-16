@@ -10,10 +10,12 @@ import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 
 export async function createAppointment(unsafeData: AppointmentActionSchema) {
-  const { data, success } = appointmentActionSchema.safeParse(unsafeData);
+  const { data, success, error } =
+    appointmentActionSchema.safeParse(unsafeData);
 
   if (!success) {
-    return "Bład walidacji";
+    console.log(error);
+    return "Błąd walidacji";
   }
 
   const service = await db.service.findUnique({
