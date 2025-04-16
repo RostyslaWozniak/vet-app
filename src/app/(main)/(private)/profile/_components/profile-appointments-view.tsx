@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import type { RouterOutputs } from "@/trpc/react";
 import { CancelAppointmentButton } from "./cancel-appointment-button";
 import { pl } from "date-fns/locale";
+import { formatTimeRange } from "@/components/schelule-calendar/utils/helpers";
 
 export function ProfileAppointmentsView({
   appointments,
@@ -50,8 +51,11 @@ export function ProfileAppointmentsView({
               </div>
               <div className="text-muted-foreground flex items-center text-xs">
                 <Clock className="mr-2 h-3 w-3" />
-                {format(startDate, "HH:mm", { locale: pl })} -{" "}
-                {format(endDate, "HH:mm", { locale: pl })}
+
+                {formatTimeRange(
+                  new Date(appointment.startTime),
+                  new Date(appointment.endTime),
+                )}
               </div>
             </div>
 
