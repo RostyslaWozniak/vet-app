@@ -14,7 +14,7 @@ import { Input } from "../ui/input";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { toZonedTime } from "date-fns-tz";
+// import { toZonedTime } from "date-fns-tz";
 import {
   Select,
   SelectContent,
@@ -56,12 +56,12 @@ export function AppointmentForm({
       guestEmail: user?.email ?? "",
     },
   });
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const date = form.watch("date");
-  const validTimesInTimezone = validTimes.map((date) =>
-    toZonedTime(date, timezone),
-  );
+  // const validTimesInTimezone = validTimes.map((date) =>
+  //   toZonedTime(date, timezone),
+  // );
 
   async function onSubmit(values: AppointmentFormSchema) {
     try {
@@ -122,9 +122,7 @@ export function AppointmentForm({
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date: string | number | Date) =>
-                        !validTimesInTimezone.some((time) =>
-                          isSameDay(date, time),
-                        )
+                        !validTimes.some((time) => isSameDay(date, time))
                       }
                       initialFocus
                     />
@@ -141,7 +139,7 @@ export function AppointmentForm({
               <FormItem className="flex-1">
                 <FormLabel>Godzina*</FormLabel>
                 <Select
-                  disabled={date == null || timezone == null}
+                  disabled={date == null}
                   onValueChange={(value) =>
                     field.onChange(new Date(Date.parse(value)))
                   }
@@ -151,7 +149,7 @@ export function AppointmentForm({
                     <SelectTrigger>
                       <SelectValue
                         placeholder={
-                          date == null || timezone == null
+                          date == null
                             ? "Wybierz najpierw datę"
                             : "Wybierz godzinę"
                         }
@@ -159,7 +157,7 @@ export function AppointmentForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {validTimesInTimezone
+                    {validTimes
                       .filter((time) => isSameDay(time, date))
                       .map((time) => (
                         <SelectItem

@@ -35,7 +35,6 @@ export class VetScheduleService {
         });
       }
     }
-    console.error("vetScheduleId", vetScheduleId);
   }
 
   public static async getByUserId(userId: string) {
