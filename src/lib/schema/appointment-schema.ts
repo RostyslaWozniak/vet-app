@@ -2,7 +2,8 @@ import { startOfDay } from "date-fns";
 import { z } from "zod";
 
 const appointmentSchemaBase = z.object({
-  startTime: z.date().min(new Date()),
+  // startTime: z.date().min(new Date()),
+  startTime: z.date(),
   guestEmail: z.string().email().min(1, "Required"),
   guestName: z.string().min(1, "Required"),
   guestNotes: z.string().optional(),

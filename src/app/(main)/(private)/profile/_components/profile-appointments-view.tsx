@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import type { RouterOutputs } from "@/trpc/react";
 import { CancelAppointmentButton } from "./cancel-appointment-button";
+import { pl } from "date-fns/locale";
 
 export function ProfileAppointmentsView({
   appointments,
@@ -45,11 +46,12 @@ export function ProfileAppointmentsView({
             <div className="flex flex-1 flex-col justify-center gap-y-2">
               <div className="flex items-center text-xs">
                 <Calendar className="mr-2 h-3 w-3" />
-                {format(startDate, "MMM d, yyyy")}
+                {format(startDate, "d MMMM , yyyy", { locale: pl })}
               </div>
               <div className="text-muted-foreground flex items-center text-xs">
                 <Clock className="mr-2 h-3 w-3" />
-                {format(startDate, "h:mm a")} - {format(endDate, "h:mm a")}
+                {format(startDate, "HH:mm", { locale: pl })} -{" "}
+                {format(endDate, "HH:mm", { locale: pl })}
               </div>
             </div>
 
