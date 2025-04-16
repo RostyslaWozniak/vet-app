@@ -48,6 +48,7 @@ export function AppointmentForm({
     email: string;
   } | null;
 }) {
+  console.log({ validTimes });
   const router = useRouter();
   const form = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFromSchema),

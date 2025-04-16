@@ -5,6 +5,8 @@ import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
 import { BackButton } from "@/components/back-button";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewAppointmentPage() {
   const services = await db.service.findMany({
     where: {

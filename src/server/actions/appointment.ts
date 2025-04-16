@@ -10,7 +10,6 @@ import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 
 export async function createAppointment(unsafeData: AppointmentActionSchema) {
-  console.log({ unsafeData });
   const { data, success } = appointmentActionSchema.safeParse(unsafeData);
 
   if (!success) {
