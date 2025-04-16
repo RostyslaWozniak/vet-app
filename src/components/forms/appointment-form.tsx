@@ -133,7 +133,6 @@ export function AppointmentForm({
             control={form.control}
             name="startTime"
             render={({ field }) => {
-              console.log(field.value?.getTime().toString());
               return (
                 <FormItem className="flex-1">
                   <FormLabel>Godzina*</FormLabel>

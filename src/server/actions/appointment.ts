@@ -23,9 +23,9 @@ export async function createAppointment(unsafeData: AppointmentActionSchema) {
   });
   if (!service) return "Brak usługi";
 
-  const startDate = data.startTime; // Appointment's start time
+  const startDate = new Date(data.startTime); // Appointment's start time
   const endDate = new Date(
-    data.startTime.getTime() + service.durationInMinutes * 60000,
+    startDate.getTime() + service.durationInMinutes * 60000,
   ); // Appointment's end time
 
   const availabilities = await db.vetScheduleAvailability.findMany({
@@ -57,7 +57,7 @@ export async function createAppointment(unsafeData: AppointmentActionSchema) {
   );
 
   if (!isAvailable) {
-    return "The requested time is not available.";
+    return "Niedostępny termin";
   }
 
   const currentUser = await getCurrentUser();
