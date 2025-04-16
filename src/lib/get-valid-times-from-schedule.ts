@@ -17,6 +17,7 @@ import {
 } from "date-fns";
 import { groupBy } from "./utils";
 import type { $Enums } from "@prisma/client";
+import { fromZonedTime } from "date-fns-tz";
 
 export async function getValidTimesFromSchedule(
   timesInOrder: Date[],
@@ -66,11 +67,8 @@ export async function getValidTimesFromSchedule(
   });
 
   const appointmentTimes = appointments.map((a) => ({
-    start: a.startTime.toISOString(),
-    end: a.endTime.toISOString(),
-    // start:
-    //   env.NODE_ENV === "production" ? a.startTime.toISOString() : a.startTime,
-    // end: env.NODE_ENV === "production" ? a.endTime.toISOString() : a.endTime,
+    start: a.startTime,
+    end: a.endTime,
   }));
 
   return timesInOrder.filter((intervalDate) => {
@@ -142,14 +140,30 @@ function getAvailabilities(
   if (availabilities == null) return [];
 
   return availabilities.map(({ startTime, endTime }) => {
-    const start = setMinutes(
-      setHours(date, parseInt(startTime.split(":")[0]!)),
-      parseInt(startTime.split(":")[1]!),
+    // const start = setMinutes(
+    //   setHours(date, parseInt(startTime.split(":")[0]!)),
+    //   parseInt(startTime.split(":")[1]!),
+    // );
+
+    // const end = setMinutes(
+    //   setHours(date, parseInt(endTime.split(":")[0]!)),
+    //   parseInt(endTime.split(":")[1]!),
+    // );
+
+    const start = fromZonedTime(
+      setMinutes(
+        setHours(date, parseInt(startTime.split(":")[0]!)),
+        parseInt(startTime.split(":")[1]!),
+      ),
+      "Europe/Warsaw",
     );
 
-    const end = setMinutes(
-      setHours(date, parseInt(endTime.split(":")[0]!)),
-      parseInt(endTime.split(":")[1]!),
+    const end = fromZonedTime(
+      setMinutes(
+        setHours(date, parseInt(endTime.split(":")[0]!)),
+        parseInt(endTime.split(":")[1]!),
+      ),
+      "Europe/Warsaw",
     );
     return { start, end };
   });

@@ -60,6 +60,7 @@ export function AppointmentForm({
   const date = form.watch("date");
 
   async function onSubmit(values: AppointmentFormSchema) {
+    console.log(values);
     try {
       const error = await createAppointment({ ...values, serviceId });
       if (error) {
@@ -131,44 +132,47 @@ export function AppointmentForm({
           <FormField
             control={form.control}
             name="startTime"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Godzina*</FormLabel>
-                <Select
-                  disabled={date == null}
-                  onValueChange={(value) =>
-                    field.onChange(new Date(Date.parse(value)))
-                  }
-                  defaultValue={field.value?.toISOString()}
-                >
-                  <FormControl className="w-full">
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder={
-                          date == null
-                            ? "Wybierz najpierw datę"
-                            : "Wybierz godzinę"
-                        }
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {validTimes
-                      .filter((time) => isSameDay(time, date))
-                      .map((time) => (
-                        <SelectItem
-                          key={time.toISOString()}
-                          value={time.toISOString()}
-                        >
-                          {formatTimeString(time)}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
+            render={({ field }) => {
+              console.log(field.value?.getTime().toString());
+              return (
+                <FormItem className="flex-1">
+                  <FormLabel>Godzina*</FormLabel>
+                  <Select
+                    disabled={date == null}
+                    onValueChange={(value) =>
+                      field.onChange(new Date(Date.parse(value)))
+                    }
+                    defaultValue={field.value?.toISOString()}
+                  >
+                    <FormControl className="w-full">
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={
+                            date == null
+                              ? "Wybierz najpierw datę"
+                              : "Wybierz godzinę"
+                          }
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {validTimes
+                        .filter((time) => isSameDay(time, date))
+                        .map((time) => (
+                          <SelectItem
+                            key={time?.toISOString()}
+                            value={time?.toISOString()}
+                          >
+                            {formatTimeString(time)}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
 
-                <FormMessage />
-              </FormItem>
-            )}
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
         </div>
         <div className="flex flex-col gap-4 md:flex-row md:items-start">
