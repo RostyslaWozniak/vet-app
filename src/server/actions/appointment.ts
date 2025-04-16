@@ -10,6 +10,7 @@ import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 
 export async function createAppointment(unsafeData: AppointmentActionSchema) {
+  console.log({ unsafeData });
   const { data, success } = appointmentActionSchema.safeParse(unsafeData);
 
   if (!success) {
@@ -22,11 +23,14 @@ export async function createAppointment(unsafeData: AppointmentActionSchema) {
     },
   });
   if (!service) return "Brak usługi";
+  // console.log({ data });
 
   const startDate = data.startTime; // Appointment's start time
   const endDate = new Date(
     data.startTime.getTime() + service.durationInMinutes * 60000,
   ); // Appointment's end time
+
+  console.log({ startDate, endDate });
 
   const availabilities = await db.vetScheduleAvailability.findMany({
     where: {

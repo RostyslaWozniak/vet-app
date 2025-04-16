@@ -64,6 +64,7 @@ export async function getValidTimesFromSchedule(
       endTime: true,
     },
   });
+
   const appointmentTimes = appointments.map((a) => ({
     start: a.startTime,
     end: a.endTime,
@@ -74,6 +75,7 @@ export async function getValidTimesFromSchedule(
       groupedAvailabilities,
       intervalDate,
     );
+
     const eventInterval = {
       start: intervalDate,
       end: addMinutes(intervalDate, service.durationInMinutes),

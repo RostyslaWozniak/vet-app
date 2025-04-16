@@ -56,12 +56,8 @@ export function AppointmentForm({
       guestEmail: user?.email ?? "",
     },
   });
-  // const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const date = form.watch("date");
-  // const validTimesInTimezone = validTimes.map((date) =>
-  //   toZonedTime(date, timezone),
-  // );
 
   async function onSubmit(values: AppointmentFormSchema) {
     try {
