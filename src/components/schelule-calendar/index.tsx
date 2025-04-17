@@ -25,11 +25,13 @@ import type { AvailabilityType } from "./types/availability";
 type ScheduleProps = {
   appointments: AppointmentType[];
   availabilities: AvailabilityType[];
+  timesRange: { startHour: number; visibleHours: number };
 };
 
 export function ScheduleCalendar({
   appointments,
   availabilities,
+  timesRange,
 }: ScheduleProps) {
   // State management
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -50,12 +52,8 @@ export function ScheduleCalendar({
 
   // Generate time slots
   const timeSlots = useMemo(
-    () =>
-      generateTimeSlots(
-        CALENDAR_CONFIG.VISIBLE_HOURS,
-        CALENDAR_CONFIG.START_HOUR,
-      ),
-    [],
+    () => generateTimeSlots(timesRange.visibleHours, timesRange.startHour),
+    [timesRange],
   );
 
   // Filter appointments for the current week view

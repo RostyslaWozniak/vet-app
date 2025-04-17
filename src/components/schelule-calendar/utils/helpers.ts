@@ -101,3 +101,33 @@ export function calculateAppointmentPosition(
 export function formatTimeRange(startTime: Date, endTime: Date): string {
   return `${format(startTime, "HH:mm")} - ${format(endTime, "HH:mm")}`;
 }
+
+export function getCallendarRangeHours(
+  availabilities?: { startTime: string; endTime: string }[],
+) {
+  let startTime = 24;
+  let endTime = 0;
+  if (!availabilities)
+    return {
+      startHour: startTime,
+      visibleHours: endTime - startTime + 1,
+    };
+  availabilities.forEach((availability) => {
+    const [startHour, _startMinute] = availability.startTime
+      .split(":")
+      .map(parseInt);
+    const [endHour, _endMinute] = availability.endTime.split(":").map(parseInt);
+
+    if (startHour && startHour < startTime) {
+      startTime = startHour;
+    }
+    if (endHour && endHour > endTime) {
+      endTime = endHour;
+    }
+  });
+
+  return {
+    startHour: startTime,
+    visibleHours: endTime - startTime + 1,
+  };
+}

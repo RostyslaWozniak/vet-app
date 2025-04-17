@@ -36,7 +36,10 @@ export function AppointmentStats({ appointments }: AppointmentStatsProps) {
   ).length;
   const todays = appointments.filter((app) => {
     const today = new Date().setHours(0, 0, 0, 0); // Set time to 00:00:00
-    return new Date(app.startTime).setHours(0, 0, 0, 0) === today;
+    return (
+      new Date(app.startTime).setHours(0, 0, 0, 0) === today &&
+      app.status === "CANCELLED"
+    );
   }).length;
 
   return (

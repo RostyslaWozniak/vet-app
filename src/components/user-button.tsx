@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
-import { Calendar, CatIcon, Lock, UserIcon } from "lucide-react";
+import { Calendar, CatIcon, Lock, LogIn, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
 import { api } from "@/trpc/react";
@@ -37,28 +37,18 @@ export function UserButton() {
             <DropdownMenuSeparator />
             {(user.roles.includes("CLIENT") ||
               user.roles.includes("ADMIN")) && (
-              <Link href={`/me`}>
-                <DropdownMenuItem
-                  variant={pathname.startsWith("/me") ? "active" : "default"}
-                >
-                  <UserIcon className="mr-2 size-4" />
-                  Profile
-                </DropdownMenuItem>
-              </Link>
-            )}
-            {(user.roles.includes("CLIENT") ||
-              user.roles.includes("ADMIN")) && (
-              <Link href={`/appointments`}>
+              <Link href={`/profile`}>
                 <DropdownMenuItem
                   variant={
-                    pathname.startsWith("/appointments") ? "active" : "default"
+                    pathname.startsWith("/profile") ? "active" : "default"
                   }
                 >
-                  <Calendar className="mr-2 size-4" />
-                  Wizyty
+                  <UserIcon className="mr-2 size-4" />
+                  Profil
                 </DropdownMenuItem>
               </Link>
             )}
+
             {user.roles.includes("VET") && (
               <Link href="/vet">
                 <DropdownMenuItem
@@ -87,11 +77,14 @@ export function UserButton() {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <div className="">
-          <LinkButton variant="outline" href="/sign-in">
-            Zaloguj
-          </LinkButton>
-        </div>
+        <LinkButton
+          variant="outline"
+          size="icon"
+          href="/sign-in"
+          className="p-4.75"
+        >
+          <LogIn className="min-h-5 min-w-5" />
+        </LinkButton>
       )}
     </>
   );

@@ -2,7 +2,6 @@ import { getCurrentUser } from "@/auth/current-user";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { AdminNav } from "./_components/admin-nav";
-import { Header } from "@/components/header";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 
 export default async function AdminLayout({
@@ -15,12 +14,9 @@ export default async function AdminLayout({
   if (!user.roles.includes("ADMIN")) return notFound();
 
   return (
-    <main className="w-screen">
-      <Header />
-      <MaxWidthWrapper className="relative my-6 flex min-h-[calc(100vh-200px)] w-full flex-grow justify-between">
-        <AdminNav />
-        <div className="relative grow">{children}</div>
-      </MaxWidthWrapper>
-    </main>
+    <MaxWidthWrapper className="relative -my-8 flex min-h-[calc(100vh-200px)] w-full flex-grow justify-between">
+      <AdminNav />
+      <div className="relative grow">{children}</div>
+    </MaxWidthWrapper>
   );
 }

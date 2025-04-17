@@ -5,6 +5,9 @@ import { Montserrat } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { MobileNav } from "@/components/mobile-nav";
 
 export const metadata: Metadata = {
   title: {
@@ -26,7 +29,16 @@ export default function RootLayout({
   return (
     <html lang="pl" className={`${montserrat.variable} `}>
       <body className="bg-background font-montserrat flex min-h-screen flex-col overflow-x-hidden">
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <div className="flex h-full flex-grow flex-col">
+            <Header />
+            <main className="my-4 min-h-[40rem] flex-grow lg:my-20">
+              {children}
+            </main>
+            <Footer />
+            <MobileNav />
+          </div>
+        </TRPCReactProvider>
         <Toaster position="top-center" richColors />
       </body>
     </html>

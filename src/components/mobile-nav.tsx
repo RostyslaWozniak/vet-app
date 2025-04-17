@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 
 export function MobileNav() {
   const pathname = usePathname();
-  if (pathname.startsWith("/join")) return null;
+
+  if (pathname.startsWith("/vet") || pathname.startsWith("/admin")) return null;
   return (
     <nav className="bg-primary/20 text-foreground fixed right-2 bottom-2 left-2 z-50 mx-auto max-w-[400px] rounded-full shadow-[0px_0px_20px_6px_#22D3EE20] backdrop-blur-lg md:hidden">
       <div className="grid translate-y-2 grid-cols-4">

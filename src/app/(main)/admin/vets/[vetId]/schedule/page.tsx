@@ -1,5 +1,6 @@
 import { LinkButton } from "@/components/link-button";
 import { ScheduleCalendar } from "@/components/schelule-calendar";
+import { getCallendarRangeHours } from "@/components/schelule-calendar/utils/helpers";
 import { api } from "@/trpc/server";
 import { ArrowLeft } from "lucide-react";
 
@@ -11,8 +12,12 @@ export default async function SchedulePage({
   const { vetId } = await params;
   const schedule = await api.admin.schedule.getByUserId({ userId: vetId });
 
-  if (!schedule)
-    return <ScheduleCalendar appointments={[]} availabilities={[]} />;
+  const hours = getCallendarRangeHours(schedule?.availabilities);
+
+  const appointments = schedule?.appointments.filter(
+    (appointment, _index, self) =>
+      self.findIndex((t) => t.startTime === appointment.startTime),
+  );
 
   return (
     <div>
@@ -21,8 +26,9 @@ export default async function SchedulePage({
         Powrót
       </LinkButton>
       <ScheduleCalendar
-        appointments={schedule.appointments}
-        availabilities={schedule.availabilities}
+        appointments={appointments ?? []}
+        availabilities={schedule?.availabilities ?? []}
+        timesRange={hours}
       />
     </div>
   );

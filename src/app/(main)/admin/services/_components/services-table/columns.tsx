@@ -38,7 +38,7 @@ export const columns: ColumnDef<AdminServiceGetAllDTO>[] = [
     cell: ({ row }) => (
       <>
         {row.original.description ? (
-          <p>{row.original.description}</p>
+          <p className="text-wrap">{row.original.description}</p>
         ) : (
           <Badge variant="destructive">N/A</Badge>
         )}
