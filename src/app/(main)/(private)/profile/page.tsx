@@ -1,5 +1,3 @@
-import { getCurrentUser } from "@/auth/current-user";
-import { notFound } from "next/navigation";
 import { ProfileAppointmentsView } from "./_components/profile-appointments-view";
 import { H2 } from "@/components/typography";
 import { LinkButton } from "@/components/link-button";
@@ -9,13 +7,6 @@ import { EmptyAppointments } from "./_components/empty-appointment";
 const MIN_APPPOINTMENTS_TO_SHOW = 3;
 
 export default async function ProfilePage() {
-  const user = await getCurrentUser({
-    redirectIfNotFound: true,
-  });
-
-  if (!user.roles.includes("CLIENT") && !user.roles.includes("ADMIN"))
-    return notFound();
-
   const {
     appointments: activeAppointments,
     appointmentsCount: activeAppointmentsCount,
