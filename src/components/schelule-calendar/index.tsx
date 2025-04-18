@@ -256,7 +256,7 @@ function DayColumns({
                   <div
                     key={index}
                     className={cn(
-                      "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:scale-105 hover:shadow-lg",
+                      "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:scale-[1.03] hover:shadow-lg",
 
                       color,
                     )}
