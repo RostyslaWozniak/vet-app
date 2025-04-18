@@ -38,7 +38,7 @@ export function AppointmentStats({ appointments }: AppointmentStatsProps) {
     const today = new Date().setHours(0, 0, 0, 0); // Set time to 00:00:00
     return (
       new Date(app.startTime).setHours(0, 0, 0, 0) === today &&
-      app.status === "CANCELLED"
+      app.status !== "CANCELLED"
     );
   }).length;
 
@@ -51,9 +51,12 @@ export function AppointmentStats({ appointments }: AppointmentStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{todays}</div>
-          <p className="text-muted-foreground text-xs">
-            {Math.round((todays / appointments.length) * 100)}% wszystkich wizyt
-          </p>
+          {!isNaN(Math.round((todays / appointments.length) * 100)) && (
+            <p className="text-muted-foreground text-xs">
+              {Math.round((todays / appointments.length) * 100)}% wszystkich
+              wizyt
+            </p>
+          )}
         </CardContent>
       </Card>
       <Card>
@@ -65,10 +68,12 @@ export function AppointmentStats({ appointments }: AppointmentStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{completed}</div>
-          <p className="text-muted-foreground text-xs">
-            {Math.round((completed / appointments.length) * 100)}% wszystkich
-            wizyt
-          </p>
+          {!isNaN(Math.round((completed / appointments.length) * 100)) && (
+            <p className="text-muted-foreground text-xs">
+              {Math.round((completed / appointments.length) * 100)}% wszystkich
+              wizyt
+            </p>
+          )}
         </CardContent>
       </Card>
 
@@ -94,10 +99,12 @@ export function AppointmentStats({ appointments }: AppointmentStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{cancelled}</div>
-          <p className="text-muted-foreground text-xs">
-            {Math.round((cancelled / appointments.length) * 100)}% wszystkich
-            wizyt
-          </p>
+          {!isNaN(Math.round((cancelled / appointments.length) * 100)) && (
+            <p className="text-muted-foreground text-xs">
+              {Math.round((cancelled / appointments.length) * 100)}% wszystkich
+              wizyt
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

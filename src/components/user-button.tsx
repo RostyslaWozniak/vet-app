@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
-import { Calendar, CatIcon, Lock, LogIn, UserIcon } from "lucide-react";
+import { CatIcon, Lock, LogIn, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
 import { api } from "@/trpc/react";

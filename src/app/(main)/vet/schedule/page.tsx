@@ -1,38 +1,14 @@
-import { getCurrentUser } from "@/auth/current-user";
 import { LinkButton } from "@/components/link-button";
 import { ScheduleCalendar } from "@/components/schelule-calendar";
 import { getCallendarRangeHours } from "@/components/schelule-calendar/utils/helpers";
-import { db } from "@/server/db";
+import { api } from "@/trpc/server";
 import { ArrowRight } from "lucide-react";
 
 export default async function SchedulePage() {
-  const vet = await getCurrentUser({ redirectIfNotFound: true });
-  const schedule = await db.vetSchedule.findUnique({
-    where: {
-      userId: vet.id,
-    },
-    select: {
-      appointments: {
-        include: {
-          service: true,
-        },
-      },
-      availabilities: {
-        select: {
-          startTime: true,
-          endTime: true,
-          dayOfWeek: true,
-        },
-      },
-    },
-  });
+  const availabilities = await api.vet.availabilities.getAllOwn();
+  const appointments = await api.vet.appointments.getAllOwn();
 
-  const hours = getCallendarRangeHours(schedule?.availabilities);
-
-  const appointments = schedule?.appointments.filter(
-    (appointment, _index, self) =>
-      self.findIndex((t) => t.startTime === appointment.startTime),
-  );
+  const hours = getCallendarRangeHours(availabilities);
 
   return (
     <div>
@@ -41,8 +17,8 @@ export default async function SchedulePage() {
         <ArrowRight />
       </LinkButton>
       <ScheduleCalendar
-        appointments={appointments ?? []}
-        availabilities={schedule?.availabilities ?? []}
+        appointments={appointments}
+        availabilities={availabilities}
         timesRange={hours}
       />
     </div>

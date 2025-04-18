@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/auth/current-user";
+import MonthPicker from "@/components/custom-ui/month-picker";
 import { AppointmentStats } from "@/components/statistics/appointments/appointment-status";
 import { AppointmentStatusChart } from "@/components/statistics/appointments/appointment-status-chart";
 import {
@@ -10,9 +11,6 @@ import {
 } from "@/components/ui/card";
 import { getMonthDateRange } from "@/lib/get-month-date-range";
 import { db } from "@/server/db";
-import { format } from "date-fns";
-import { pl } from "date-fns/locale";
-import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default async function VetDashboardPage({
@@ -57,13 +55,7 @@ export default async function VetDashboardPage({
   return (
     <div className="flex min-h-screen w-full flex-col">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-        <div className="flex items-center justify-between space-y-2">
-          <div className="flex items-center space-x-2">
-            <Calendar className="h-5 w-5" />
-
-            <div>{format(new Date(), "MMM yyyy", { locale: pl })}</div>
-          </div>
-        </div>
+        <MonthPicker />
 
         <AppointmentStats appointments={appointments} />
 

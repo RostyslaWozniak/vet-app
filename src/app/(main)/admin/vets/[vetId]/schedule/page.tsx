@@ -10,14 +10,15 @@ export default async function SchedulePage({
   params: Promise<{ vetId: string }>;
 }) {
   const { vetId } = await params;
-  const schedule = await api.admin.schedule.getByUserId({ userId: vetId });
 
-  const hours = getCallendarRangeHours(schedule?.availabilities);
+  const availabilities = await api.admin.availabilities.getAllByUserId({
+    userId: vetId,
+  });
+  const appointments = await api.admin.appointments.getAllByUserId({
+    userId: vetId,
+  });
 
-  const appointments = schedule?.appointments.filter(
-    (appointment, _index, self) =>
-      self.findIndex((t) => t.startTime === appointment.startTime),
-  );
+  const hours = getCallendarRangeHours(availabilities);
 
   return (
     <div>
@@ -26,8 +27,8 @@ export default async function SchedulePage({
         Powrót
       </LinkButton>
       <ScheduleCalendar
-        appointments={appointments ?? []}
-        availabilities={schedule?.availabilities ?? []}
+        appointments={appointments}
+        availabilities={availabilities}
         timesRange={hours}
       />
     </div>

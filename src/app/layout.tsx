@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { MobileNav } from "@/components/mobile-nav";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
   title: {
@@ -30,14 +31,16 @@ export default function RootLayout({
     <html lang="pl" className={`${montserrat.variable} `}>
       <body className="bg-background font-montserrat flex min-h-screen flex-col overflow-x-hidden">
         <TRPCReactProvider>
-          <div className="flex h-full flex-grow flex-col">
-            <Header />
-            <main className="my-4 min-h-[40rem] flex-grow lg:my-20">
-              {children}
-            </main>
-            <Footer />
-            <MobileNav />
-          </div>
+          <NuqsAdapter>
+            <div className="flex h-full flex-grow flex-col">
+              <Header />
+              <main className="my-4 min-h-[40rem] flex-grow lg:my-20">
+                {children}
+              </main>
+              <Footer />
+              <MobileNav />
+            </div>
+          </NuqsAdapter>
         </TRPCReactProvider>
         <Toaster position="top-center" richColors />
       </body>

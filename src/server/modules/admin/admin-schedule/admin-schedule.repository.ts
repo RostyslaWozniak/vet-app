@@ -11,6 +11,9 @@ export class AdminScheduleRepository {
           include: {
             service: true,
           },
+          orderBy: {
+            updatedAt: "desc",
+          },
         },
         availabilities: {
           select: {

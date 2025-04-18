@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Clock, Mail, Phone, User, Calendar } from "lucide-react";
@@ -11,17 +10,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { $Enums } from "@prisma/client";
-import type { AppointmentType } from "./types/appointment";
+import type { AppointmentType } from "../types/appointment";
+import { api } from "@/trpc/react";
+import { usePathname } from "next/navigation";
+import { CancelAppointmentDialog } from "./cancel-appointment-dialog";
+import { mapAppointmentStatus } from "@/lib/map-appointment-status";
+import { UpdateAppointmentStatusDialog } from "./update-appointment-status-dialog";
 
 interface AppointmentDialogProps {
   selectedAppointment: AppointmentType | null;
@@ -32,33 +29,15 @@ interface AppointmentDialogProps {
 export default function AppointmentDialog({
   selectedAppointment,
   setSelectedAppointment,
-  onStatusChange,
 }: AppointmentDialogProps) {
-  const [status, setStatus] = useState<$Enums.AppointmentStatus | null>(
-    selectedAppointment?.status ?? null,
-  );
+  const user = api.public.user.getCurrentUser.useQuery();
+  const pathname = usePathname();
 
-  const getStatusColor = (status: $Enums.AppointmentStatus) => {
-    switch (status) {
-      case "CONFIRMED":
-        return "bg-green-100 text-green-800";
-      case "PENDING":
-        return "bg-yellow-100 text-yellow-800";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800";
-      case "COMPLETED":
-        return "bg-slate-100 text-slate-800";
-      default:
-        return "bg-slate-100 text-slate-800";
-    }
-  };
+  const isAdmin =
+    user.data?.roles.includes("ADMIN") && pathname.startsWith("/admin");
+  const isVet = user.data?.roles.includes("VET") && pathname.startsWith("/vet");
 
-  const handleStatusChange = (newStatus: $Enums.AppointmentStatus) => {
-    setStatus(newStatus);
-    if (selectedAppointment && onStatusChange) {
-      onStatusChange(selectedAppointment.id, newStatus);
-    }
-  };
+  const status = mapAppointmentStatus(selectedAppointment?.status ?? "PENDING");
 
   return (
     <Dialog
@@ -80,37 +59,29 @@ export default function AppointmentDialog({
                 <h3 className="text-lg font-semibold">
                   {selectedAppointment.service.name}
                 </h3>
-                <Badge
-                  className={cn(
-                    "border-none px-3 py-1",
-                    getStatusColor(selectedAppointment.status),
-                  )}
-                >
-                  {selectedAppointment.status}
+                <Badge className={cn("border-none px-3 py-1", status.color)}>
+                  {status.label}
                 </Badge>
               </div>
-
-              <div className="mt-2">
-                <label className="text-card-foreground text-sm font-medium">
-                  Zmień Status:
-                </label>
-                <Select
-                  value={status ?? selectedAppointment.status}
-                  onValueChange={(value) =>
-                    handleStatusChange(value as $Enums.AppointmentStatus)
-                  }
-                >
-                  <SelectTrigger className="mt-1 w-full">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-                    <SelectItem value="PENDING">Pending</SelectItem>
-                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                    <SelectItem value="COMPLETED">Completed</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {isAdmin &&
+                selectedAppointment.status !== "CANCELLED" &&
+                selectedAppointment.status !== "COMPLETED" && (
+                  <CancelAppointmentDialog
+                    appointmentId={selectedAppointment.id}
+                  />
+                )}
+              {isVet &&
+                selectedAppointment.status !== "CANCELLED" &&
+                selectedAppointment.status !== "COMPLETED" && (
+                  <UpdateAppointmentStatusDialog
+                    appointmentId={selectedAppointment.id}
+                    status={
+                      selectedAppointment.status === "PENDING"
+                        ? "CONFIRMED"
+                        : "COMPLETED"
+                    }
+                  />
+                )}
             </div>
 
             {/* Date and Time Section */}

@@ -5,7 +5,7 @@ import { format, addDays, isSameDay } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import AppointmentDialog from "./appointment-dialog";
+import AppointmentDialog from "./conponents/appointment-dialog";
 
 // Import types, config and helpers
 import type { AppointmentType, WeekDayInfo } from "./types/appointment";
@@ -270,7 +270,8 @@ function DayColumns({
                 <div
                   key={index}
                   className={cn(
-                    "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-all duration-200 ease-in-out hover:z-20 hover:scale-105 hover:shadow-lg",
+                    "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:scale-105 hover:shadow-lg",
+
                     color,
                   )}
                   style={{

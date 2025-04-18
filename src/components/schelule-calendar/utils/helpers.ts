@@ -113,10 +113,8 @@ export function getCallendarRangeHours(
       visibleHours: endTime - startTime + 1,
     };
   availabilities.forEach((availability) => {
-    const [startHour, _startMinute] = availability.startTime
-      .split(":")
-      .map(parseInt);
-    const [endHour, _endMinute] = availability.endTime.split(":").map(parseInt);
+    const [startHour] = availability.startTime.split(":").map(parseInt);
+    const [endHour] = availability.endTime.split(":").map(parseInt);
 
     if (startHour && startHour < startTime) {
       startTime = startHour;

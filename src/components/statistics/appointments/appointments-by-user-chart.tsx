@@ -28,10 +28,19 @@ type AppointmentsByUserChartProps = {
 
 const charts = [
   { name: "Wszystkie", value: "total" },
+  { name: "Dzisiaj", value: "today" },
   { name: "Zakończone", value: "completed" },
   { name: "Nadchodzące", value: "upcoming" },
   { name: "Anulowane", value: "cancelled" },
 ] as const;
+
+const COLORS = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];
 
 export function AppointmentsByUserChart({
   groupedAppointments,
@@ -46,20 +55,20 @@ export function AppointmentsByUserChart({
       completed: appointments.filter((a) => a.status === "COMPLETED").length,
       upcoming: appointments.filter(
         (a) =>
-          a.status === "CONFIRMED" ||
-          (a.status === "PENDING" && a.startTime > new Date()),
+          (a.status === "CONFIRMED" || a.status === "PENDING") &&
+          a.startTime > new Date(),
       ).length,
       cancelled: appointments.filter((a) => a.status === "CANCELLED").length,
+      today: appointments.filter((a) => {
+        const appointmentDate = new Date(a.startTime);
+        const today = new Date();
+        return (
+          appointmentDate.toDateString() === today.toDateString() &&
+          a.status !== "CANCELLED"
+        );
+      }).length,
     }),
   );
-
-  const COLORS = [
-    "var(--chart-1)",
-    "var(--chart-2)",
-    "var(--chart-3)",
-    "var(--chart-4)",
-    "var(--chart-5)",
-  ];
 
   return (
     <>
@@ -74,36 +83,44 @@ export function AppointmentsByUserChart({
           </Button>
         ))}
       </div>
-      <ChartContainer config={{}} className="h-[300px] w-full">
-        <PieChart>
-          <Pie
-            isAnimationActive={false}
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={80}
-            outerRadius={100}
-            paddingAngle={5}
-            dataKey={activeChart}
-            nameKey="name"
-            label={({ name, percent }) =>
-              `${name}: ${(percent * 100).toFixed(0)}%`
-            }
-            labelLine={false}
-          >
-            {data.map((entry, index) => {
-              console.log(entry);
-              return (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              );
-            })}
-          </Pie>
-          <Tooltip content={<ChartTooltipContent />} />
-        </PieChart>
-      </ChartContainer>
+      {data.every((item) => item[activeChart] === 0) || data.length === 0 ? (
+        <div className="flex h-[300px] w-full items-center justify-center">
+          <p className="text-muted-foreground text-sm">
+            Brak danych do wyświetlenia
+          </p>
+        </div>
+      ) : (
+        <ChartContainer config={{}} className="h-[300px] w-full">
+          <PieChart>
+            <Pie
+              isAnimationActive={false}
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={80}
+              outerRadius={100}
+              paddingAngle={5}
+              dataKey={activeChart}
+              nameKey="name"
+              label={({ name, percent }) =>
+                `${name}: ${(percent * 100).toFixed(0)}%`
+              }
+              labelLine={false}
+            >
+              {data.map((entry, index) => {
+                console.log(entry);
+                return (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                );
+              })}
+            </Pie>
+            <Tooltip content={<ChartTooltipContent />} />
+          </PieChart>
+        </ChartContainer>
+      )}
     </>
   );
 }
