@@ -12,9 +12,11 @@ import { toast } from "sonner";
 export function UpdateAppointmentStatusDialog({
   appointmentId,
   status,
+  setIsAppointmentDialogOpen,
 }: {
   appointmentId: string;
   status: "CONFIRMED" | "COMPLETED";
+  setIsAppointmentDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const router = useRouter();
   const isConfirmOperation = status === "CONFIRMED";
@@ -29,6 +31,7 @@ export function UpdateAppointmentStatusDialog({
             : "Wizyta została zakończona",
         );
         setIsOpen(false);
+        setIsAppointmentDialogOpen(false);
         router.refresh();
       },
       onError: (error) => {

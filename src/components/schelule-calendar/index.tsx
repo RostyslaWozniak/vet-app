@@ -5,9 +5,7 @@ import { format, addDays, isSameDay } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import AppointmentDialog from "./conponents/appointment-dialog";
-
-// Import types, config and helpers
+import { AppointmentDialog } from "./conponents/appointment-dialog";
 import type { AppointmentType, WeekDayInfo } from "./types/appointment";
 import { CALENDAR_CONFIG } from "./configs/config";
 import {
@@ -35,8 +33,6 @@ export function ScheduleCalendar({
 }: ScheduleProps) {
   // State management
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<AppointmentType | null>(null);
   const [cellSize, setCellSize] = useState(CALENDAR_CONFIG.DEFAULT_CELL_SIZE);
 
   // Navigation handlers
@@ -148,18 +144,11 @@ export function ScheduleCalendar({
                 timeSlots={timeSlots}
                 visibleAppointments={visibleAppointments}
                 cellSize={cellSize}
-                onAppointmentClick={setSelectedAppointment}
               />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Appointment Details Dialog */}
-      <AppointmentDialog
-        selectedAppointment={selectedAppointment}
-        setSelectedAppointment={setSelectedAppointment}
-      />
     </div>
   );
 }
@@ -225,15 +214,11 @@ function DayColumns({
   timeSlots,
   visibleAppointments,
   cellSize,
-  onAppointmentClick,
 }: {
   weekDays: WeekDayInfo[];
   timeSlots: string[];
   visibleAppointments: AppointmentType[];
   cellSize: number;
-  onAppointmentClick: React.Dispatch<
-    React.SetStateAction<AppointmentType | null>
-  >;
 }) {
   return (
     <>
@@ -267,28 +252,29 @@ function DayColumns({
               const { color } = mapAppointmentStatus(appointment.status);
 
               return (
-                <div
-                  key={index}
-                  className={cn(
-                    "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:scale-105 hover:shadow-lg",
+                <AppointmentDialog key={index} appointment={appointment}>
+                  <div
+                    key={index}
+                    className={cn(
+                      "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:scale-105 hover:shadow-lg",
 
-                    color,
-                  )}
-                  style={{
-                    ...positionStyle,
-                    left: "4px",
-                    right: "4px",
-                  }}
-                  onClick={() => onAppointmentClick(appointment)}
-                >
-                  <div>
-                    {formatTimeRange(
-                      new Date(appointment.startTime),
-                      new Date(appointment.endTime),
+                      color,
                     )}
+                    style={{
+                      ...positionStyle,
+                      left: "4px",
+                      right: "4px",
+                    }}
+                  >
+                    <div>
+                      {formatTimeRange(
+                        new Date(appointment.startTime),
+                        new Date(appointment.endTime),
+                      )}
+                    </div>
+                    <div>{appointment.contactName}</div>
                   </div>
-                  <div>{appointment.contactName}</div>
-                </div>
+                </AppointmentDialog>
               );
             })}
         </div>

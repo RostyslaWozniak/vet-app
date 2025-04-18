@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import ProfileHeader from "./_components/profile-header";
 import { getCurrentUser } from "@/auth/current-user";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
-import { PrivateSessionProvider } from "./session-provider";
+import { SessionProvider } from "../../../session-provider";
 import { notFound } from "next/navigation";
 
 export default async function PrivateLayout({
@@ -19,11 +19,11 @@ export default async function PrivateLayout({
     return notFound();
 
   return (
-    <PrivateSessionProvider user={user}>
+    <SessionProvider user={user}>
       <MaxWidthWrapper className="max-w-[1000px]">
         <ProfileHeader user={user} />
         <div className="relative mt-8 min-h-60">{children}</div>
       </MaxWidthWrapper>
-    </PrivateSessionProvider>
+    </SessionProvider>
   );
 }

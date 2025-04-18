@@ -10,8 +10,10 @@ import { toast } from "sonner";
 
 export function CancelAppointmentDialog({
   appointmentId,
+  setIsAppointmentDialogOpen,
 }: {
   appointmentId: string;
+  setIsAppointmentDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const router = useRouter();
 
@@ -21,6 +23,7 @@ export function CancelAppointmentDialog({
       onSuccess: () => {
         toast.success("Wizyta została anulowana");
         setIsOpen(false);
+        setIsAppointmentDialogOpen(false);
         router.refresh();
       },
       onError: (error) => {
