@@ -20,7 +20,7 @@ const getInputObjectSchema = z
     orderBy: "startTime",
   });
 
-export const publicAppointmentsRouter = createTRPCRouter({
+export const privateAppointmentsRouter = createTRPCRouter({
   getAll: privateProcedure
     .input(getInputObjectSchema)
     .query(async ({ ctx, input }) => {

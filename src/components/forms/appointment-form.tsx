@@ -32,9 +32,10 @@ import {
   appointmentFromSchema,
   type AppointmentFormSchema,
 } from "@/lib/schema/appointment-schema";
-import { createAppointment } from "@/server/actions/appointment";
+// import { createAppointment } from "@/server/actions/appointment";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
 export function AppointmentForm({
   validTimes,
@@ -49,6 +50,17 @@ export function AppointmentForm({
   } | null;
 }) {
   const router = useRouter();
+
+  const { mutate } = api.public.appointments.create.useMutation({
+    onSuccess: () => {
+      toast.success("Pomyślnie zapisano wizytę.");
+      router.push(user ? "/profile/appointments" : "/");
+    },
+    onError: ({ message }) => {
+      toast.error(message);
+    },
+  });
+
   const form = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFromSchema),
     defaultValues: {
@@ -60,16 +72,12 @@ export function AppointmentForm({
   const date = form.watch("date");
 
   async function onSubmit(values: AppointmentFormSchema) {
-    console.log(values);
     try {
-      const error = await createAppointment({ ...values, serviceId });
-      if (error) {
-        toast.error(error);
-        return;
-      }
-
-      toast.success("Pomyślnie zapisano wizytę.");
-      router.push(user ? "/profile/appointments" : "/");
+      mutate({
+        ...values,
+        startTime: values.startTime.toString(),
+        serviceId,
+      });
     } catch {
       toast.error("Wystąpił błąd. Spróbuj ponownie.");
     }
@@ -141,7 +149,7 @@ export function AppointmentForm({
                     onValueChange={(value) =>
                       field.onChange(new Date(Date.parse(value)))
                     }
-                    defaultValue={field.value?.toISOString()}
+                    defaultValue={field.value?.toString()}
                   >
                     <FormControl className="w-full">
                       <SelectTrigger>
@@ -159,8 +167,8 @@ export function AppointmentForm({
                         .filter((time) => isSameDay(time, date))
                         .map((time) => (
                           <SelectItem
-                            key={time?.toISOString()}
-                            value={time?.toISOString()}
+                            key={time?.toString()}
+                            value={time?.toString()}
                           >
                             {formatTimeString(time)}
                           </SelectItem>
