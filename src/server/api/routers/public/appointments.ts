@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 import { getCurrentUser } from "@/auth/current-user";
+import { env } from "@/env";
 
 export const publicAppointmentsRouter = createTRPCRouter({
   create: publicProcedure
@@ -129,9 +130,12 @@ function checkIfIsDateAvailable(
   // Get the day of the week for startDate (0 = Sunday, 1 = Monday, etc.)
   const appointmentDayOfWeek = startDate.getDay();
 
+  const deployedHoursDelay = env.NODE_ENV === "production" ? 2 : 0;
   // Convert startTime and endTime of appointment into minutes since midnight
-  const startMinutes = startDate.getHours() * 60 + startDate.getMinutes();
-  const endMinutes = endDate.getHours() * 60 + endDate.getMinutes();
+  const startMinutes =
+    (startDate.getHours() - deployedHoursDelay) * 60 + startDate.getMinutes();
+  const endMinutes =
+    (endDate.getHours() - deployedHoursDelay) * 60 + endDate.getMinutes();
   const vetScheduleIds: string[] = [];
 
   const isAvailable = availabilities.some((availability) => {
