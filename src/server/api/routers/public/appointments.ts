@@ -133,9 +133,9 @@ function checkIfIsDateAvailable(
   const deployedHoursDelay = env.NODE_ENV === "production" ? 2 : 0;
   // Convert startTime and endTime of appointment into minutes since midnight
   const startMinutes =
-    (startDate.getHours() - deployedHoursDelay) * 60 + startDate.getMinutes();
+    (startDate.getHours() + deployedHoursDelay) * 60 + startDate.getMinutes();
   const endMinutes =
-    (endDate.getHours() - deployedHoursDelay) * 60 + endDate.getMinutes();
+    (endDate.getHours() + deployedHoursDelay) * 60 + endDate.getMinutes();
   const vetScheduleIds: string[] = [];
 
   const isAvailable = availabilities.some((availability) => {
