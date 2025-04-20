@@ -4,10 +4,11 @@ import Link from "next/link";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
 import { BackButton } from "@/components/back-button";
-import { SearchAppointmentForm } from "@/components/forms/search-appointment-form";
+import { SearchForm } from "@/components/forms/search-form";
 import { cn } from "@/lib/utils";
 import { COLORS } from "@/lib/constants";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Frown } from "lucide-react";
+import { EmptyResult } from "@/components/empty-result";
 
 export const dynamic = "force-dynamic";
 
@@ -61,28 +62,36 @@ export default async function NewAppointmentPage({
             titleClassName="text-nowrap text-center"
           />
           <div className="w-full sm:min-w-100">
-            <SearchAppointmentForm
+            <SearchForm
               searchKey="search"
               path="/appointments"
               inputPlaceholder="Wyszukaj usługę..."
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, i) => (
-            <Link
-              href={`/appointments/new/${service.id}`}
-              key={service.id}
-              className="grid"
-            >
-              <ServiceCard
-                service={service}
-                showDescription
-                className={cn("grid", COLORS[i % COLORS.length])}
-              />
-            </Link>
-          ))}
-        </div>
+        {services.length > 0 ? (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((service, i) => (
+              <Link
+                href={`/appointments/new/${service.id}`}
+                key={service.id}
+                className="grid"
+              >
+                <ServiceCard
+                  service={service}
+                  showDescription
+                  className={cn("grid", COLORS[i % COLORS.length])}
+                />
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <EmptyResult
+            title="Brak usług"
+            icon={Frown}
+            description="Usługi nie zostały znalezione. Spróbuj wyszukać za pomocą innych kryteriów."
+          />
+        )}
       </MaxWidthWrapper>
     </section>
   );

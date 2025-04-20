@@ -2,9 +2,11 @@ import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
 import { ProfileAppointmentsView } from "../_components/profile-appointments-view";
 import { api } from "@/trpc/server";
-import { EmptyAppointments } from "../_components/empty-appointment";
 import type { $Enums } from "@prisma/client";
 import { mapAppointmentStatus } from "@/lib/map-appointment-status";
+import { EmptyResult } from "@/components/empty-result";
+import { Calendar, Plus } from "lucide-react";
+import { LinkButton } from "@/components/link-button";
 
 export default async function ProfileAppointmentsPage() {
   const { appointments, appointmentsCount } =
@@ -24,10 +26,28 @@ export default async function ProfileAppointmentsPage() {
           />
 
           {appointmentsCount === 0 ? (
-            <EmptyAppointments />
+            <EmptyResult
+              icon={Calendar}
+              title="Jeszcze nie masz żadnych wizyt"
+              description="Po umówieniu wizyty pojawią się one tutaj. Możesz łatwo śledzić i
+        zarządzać wszystkimi swoimi wizytami w jednym miejscu."
+              actionButton={
+                <LinkButton href="/appointments/new" className="my-4 w-full">
+                  <Plus /> Umów wizytę
+                </LinkButton>
+              }
+            />
           ) : appointments.length === 0 ? (
-            <EmptyAppointments
-              message={`Brak wizyt ze statusem ${mapAppointmentStatus(status as $Enums.AppointmentStatus).label}`}
+            <EmptyResult
+              icon={Calendar}
+              title={`Brak wizyt ze statusem ${mapAppointmentStatus(status as $Enums.AppointmentStatus).label}`}
+              description="Po umówieniu wizyty pojawią się one tutaj. Możesz łatwo śledzić i
+                      zarządzać wszystkimi swoimi wizytami w jednym miejscu."
+              actionButton={
+                <LinkButton href="/appointments/new" className="my-4 w-full">
+                  <Plus /> Umów wizytę
+                </LinkButton>
+              }
             />
           ) : (
             <ProfileAppointmentsView appointments={appointments} />

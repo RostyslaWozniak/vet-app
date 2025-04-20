@@ -2,7 +2,8 @@ import { ProfileAppointmentsView } from "./_components/profile-appointments-view
 import { H2 } from "@/components/typography";
 import { LinkButton } from "@/components/link-button";
 import { api } from "@/trpc/server";
-import { EmptyAppointments } from "./_components/empty-appointment";
+import { EmptyResult } from "@/components/empty-result";
+import { Calendar, Plus } from "lucide-react";
 
 const MIN_APPPOINTMENTS_TO_SHOW = 3;
 
@@ -15,7 +16,19 @@ export default async function ProfilePage() {
   });
 
   if (activeAppointmentsCount === 0) {
-    return <EmptyAppointments message="Brak aktywnych wizyt" />;
+    return (
+      <EmptyResult
+        icon={Calendar}
+        title="Brak aktywnych wizyt"
+        description="Po umówieniu wizyty pojawią się one tutaj. Możesz łatwo śledzić i
+        zarządzać wszystkimi swoimi wizytami w jednym miejscu."
+        actionButton={
+          <LinkButton href="/appointments/new" className="my-4 w-full">
+            <Plus /> Umów wizytę
+          </LinkButton>
+        }
+      />
+    );
   }
 
   return (
@@ -24,7 +37,17 @@ export default async function ProfilePage() {
         Moje aktywne wizyty
       </H2>
       {activeAppointmentsCount === 0 ? (
-        <EmptyAppointments />
+        <EmptyResult
+          icon={Calendar}
+          title="Jeszcze nie masz żadnych wizyt"
+          description="Po umówieniu wizyty pojawią się one tutaj. Możesz łatwo śledzić i
+        zarządzać wszystkimi swoimi wizytami w jednym miejscu."
+          actionButton={
+            <LinkButton href="/appointments/new" className="my-4 w-full">
+              <Plus /> Umów wizytę
+            </LinkButton>
+          }
+        />
       ) : (
         <ProfileAppointmentsView appointments={activeAppointments} />
       )}
