@@ -19,8 +19,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AppointmentForm } from "@/components/forms/appointment-form";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
-import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
 import { getCurrentUser } from "@/auth/current-user";
+import { BackButton } from "@/components/back-button";
+import { ArrowLeft } from "lucide-react";
 
 export default async function ServiceIdPage({
   params,
@@ -57,12 +58,11 @@ export default async function ServiceIdPage({
   }
 
   return (
-    <section className="my-16 lg:my-28">
-      <MaxWidthWrapper className="space-y-12 lg:space-y-16">
-        <SectionHeadingSubtitle
-          title="Data i godzina wizyty"
-          titleClassName="sm:text-nowrap"
-        />
+    <section>
+      <MaxWidthWrapper className="space-y-4 lg:space-y-16">
+        <BackButton size="sm" variant="link">
+          <ArrowLeft /> Powrót
+        </BackButton>
         <div>
           <Card className="mx-auto max-w-4xl">
             <CardHeader>

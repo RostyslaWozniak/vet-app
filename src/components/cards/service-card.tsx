@@ -12,9 +12,14 @@ import { cn } from "@/lib/utils";
 type ServiceCardProps = {
   service: RouterOutputs["public"]["services"]["getAll"][number];
   className?: string;
+  showDescription?: boolean;
 };
 
-export function ServiceCard({ service, className }: ServiceCardProps) {
+export function ServiceCard({
+  service,
+  className,
+  showDescription = false,
+}: ServiceCardProps) {
   return (
     <Card
       key={service.id}
@@ -27,9 +32,11 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         <CardTitle className="text-xl font-bold">
           <H3 className="text-lg md:text-2xl">{service.name}</H3>
         </CardTitle>
-        <CardDescription className="text-muted-foreground line-clamp-3 hidden md:block">
-          {service.description}
-        </CardDescription>
+        {showDescription && (
+          <CardDescription className="text-muted-foreground line-clamp-3">
+            {service.description}
+          </CardDescription>
+        )}
       </CardContent>
       <div className="text-muted-foreground flex items-center text-sm">
         <Clock className="mr-1 w-4" />

@@ -116,10 +116,8 @@ model Appointment {
     serviceId String  @map("service_id")
     service   Service @relation(fields: [serviceId], references: [id])
 
-    startTime       DateTime @map("start_time")
-    endTime         DateTime @map("end_time")
-    startTimeString String   @default("") @map("start_time_string")
-    endTimeString   String   @default("") @map("end_time_string")
+    startTime DateTime @map("start_time")
+    endTime   DateTime @map("end_time")
 
     status    AppointmentStatus @default(PENDING)
     createdAt DateTime          @default(now()) @map("created_at")

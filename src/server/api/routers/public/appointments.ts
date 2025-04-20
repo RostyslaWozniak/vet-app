@@ -88,8 +88,6 @@ export const publicAppointmentsRouter = createTRPCRouter({
               serviceId: input.serviceId,
               startTime: startDate,
               endTime: endDate,
-              startTimeString: startDate.toString(),
-              endTimeString: endDate.toString(),
             },
           });
         } else {
@@ -102,8 +100,6 @@ export const publicAppointmentsRouter = createTRPCRouter({
               serviceId: input.serviceId,
               startTime: startDate,
               endTime: endDate,
-              startTimeString: startDate.toString(),
-              endTimeString: endDate.toString(),
             },
           });
         }

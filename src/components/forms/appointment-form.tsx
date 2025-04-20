@@ -11,10 +11,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import Link from "next/link";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-// import { toZonedTime } from "date-fns-tz";
 import {
   Select,
   SelectContent,
@@ -32,10 +30,10 @@ import {
   appointmentFromSchema,
   type AppointmentFormSchema,
 } from "@/lib/schema/appointment-schema";
-// import { createAppointment } from "@/server/actions/appointment";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import LoadingButton from "../loading-button";
 
 export function AppointmentForm({
   validTimes,
@@ -51,15 +49,16 @@ export function AppointmentForm({
 }) {
   const router = useRouter();
 
-  const { mutate } = api.public.appointments.create.useMutation({
-    onSuccess: () => {
-      toast.success("Pomyślnie zapisano wizytę.");
-      router.push(user ? "/profile/appointments" : "/");
-    },
-    onError: ({ message }) => {
-      toast.error(message);
-    },
-  });
+  const { mutate: createAppointment, isPending: isCreating } =
+    api.public.appointments.create.useMutation({
+      onSuccess: () => {
+        toast.success("Pomyślnie zapisano wizytę.");
+        router.push(user ? "/profile/appointments" : "/");
+      },
+      onError: ({ message }) => {
+        toast.error(message);
+      },
+    });
 
   const form = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFromSchema),
@@ -72,15 +71,11 @@ export function AppointmentForm({
   const date = form.watch("date");
 
   async function onSubmit(values: AppointmentFormSchema) {
-    try {
-      mutate({
-        ...values,
-        startTime: values.startTime.toString(),
-        serviceId,
-      });
-    } catch {
-      toast.error("Wystąpił błąd. Spróbuj ponownie.");
-    }
+    createAppointment({
+      ...values,
+      startTime: values.startTime.toString(),
+      serviceId,
+    });
   }
 
   return (
@@ -224,18 +219,14 @@ export function AppointmentForm({
           )}
         />
 
-        <div className="flex justify-end gap-2">
-          <Button
-            disabled={form.formState.isSubmitting}
-            type="button"
-            asChild
-            variant="outline"
+        <div className="flex gap-2 sm:justify-end">
+          <LoadingButton
+            loading={isCreating}
+            type="submit"
+            className="sm:auto w-full"
           >
-            <Link href={`/`}>Anuluj</Link>
-          </Button>
-          <Button disabled={form.formState.isSubmitting} type="submit">
             Potwierdź
-          </Button>
+          </LoadingButton>
         </div>
       </form>
     </Form>

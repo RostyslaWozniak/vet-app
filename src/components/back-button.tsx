@@ -1,15 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button, type ButtonProps } from "./ui/button";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type BackButtonProps = {
+interface BackButtonProps extends ButtonProps {
+  children?: React.ReactNode;
   className?: string;
-};
-
-export function BackButton({ className }: BackButtonProps) {
+}
+export function BackButton({ children, className, ...props }: BackButtonProps) {
   const router = useRouter();
   return (
     <Button
@@ -17,8 +17,9 @@ export function BackButton({ className }: BackButtonProps) {
       variant="outline"
       size="icon"
       className={cn("", className)}
+      {...props}
     >
-      <ArrowLeft />
+      {children ?? <ArrowLeft />}
     </Button>
   );
 }

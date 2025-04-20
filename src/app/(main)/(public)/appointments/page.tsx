@@ -4,10 +4,17 @@ import Link from "next/link";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
 import { BackButton } from "@/components/back-button";
+import { SearchAppointmentForm } from "@/components/forms/search-appointment-form";
 
 export const dynamic = "force-dynamic";
 
-export default async function NewAppointmentPage() {
+export default async function NewAppointmentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search: string }>;
+}) {
+  const { search } = await searchParams;
+
   const services = await db.service.findMany({
     where: {
       isActive: true,
@@ -18,15 +25,49 @@ export default async function NewAppointmentPage() {
           },
         },
       },
+
+      ...(search
+        ? {
+            OR: [
+              {
+                name: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+        : {}),
+      //  OR: [
+      //   {
+      //     name: {
+      //       contains: search,
+      //       mode: "insensitive",
+      //     },
+      //   },
+      //   {
+      //     description: {
+      //       contains: search,
+      //       mode: "insensitive",
+      //     },
+      //   },
+      // ],
     },
   });
   return (
     <section>
       <MaxWidthWrapper className="space-y-6 lg:space-y-12">
+        <SearchAppointmentForm />
         <div className="relative flex items-center gap-4">
           <BackButton className="absolute md:static" />
           <SectionHeadingSubtitle
-            title="Nowa wizyta"
+            title="Naze usługi"
             titleClassName="text-nowrap text-center"
           />
         </div>
