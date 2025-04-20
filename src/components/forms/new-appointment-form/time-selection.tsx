@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { formatTimeString } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { Clock } from "lucide-react";
-import { useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 type TimeSelectionProps = {
@@ -21,10 +20,17 @@ type TimeSelectionProps = {
   >;
   times: Date[];
   disabled: boolean;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function TimeSelection({ field, times, disabled }: TimeSelectionProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function TimeSelection({
+  field,
+  times,
+  disabled,
+  isOpen,
+  setIsOpen,
+}: TimeSelectionProps) {
   return (
     <>
       <DialogWrapper
@@ -43,7 +49,10 @@ export function TimeSelection({ field, times, disabled }: TimeSelectionProps) {
               }
               key={time?.toString()}
               value={time?.toString()}
-              onClick={() => field.onChange(time)}
+              onClick={() => {
+                field.onChange(time);
+                setIsOpen(false);
+              }}
             >
               {formatTimeString(time)}
             </Button>

@@ -7,7 +7,6 @@ import { formatDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { isSameDay } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 type DateSelectionProps = {
@@ -22,10 +21,18 @@ type DateSelectionProps = {
     "date"
   >;
   validTimes: Date[];
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTimeDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function DateSelection({ field, validTimes }: DateSelectionProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function DateSelection({
+  field,
+  validTimes,
+  isOpen,
+  setIsOpen,
+  setIsTimeDialogOpen,
+}: DateSelectionProps) {
   return (
     <>
       <DialogWrapper
@@ -38,7 +45,11 @@ export function DateSelection({ field, validTimes }: DateSelectionProps) {
           className="sm:mx-auto"
           mode="single"
           selected={field.value}
-          onSelect={field.onChange}
+          onSelect={(e) => {
+            field.onChange(e);
+            setIsOpen(false);
+            setIsTimeDialogOpen(true);
+          }}
           disabled={(date: string | number | Date) =>
             !validTimes.some((time) => isSameDay(date, time))
           }

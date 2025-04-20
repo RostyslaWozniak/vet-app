@@ -23,7 +23,7 @@ import { api } from "@/trpc/react";
 import LoadingButton from "@/components/loading-button";
 import { DateSelection } from "./date-selection";
 import { TimeSelection } from "./time-selection";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function NewAppointmentForm({
   validTimes,
@@ -37,6 +37,9 @@ export function NewAppointmentForm({
     email: string;
   } | null;
 }) {
+  const [isDateDialogOpen, setIsDateDialogOpen] = useState(false);
+  const [isTimeDialogOpen, setIsTimeDialogOpen] = useState(false);
+
   const router = useRouter();
 
   const { mutate: createAppointment, isPending: isCreating } =
@@ -92,7 +95,13 @@ export function NewAppointmentForm({
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>Data*</FormLabel>
-                <DateSelection field={field} validTimes={validTimes} />
+                <DateSelection
+                  field={field}
+                  validTimes={validTimes}
+                  isOpen={isDateDialogOpen}
+                  setIsOpen={setIsDateDialogOpen}
+                  setIsTimeDialogOpen={setIsTimeDialogOpen}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -109,6 +118,8 @@ export function NewAppointmentForm({
                     field={field}
                     times={validTimes.filter((time) => isSameDay(time, date))}
                     disabled={!date}
+                    isOpen={isTimeDialogOpen}
+                    setIsOpen={setIsTimeDialogOpen}
                   />
                   <FormMessage />
                 </FormItem>
