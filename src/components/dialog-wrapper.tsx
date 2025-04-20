@@ -50,7 +50,7 @@ export const DialogWrapper = ({
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogContent
             className={cn(
-              "flex h-min max-h-[90vh] max-w-min flex-col sm:max-w-min",
+              "flex h-min max-h-[90vh] max-w-min min-w-100 flex-col sm:max-w-min",
               {
                 "overflow-y-auto": overflowYScroll,
               },
@@ -77,7 +77,7 @@ export const DialogWrapper = ({
         </Dialog>
       ) : (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
-          <DrawerContent className="px-2.5">
+          <DrawerContent className="px-2.5 pb-12">
             <DrawerHeader className="text-left">
               <DrawerTitle>{title}</DrawerTitle>
               <DrawerDescription>{description}</DrawerDescription>

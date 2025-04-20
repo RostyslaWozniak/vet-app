@@ -21,7 +21,7 @@ export function Accordion({ questions, className }: AccorderonProps) {
       {questions.map(({ question, answer }, index) => (
         <MotionWrapper
           key={index}
-          transition={{ duration: 0.5, delay: 0.2 * index }}
+          transition={{ duration: 0.5, delay: 0.1 * index }}
         >
           <PawsBgCard
             className="relative flex items-center justify-between rounded-2xl !p-0 shadow transition-all duration-300 hover:scale-101 hover:shadow-md"

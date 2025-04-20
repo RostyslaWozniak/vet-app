@@ -9,23 +9,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { formatDate, formatTimeString } from "@/lib/formatters";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../ui/calendar";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { isSameDay } from "date-fns";
-import { cn } from "@/lib/utils";
 import {
   appointmentFromSchema,
   type AppointmentFormSchema,
@@ -33,9 +20,12 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
-import LoadingButton from "../loading-button";
+import LoadingButton from "@/components/loading-button";
+import { DateSelection } from "./date-selection";
+import { TimeSelection } from "./time-selection";
+import { useEffect } from "react";
 
-export function AppointmentForm({
+export function NewAppointmentForm({
   validTimes,
   serviceId,
   user,
@@ -78,6 +68,11 @@ export function AppointmentForm({
     });
   }
 
+  useEffect(() => {
+    form.resetField("startTime");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch("date")]);
+
   return (
     <Form {...form}>
       <form
@@ -95,43 +90,14 @@ export function AppointmentForm({
             control={form.control}
             name="date"
             render={({ field }) => (
-              <Popover>
-                <FormItem className="flex-1">
-                  <FormLabel>Data*</FormLabel>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "border-foreground flex w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value ? (
-                          formatDate(field.value)
-                        ) : (
-                          <span>Wybierz datę</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date: string | number | Date) =>
-                        !validTimes.some((time) => isSameDay(date, time))
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                  <FormMessage />
-                </FormItem>
-              </Popover>
+              <FormItem className="flex-1">
+                <FormLabel>Data*</FormLabel>
+                <DateSelection field={field} validTimes={validTimes} />
+                <FormMessage />
+              </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="startTime"
@@ -139,38 +105,11 @@ export function AppointmentForm({
               return (
                 <FormItem className="flex-1">
                   <FormLabel>Godzina*</FormLabel>
-                  <Select
-                    disabled={date == null}
-                    onValueChange={(value) =>
-                      field.onChange(new Date(Date.parse(value)))
-                    }
-                    defaultValue={field.value?.toString()}
-                  >
-                    <FormControl className="w-full">
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            date == null
-                              ? "Wybierz najpierw datę"
-                              : "Wybierz godzinę"
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {validTimes
-                        .filter((time) => isSameDay(time, date))
-                        .map((time) => (
-                          <SelectItem
-                            key={time?.toString()}
-                            value={time?.toString()}
-                          >
-                            {formatTimeString(time)}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-
+                  <TimeSelection
+                    field={field}
+                    times={validTimes.filter((time) => isSameDay(time, date))}
+                    disabled={!date}
+                  />
                   <FormMessage />
                 </FormItem>
               );

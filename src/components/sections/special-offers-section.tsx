@@ -36,15 +36,15 @@ const data = [
 
 export function SpecialOffersSection() {
   return (
-    <section className="space-y-4 md:space-y-28">
+    <section className="space-y-6 md:space-y-20">
+      <SectionHeading>Oferty specjalne</SectionHeading>
       <MaxWidthWrapper>
-        <div className="bg-card text-card-foreground space-y-4 rounded-xl p-2">
-          <SectionHeading>Oferty specjalne</SectionHeading>
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-2.5 md:grid-cols-2">
+        <div className="text-card-foreground space-y-4 rounded-xl">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
             {data.map((item, i) => (
               <MotionWrapper
                 key={item.id}
-                transition={{ duration: 0.3, delay: i * 0.2 }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
                 className="flex items-start gap-2"
               >
                 <div>

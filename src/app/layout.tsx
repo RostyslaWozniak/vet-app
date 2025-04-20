@@ -34,7 +34,7 @@ export default function RootLayout({
           <NuqsAdapter>
             <div className="flex h-full flex-grow flex-col">
               <Header />
-              <main className="my-4 min-h-[40rem] flex-grow lg:my-20">
+              <main className="my-4 min-h-[40rem] flex-grow lg:my-12">
                 {children}
               </main>
               <Footer />

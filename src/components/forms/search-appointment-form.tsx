@@ -2,29 +2,36 @@
 
 import { useQueryState } from "nuqs";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { redirect, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
-export function SearchAppointmentForm() {
-  const [search, setSearch] = useQueryState("search", { defaultValue: "" });
-  const router = useRouter();
+type SearchAppointmentFormProps = {
+  path: string;
+  searchKey: string;
+  inputPlaceholder: string;
+};
 
-  //   useEffect(() => {
-  //     redirect(`/appointments?search=${search}`);
-  //   }, [search]);
+export function SearchAppointmentForm({
+  path,
+  searchKey,
+  inputPlaceholder,
+}: SearchAppointmentFormProps) {
+  const [search, setSearch] = useQueryState(`${searchKey}`, {
+    defaultValue: "",
+  });
+
+  async function hendleSearch(value: string) {
+    console.log({ searchKey, path, inputPlaceholder });
+    await setSearch(value);
+    setTimeout(() => {
+      redirect(`${path}${value ? `?${searchKey}=${value}` : ""}`);
+    }, 300);
+  }
   return (
-    <form
-      className="flex items-center gap-2"
-      onSubmit={(e) => {
-        e.preventDefault();
-        redirect(`/appointments?search=${search}`);
-      }}
-    >
+    <form className="flex items-center gap-2">
       <Input
-        placeholder="Wyszukaj wizytę..."
+        placeholder={inputPlaceholder}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => hendleSearch(e.target.value)}
       />
     </form>
   );

@@ -6,10 +6,15 @@ import { api } from "@/trpc/server";
 import { SectionHeadingSubtitle } from "./components/section-heading-subtitle";
 import { MotionWrapper } from "../motion-wrapper";
 import { H2 } from "../typography";
+import { cn } from "@/lib/utils";
+import { COLORS } from "@/lib/constants";
+import Link from "next/link";
 
 export async function ServicesSection() {
   const services = await api.public.services.getAll({
     take: 6,
+    orderBy: "updatedAt",
+    order: "asc",
   });
   return (
     <section className="mt-8 mb-4 lg:mt-40 lg:mb-12">
@@ -25,15 +30,23 @@ export async function ServicesSection() {
           {services.map((service, i) => (
             <MotionWrapper
               key={service.id}
-              transition={{ duration: 0.3, delay: i * 0.2 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
               className="grid first:col-span-5 md:!col-span-1 [&:nth-child(2n)]:col-span-4 [&:nth-child(3n)]:col-span-4 [&:nth-child(4n)]:col-span-5 [&:nth-child(5n)]:col-span-5 [&:nth-child(6n)]:col-span-4"
             >
-              <ServiceCard key={service.id} service={service} />
+              <Link href={`/appointments/new/${service.id}`} className="grid">
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  className={cn(COLORS[i % COLORS.length])}
+                  descriptionClassName="hidden md:block"
+                  showDescription
+                />
+              </Link>
             </MotionWrapper>
           ))}
         </div>
         <LinkButton
-          href="/appointments/new"
+          href="/appointments"
           size="lg"
           variant="link"
           className="md:border-primary absolute -top-2 right-0 underline-offset-0 md:static md:border-2"

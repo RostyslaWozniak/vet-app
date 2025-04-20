@@ -17,11 +17,11 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { AppointmentForm } from "@/components/forms/appointment-form";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { getCurrentUser } from "@/auth/current-user";
 import { BackButton } from "@/components/back-button";
 import { ArrowLeft } from "lucide-react";
+import { NewAppointmentForm } from "@/components/forms/new-appointment-form";
 
 export default async function ServiceIdPage({
   params,
@@ -59,14 +59,18 @@ export default async function ServiceIdPage({
 
   return (
     <section>
-      <MaxWidthWrapper className="space-y-4 lg:space-y-16">
+      <MaxWidthWrapper className="space-y-4 lg:space-y-12">
         <BackButton size="sm" variant="link">
           <ArrowLeft /> Powrót
         </BackButton>
+
         <div>
           <Card className="mx-auto max-w-4xl">
             <CardHeader>
-              <CardTitle className="text-2xl">{service.name}</CardTitle>
+              <CardTitle className="text-2xl font-normal">
+                Rezerwacja usługi <br />
+                <span className="font-bold">{service.name}</span>
+              </CardTitle>
               {service.description && (
                 <CardDescription>{service.description}</CardDescription>
               )}
@@ -78,7 +82,7 @@ export default async function ServiceIdPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <AppointmentForm
+              <NewAppointmentForm
                 validTimes={validTimes}
                 serviceId={service.id}
                 user={user}

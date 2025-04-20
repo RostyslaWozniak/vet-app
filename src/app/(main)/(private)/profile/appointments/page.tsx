@@ -10,6 +10,8 @@ export default async function ProfileAppointmentsPage() {
   const { appointments, appointmentsCount } =
     await api.private.appointments.getAll({
       take: 9,
+      orderBy: "updatedAt",
+      order: "desc",
     });
 
   return (

@@ -4,10 +4,20 @@ import Link from "next/link";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { SectionHeadingSubtitle } from "@/components/sections/components/section-heading-subtitle";
 import { BackButton } from "@/components/back-button";
+import { ArrowLeft } from "lucide-react";
+import { SearchAppointmentForm } from "@/components/forms/search-appointment-form";
+import { cn } from "@/lib/utils";
+import { COLORS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-export default async function NewAppointmentPage() {
+export default async function NewAppointmentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search: string }>;
+}) {
+  const { search } = await searchParams;
+
   const services = await db.service.findMany({
     where: {
       isActive: true,
@@ -18,20 +28,49 @@ export default async function NewAppointmentPage() {
           },
         },
       },
+
+      ...(search
+        ? {
+            OR: [
+              {
+                name: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+        : {}),
     },
   });
   return (
     <section>
-      <MaxWidthWrapper className="space-y-6 lg:space-y-12">
-        <div className="relative flex items-center gap-4">
-          <BackButton className="absolute md:static" />
+      <MaxWidthWrapper className="space-y-4 lg:space-y-12">
+        <BackButton size="sm" variant="link">
+          <ArrowLeft /> Powrót
+        </BackButton>
+
+        <div className="relative flex flex-col items-center gap-4 sm:flex-row">
           <SectionHeadingSubtitle
             title="Nowa wizyta"
             titleClassName="text-nowrap text-center"
           />
+          <div className="w-full sm:min-w-100">
+            <SearchAppointmentForm
+              searchKey="search"
+              path="/appointments/new"
+              inputPlaceholder="Wyszukaj usługę..."
+            />
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
+          {services.map((service, i) => (
             <Link
               href={`/appointments/new/${service.id}`}
               key={service.id}
@@ -39,7 +78,7 @@ export default async function NewAppointmentPage() {
             >
               <ServiceCard
                 service={service}
-                className="w-full"
+                className={cn(COLORS[i % COLORS.length])}
                 showDescription
               />
             </Link>
