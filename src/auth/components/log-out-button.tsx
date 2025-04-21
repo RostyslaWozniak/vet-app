@@ -1,21 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { logOut } from "../actions/logout-action";
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export function LogOutButton({
-  children,
-  className,
-}: {
-  children?: React.ReactNode;
-  className?: string;
-}) {
-  const router = useRouter();
-
+export function LogOutButton({ children, className, ...props }: ButtonProps) {
   async function hadnleLogOut() {
-    await logOut();
-    router.refresh();
+    const error = await logOut();
+    if (error) {
+      toast.error(error);
+    }
   }
   return (
     <Button
@@ -23,8 +17,9 @@ export function LogOutButton({
       size="icon"
       onClick={hadnleLogOut}
       className={className}
+      {...props}
     >
-      {children ?? "Wyloguj"}
+      {children}
     </Button>
   );
 }

@@ -144,6 +144,7 @@ export function ScheduleCalendar({
                 timeSlots={timeSlots}
                 visibleAppointments={visibleAppointments}
                 cellSize={cellSize}
+                dayStartHour={timesRange.startHour}
               />
             </div>
           </div>
@@ -214,11 +215,13 @@ function DayColumns({
   timeSlots,
   visibleAppointments,
   cellSize,
+  dayStartHour,
 }: {
   weekDays: WeekDayInfo[];
   timeSlots: string[];
   visibleAppointments: AppointmentType[];
   cellSize: number;
+  dayStartHour: number;
 }) {
   return (
     <>
@@ -248,6 +251,7 @@ function DayColumns({
                 new Date(appointment.startTime),
                 new Date(appointment.endTime),
                 cellSize,
+                dayStartHour,
               );
               const { color } = mapAppointmentStatus(appointment.status);
 

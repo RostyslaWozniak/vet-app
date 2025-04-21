@@ -33,6 +33,13 @@ export function DateSelection({
   setIsOpen,
   setIsTimeDialogOpen,
 }: DateSelectionProps) {
+  function handleSelectDate(value: Date | undefined) {
+    if (!value) return field.onChange(value);
+    field.onChange(value);
+    setIsOpen(false);
+    setIsTimeDialogOpen(true);
+  }
+
   return (
     <>
       <DialogWrapper
@@ -45,11 +52,7 @@ export function DateSelection({
           className="sm:mx-auto"
           mode="single"
           selected={field.value}
-          onSelect={(e) => {
-            field.onChange(e);
-            setIsOpen(false);
-            setIsTimeDialogOpen(true);
-          }}
+          onSelect={(e) => handleSelectDate(e)}
           disabled={(date: string | number | Date) =>
             !validTimes.some((time) => isSameDay(date, time))
           }

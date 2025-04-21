@@ -11,6 +11,7 @@ model User {
     id            String             @id @default(uuid())
     name          String
     email         String             @unique
+    phoneNumber   String             @default("+48 777 777 777") @map("phone_number")
     password      String?
     salt          String?
     roles         Roles[]            @default([CLIENT])

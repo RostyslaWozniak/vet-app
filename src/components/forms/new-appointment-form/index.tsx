@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { isSameDay } from "date-fns";
 import {
   appointmentFromSchema,
@@ -24,6 +23,7 @@ import LoadingButton from "@/components/loading-button";
 import { DateSelection } from "./date-selection";
 import { TimeSelection } from "./time-selection";
 import { useEffect, useState } from "react";
+import { NotesDialog } from "./notes-dialog";
 
 export function NewAppointmentForm({
   validTimes,
@@ -46,7 +46,7 @@ export function NewAppointmentForm({
     api.public.appointments.create.useMutation({
       onSuccess: () => {
         toast.success("Pomyślnie zapisano wizytę.");
-        router.push(user ? "/profile/appointments" : "/");
+        router.push(user ? "/profile" : "/");
       },
       onError: ({ message }) => {
         toast.error(message);
@@ -88,13 +88,16 @@ export function NewAppointmentForm({
           </div>
         )}
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-start">
+        <div className="flex flex-row gap-4 md:flex-row md:items-start">
           <FormField
             control={form.control}
             name="date"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Data*</FormLabel>
+                <div className="flex h-5 items-center gap-4">
+                  <FormLabel>Data*</FormLabel>
+                  <FormMessage className="text-sm" />
+                </div>
                 <DateSelection
                   field={field}
                   validTimes={validTimes}
@@ -102,7 +105,6 @@ export function NewAppointmentForm({
                   setIsOpen={setIsDateDialogOpen}
                   setIsTimeDialogOpen={setIsTimeDialogOpen}
                 />
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -113,7 +115,10 @@ export function NewAppointmentForm({
             render={({ field }) => {
               return (
                 <FormItem className="flex-1">
-                  <FormLabel>Godzina*</FormLabel>
+                  <div className="flex h-5 items-center gap-4">
+                    <FormLabel>Godzina*</FormLabel>
+                    <FormMessage className="text-sm" />
+                  </div>
                   <TimeSelection
                     field={field}
                     times={validTimes.filter((time) => isSameDay(time, date))}
@@ -121,7 +126,6 @@ export function NewAppointmentForm({
                     isOpen={isTimeDialogOpen}
                     setIsOpen={setIsTimeDialogOpen}
                   />
-                  <FormMessage />
                 </FormItem>
               );
             }}
@@ -133,11 +137,13 @@ export function NewAppointmentForm({
             name="guestName"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Imię*</FormLabel>
+                <div className="flex h-5 items-center gap-4">
+                  <FormLabel>Imię*</FormLabel>
+                  <FormMessage className="text-sm" />
+                </div>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -146,11 +152,13 @@ export function NewAppointmentForm({
             name="guestEmail"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Email*</FormLabel>
+                <div className="flex h-5 items-center gap-4">
+                  <FormLabel>Email*</FormLabel>
+                  <FormMessage className="text-sm" />
+                </div>
                 <FormControl>
                   <Input type="email" {...field} />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -160,10 +168,7 @@ export function NewAppointmentForm({
           name="guestNotes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Opis (opcjonalne)</FormLabel>
-              <FormControl>
-                <Textarea className="h-32 resize-none" {...field} />
-              </FormControl>
+              <NotesDialog field={field} />
               <FormMessage />
             </FormItem>
           )}

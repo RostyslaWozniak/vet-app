@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 
 export function formatDate(date: Date) {
-  return format(date, "yyyy-MM-dd", { locale: pl });
+  return format(date, "d MMMM yyyy", { locale: pl });
 }
 
 export function formatTimeString(date: Date) {

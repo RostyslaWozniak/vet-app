@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
-import { CatIcon, Lock, LogIn, UserIcon } from "lucide-react";
+import { CatIcon, Lock, LogIn, LogOut, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
 import { api } from "@/trpc/react";
@@ -72,7 +72,9 @@ export function UserButton() {
 
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOutButton className="w-full" />
+              <LogOutButton className="w-full">
+                Wyloguj <LogOut className="text-destructive-foreground" />
+              </LogOutButton>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

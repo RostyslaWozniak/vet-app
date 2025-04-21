@@ -11,7 +11,6 @@ import type {
   WeekDayInfo,
   AppointmentPosition,
 } from "../types/appointment";
-import { CALENDAR_CONFIG } from "../configs/config";
 import { pl } from "date-fns/locale";
 import type { AvailabilityType } from "../types/availability";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
@@ -74,6 +73,7 @@ export function calculateAppointmentPosition(
   startTime: Date,
   endTime: Date,
   cellSize: number,
+  dayStartHour: number,
 ): AppointmentPosition {
   const startHour = getHours(startTime);
   const startMinute = getMinutes(startTime);
@@ -82,7 +82,9 @@ export function calculateAppointmentPosition(
 
   // Calculate position based on time and cell size
   const minutesSinceCalendarStart =
-    (startHour - CALENDAR_CONFIG.START_HOUR) * 60 + startMinute;
+    (startHour - dayStartHour) * 60 + startMinute;
+  // const minutesSinceCalendarStart = (startHour - 10) * 60 + startMinute;
+
   const durationInMinutes =
     (endHour - startHour) * 60 + (endMinute - startMinute);
 
@@ -110,7 +112,7 @@ export function getCallendarRangeHours(
   if (!availabilities)
     return {
       startHour: startTime,
-      visibleHours: endTime - startTime + 1,
+      visibleHours: endTime - startTime,
     };
   availabilities.forEach((availability) => {
     const [startHour] = availability.startTime.split(":").map(parseInt);

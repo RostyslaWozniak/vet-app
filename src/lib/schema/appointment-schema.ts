@@ -3,19 +3,15 @@ import { z } from "zod";
 // import { fromZonedTime } from "date-fns-tz";
 
 const appointmentSchemaBase = z.object({
-  startTime: z.date(),
-  guestEmail: z.string().email().min(1, "Required"),
-  guestName: z.string().min(1, "Required"),
+  startTime: z.date({ message: "Wybierz czas" }),
+  guestEmail: z.string().min(1, "Jest wymagane").email("Nie poprawny email"),
+  guestName: z.string().min(1, "Jest wymagane"),
   guestNotes: z.string().optional(),
 });
 
 export const appointmentFromSchema = z
   .object({
-    date: z.date(),
-    // .min(
-    //   startOfDay(fromZonedTime(new Date(), "Europe/Warsaw")),
-    //   "Must be in the future",
-    // ),
+    date: z.date({ message: "Wybierz datę" }),
   })
   .merge(appointmentSchemaBase);
 

@@ -57,6 +57,13 @@ export const getCurrentUser = cache(_getCurrentUser);
 function getUserFromDb(id: string) {
   return db.user.findUnique({
     where: { id },
-    select: { id: true, email: true, roles: true, name: true, photo: true },
+    select: {
+      id: true,
+      email: true,
+      roles: true,
+      name: true,
+      phoneNumber: true,
+      photo: true,
+    },
   });
 }

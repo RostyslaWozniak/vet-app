@@ -63,6 +63,7 @@ export default async function NewAppointmentPage({
           />
           <div className="w-full sm:min-w-100">
             <SearchForm
+              autoFocus
               searchKey="search"
               path="/appointments"
               inputPlaceholder="Wyszukaj usługę..."

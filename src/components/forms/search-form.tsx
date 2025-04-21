@@ -11,12 +11,14 @@ type SearchFormProps = {
   path: string;
   searchKey: string;
   inputPlaceholder: string;
+  autoFocus?: boolean;
 };
 
 export function SearchForm({
   path,
   searchKey,
   inputPlaceholder,
+  autoFocus = false,
 }: SearchFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +36,7 @@ export function SearchForm({
   return (
     <form className="relative flex items-center gap-2">
       <Input
+        autoFocus={autoFocus}
         placeholder={inputPlaceholder}
         value={search}
         onChange={async (e) => {
