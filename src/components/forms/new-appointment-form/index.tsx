@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { isSameDay } from "date-fns";
+import { isSameDay, roundToNearestMinutes } from "date-fns";
 import {
   appointmentFromSchema,
   type AppointmentFormSchema,
@@ -24,14 +24,13 @@ import { DateSelection } from "./date-selection";
 import { TimeSelection } from "./time-selection";
 import { useEffect, useState } from "react";
 import { NotesDialog } from "./notes-dialog";
+import { getMonthRange } from "@/lib/get-month-date-range";
 
 export function NewAppointmentForm({
-  validTimes,
-  serviceId,
+  service,
   user,
 }: {
-  validTimes: Date[];
-  serviceId: string;
+  service: { id: string; durationInMinutes: number };
   user: {
     name: string;
     email: string;
@@ -39,6 +38,29 @@ export function NewAppointmentForm({
 }) {
   const [isDateDialogOpen, setIsDateDialogOpen] = useState(false);
   const [isTimeDialogOpen, setIsTimeDialogOpen] = useState(false);
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  function handleCalendarMonthChange(month: number, year: number) {
+    setMonth(month);
+    setYear(year);
+  }
+  const { startDate, endDate } = getMonthRange(
+    month.toString(),
+    year.toString(),
+  );
+
+  const nearestValidDate = roundToNearestMinutes(startDate, {
+    nearestTo: 15,
+    roundingMethod: "ceil",
+  });
+
+  const { data: validTimes, isLoading: isGettingValidTimes } =
+    api.public.schedule.getValidTimesFromSchedule.useQuery({
+      nearestValidDate,
+      endDate,
+      service,
+    });
 
   const router = useRouter();
 
@@ -67,7 +89,7 @@ export function NewAppointmentForm({
     createAppointment({
       ...values,
       startTime: values.startTime.toString(),
-      serviceId,
+      serviceId: service.id,
     });
   }
 
@@ -99,11 +121,13 @@ export function NewAppointmentForm({
                   <FormMessage className="text-sm" />
                 </div>
                 <DateSelection
+                  isGettingValidTimes={isGettingValidTimes}
                   field={field}
                   validTimes={validTimes}
                   isOpen={isDateDialogOpen}
                   setIsOpen={setIsDateDialogOpen}
                   setIsTimeDialogOpen={setIsTimeDialogOpen}
+                  handleCalendarMonthChange={handleCalendarMonthChange}
                 />
               </FormItem>
             )}
@@ -121,7 +145,7 @@ export function NewAppointmentForm({
                   </div>
                   <TimeSelection
                     field={field}
-                    times={validTimes.filter((time) => isSameDay(time, date))}
+                    times={validTimes?.filter((time) => isSameDay(time, date))}
                     disabled={!date}
                     isOpen={isTimeDialogOpen}
                     setIsOpen={setIsTimeDialogOpen}

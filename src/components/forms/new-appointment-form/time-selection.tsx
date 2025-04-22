@@ -18,7 +18,7 @@ type TimeSelectionProps = {
     },
     "startTime"
   >;
-  times: Date[];
+  times: Date[] | undefined;
   disabled: boolean;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,7 +40,7 @@ export function TimeSelection({
         setIsOpen={setIsOpen}
       >
         <div className="grid grid-cols-5 gap-2">
-          {times.map((time) => (
+          {times?.map((time) => (
             <Button
               variant={
                 time.getTime() === field.value?.getTime()

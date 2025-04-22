@@ -57,9 +57,10 @@ export function generateTimeSlots(
  * Filters appointments that fall within the current week view
  */
 export function filterAppointmentsForWeek(
-  appointments: AppointmentType[],
+  appointments: AppointmentType[] | undefined,
   weekDays: WeekDayInfo[],
 ): AppointmentType[] {
+  if (!appointments) return [];
   return appointments.filter((appointment) => {
     const appointmentDate = new Date(appointment.startTime);
     return weekDays.some((day) => isSameDay(day.date, appointmentDate));

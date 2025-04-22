@@ -1,14 +1,25 @@
 import { LinkButton } from "@/components/link-button";
 import { ScheduleCalendar } from "@/components/schelule-calendar";
 import { getCallendarRangeHours } from "@/components/schelule-calendar/utils/helpers";
+import { getWeekDateRange } from "@/lib/get-month-date-range";
 import { api } from "@/trpc/server";
 import { ArrowRight } from "lucide-react";
 
-export default async function SchedulePage() {
-  const availabilities = await api.vet.availabilities.getAllOwn();
-  const appointments = await api.vet.appointments.getAllOwn();
+export default async function SchedulePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ year: string; week: string }>;
+}) {
+  const { year, week } = await searchParams;
 
-  const hours = getCallendarRangeHours(availabilities);
+  const { start: weekStartDate, end: weekEndDate } = getWeekDateRange(
+    year,
+    week,
+  );
+
+  const availabilities = await api.vet.availabilities.getAllOwn();
+
+  const timesRange = getCallendarRangeHours(availabilities);
 
   return (
     <div>
@@ -17,9 +28,11 @@ export default async function SchedulePage() {
         <ArrowRight />
       </LinkButton>
       <ScheduleCalendar
-        appointments={appointments}
+        weekStartDate={weekStartDate}
+        weekEndDate={weekEndDate}
         availabilities={availabilities}
-        timesRange={hours}
+        timesRange={timesRange}
+        vetId={undefined}
       />
     </div>
   );

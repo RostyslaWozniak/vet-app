@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { format, addDays, isSameDay } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getISOWeek, getISOWeeksInYear, isSameDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AppointmentDialog } from "./conponents/appointment-dialog";
@@ -15,30 +14,62 @@ import {
   calculateAppointmentPosition,
   formatTimeRange,
 } from "./utils/helpers";
-import { pl } from "date-fns/locale";
 import { $Enums } from "@prisma/client";
 import { mapAppointmentStatus } from "@/lib/map-appointment-status";
 import type { AvailabilityType } from "./types/availability";
+import WeekPicker from "../custom-ui/week-picker";
+import { Loader } from "lucide-react";
+import { api } from "@/trpc/react";
+import { useQueryState } from "nuqs";
+import { getWeekDateRange } from "@/lib/get-month-date-range";
+import { getDateFromWeekAndYear } from "@/lib/formatters";
 
 type ScheduleProps = {
-  appointments: AppointmentType[];
+  weekStartDate: Date;
+  weekEndDate: Date;
+  vetId: string | undefined;
   availabilities: AvailabilityType[];
   timesRange: { startHour: number; visibleHours: number };
 };
 
 export function ScheduleCalendar({
-  appointments,
+  vetId,
   availabilities,
   timesRange,
 }: ScheduleProps) {
   // State management
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const todayDate = new Date();
+  const todayWeek = getISOWeek(todayDate);
+  const todayYear = todayDate.getFullYear();
+
+  const [week, setWeek] = useQueryState("week", {
+    defaultValue: todayWeek,
+    parse: parseInt,
+  });
+  const [year, setYear] = useQueryState("year", {
+    defaultValue: todayYear,
+    parse: parseInt,
+  });
+
   const [cellSize, setCellSize] = useState(CALENDAR_CONFIG.DEFAULT_CELL_SIZE);
 
-  // Navigation handlers
-  const navigateToToday = () => setCurrentDate(new Date());
-  const navigateToPreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
-  const navigateToNextWeek = () => setCurrentDate(addDays(currentDate, 7));
+  const currentDate = useMemo(
+    () => getDateFromWeekAndYear(week, year),
+    [week, year],
+  );
+
+  const { start, end } = getWeekDateRange(year.toString(), week.toString());
+
+  const { data: appointments, isLoading: isAppointmentsLoading } = vetId
+    ? api.admin.appointments.getAllByUserId.useQuery({
+        userId: vetId,
+        startDate: start,
+        endDate: end,
+      })
+    : api.vet.appointments.getAllOwn.useQuery({
+        startDate: start,
+        endDate: end,
+      });
 
   // Generate week days data
   const weekDays = useMemo(
@@ -58,6 +89,20 @@ export function ScheduleCalendar({
     [weekDays, appointments],
   );
 
+  // Navigation handlers
+  const navigateToToday = async () => {
+    await setWeek(todayWeek);
+    await setYear(todayYear);
+  };
+  const navigateToPreviousWeek = async () => {
+    await setWeek(week - 1 === 0 ? getISOWeeksInYear(year - 1) : week - 1);
+    await setYear(week - 1 === 0 ? year - 1 : year);
+  };
+  const navigateToNextWeek = async () => {
+    await setWeek(week + 1 === getISOWeeksInYear(year) + 1 ? 1 : week + 1);
+    await setYear(week + 1 === getISOWeeksInYear(year) + 1 ? year + 1 : year);
+  };
+
   return (
     <div className="relative h-full w-full p-4">
       <div className="h-full min-h-[calc(100vh-2rem)]">
@@ -65,34 +110,15 @@ export function ScheduleCalendar({
         <div className="p-4">
           <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
             {/* Navigation Controls */}
-            <div className="flex items-center gap-4">
-              <Button onClick={navigateToToday} variant="default">
-                Dzisiaj
-              </Button>
-              <div className="flex">
-                <Button
-                  onClick={navigateToPreviousWeek}
-                  variant="outline"
-                  size="icon"
-                  className="rounded-r-none"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </Button>
-                <Button
-                  onClick={navigateToNextWeek}
-                  variant="outline"
-                  size="icon"
-                  className="rounded-l-none"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </Button>
-              </div>
-              <h2 className="text-xl font-semibold">
-                {format(currentDate, "MMM yyyy", {
-                  locale: pl,
-                })}
-              </h2>
-            </div>
+            <WeekPicker
+              isCurrentWeek={week === todayWeek && year === todayYear}
+              navigateToNextWeek={navigateToNextWeek}
+              navigateToPreviousWeek={navigateToPreviousWeek}
+              navigateToToday={navigateToToday}
+            >
+              Tydz. {week}, {year}
+            </WeekPicker>
+
             <div className="flex items-center gap-4">
               {Object.values($Enums.AppointmentStatus).map((status) => {
                 const { color, label } = mapAppointmentStatus(status);
@@ -129,7 +155,12 @@ export function ScheduleCalendar({
 
         {/* Calendar Content */}
         <div className="flex-1 p-4">
-          <div className="h-full overflow-hidden rounded-xl border shadow-sm">
+          <div className="relative h-full overflow-hidden rounded-xl border shadow-sm">
+            {isAppointmentsLoading && (
+              <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70">
+                <Loader className="animate-spin" />
+              </div>
+            )}
             {/* Week Header Row */}
             <WeekHeaderRow weekDays={weekDays} />
 

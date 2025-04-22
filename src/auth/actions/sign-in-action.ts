@@ -17,7 +17,8 @@ export async function signIn(unsafeData: unknown) {
 
   const user = await db.user.findUnique({ where: { email: data.email } });
 
-  if (!user) return "User not found";
+  if (!user)
+    return "Nie udało się zalogować. Upewnij się, że dane są poprawne.";
 
   if (!user.password || !user.salt) {
     const oAuthUser = await db.userOAuthAccount.findFirst({
@@ -29,7 +30,7 @@ export async function signIn(unsafeData: unknown) {
       const oAuthClient = getOAuthClient(oAuthUser.provider as OAuthProvider);
       redirect(oAuthClient.createAuthUrl(await cookies()));
     }
-    return "User not found";
+    return;
   }
 
   const isCorrectPassword = await comparePasswords({
@@ -38,7 +39,8 @@ export async function signIn(unsafeData: unknown) {
     salt: user.salt,
   });
 
-  if (!isCorrectPassword) return "Incorrect password";
+  if (!isCorrectPassword)
+    return "Nie udało się zalogować. Upewnij się, że dane są poprawne.";
 
   await createUserSession(user, await cookies());
 

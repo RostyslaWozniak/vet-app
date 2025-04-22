@@ -7,12 +7,7 @@ export function createGoogleOAuthClient() {
     provider: "google",
     clientId: env.GOOGLE_AUTH_CLIENT_ID,
     clientSecret: env.GOOGLE_AUTH_CLIENT_SECRET,
-    scopes: [
-      "openid",
-      "profile",
-      "email",
-      // "https://www.googleapis.com/auth/calendar.events",
-    ],
+    scopes: ["openid", "profile", "email"],
     urls: {
       auth: "https://accounts.google.com/o/oauth2/auth",
       token: "https://oauth2.googleapis.com/token",

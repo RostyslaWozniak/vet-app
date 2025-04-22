@@ -26,9 +26,16 @@ export async function GET(
     );
   }
   const oAuthClient = getOAuthClient(provider);
+  let afterLoginRedirectUrl = "/";
   try {
     const oAuthUser = await oAuthClient.fetchUser(code, state, await cookies());
     const user = await connectUserToAccount(oAuthUser, provider);
+
+    afterLoginRedirectUrl = user.roles.includes("ADMIN")
+      ? "/admin"
+      : user.roles.includes("VET")
+        ? "/vet"
+        : "/profile";
     await createUserSession(user, await cookies());
   } catch (error) {
     console.error(error);
@@ -39,7 +46,7 @@ export async function GET(
     );
   }
 
-  redirect("/");
+  redirect(afterLoginRedirectUrl);
 }
 
 function connectUserToAccount(

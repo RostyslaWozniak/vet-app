@@ -1,17 +1,27 @@
 import { z } from "zod";
 import { adminProcedure } from "../../procedures/admin-procedure";
 import { createTRPCRouter } from "../../trpc";
-import { groupBy } from "@/lib/utils";
+import { isBefore, isAfter } from "date-fns";
 import { TRPCError } from "@trpc/server";
 
 export const adminAppointmentsRouter = createTRPCRouter({
   getAllByUserId: adminProcedure
-    .input(z.object({ userId: z.string().uuid() }))
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const appointments = await ctx.db.appointment.findMany({
         where: {
           vetSchedule: {
             userId: input.userId,
+          },
+          startTime: {
+            gte: input.startDate,
+            lte: input.endDate,
           },
         },
         orderBy: {
@@ -38,18 +48,27 @@ export const adminAppointmentsRouter = createTRPCRouter({
         },
       });
 
-      //   group by date
-      const appointmentsByDate = groupBy(appointments, (a) =>
-        a.startTime.toISOString(),
-      );
+      return appointments.filter((appointment, _, all) => {
+        if (appointment.status !== "CANCELLED") {
+          return true;
+        }
 
-      // check if the date is repeating (since some meetings can be CANCELLED and may have the same date)
-      // and return only the last meetings if there are more than 1
-      return Object.entries(appointmentsByDate)
-        .map(([_key, value]) => {
-          return value.at(-1);
-        })
-        .filter((app) => app !== undefined);
+        const { startTime: cancelledStart, endTime: cancelledEnd } =
+          appointment;
+
+        // Check if any NON-CANCELLED appointment overlaps this one
+        const overlappingActive = all.some(
+          (other) =>
+            other.status !== "CANCELLED" &&
+            // Start of other is before end of cancelled
+            isBefore(other.startTime, cancelledEnd) &&
+            // End of other is after start of cancelled
+            isAfter(other.endTime, cancelledStart),
+        );
+
+        // Exclude this canceled appointment if there's overlap
+        return !overlappingActive;
+      });
     }),
 
   cancel: adminProcedure
