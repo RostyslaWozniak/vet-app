@@ -33,7 +33,13 @@ export function NotesDialog({ field }: NotesDialogProps) {
       >
         <div className="grid">
           <Textarea {...field} className="h-32 resize-none" autoFocus />
-          <Button onClick={() => setIsOpen(false)} className="float-right mt-4">
+          <Button
+            onClick={() => {
+              setIsOpen(false);
+              scrollTo(0, 120);
+            }}
+            className="float-right mt-4"
+          >
             Ok
           </Button>
         </div>
