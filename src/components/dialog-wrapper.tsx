@@ -74,8 +74,8 @@ export const DialogWrapper = ({
           </DialogContent>
         </Dialog>
       ) : (
-        <Drawer open={isOpen} onOpenChange={setIsOpen}>
-          <DrawerContent className="px-2.5 pb-12">
+        <Drawer open={isOpen} onOpenChange={setIsOpen} disablePreventScroll>
+          <DrawerContent className={cn("px-2.5 pb-12", contentClassName)}>
             <DrawerHeader className="text-left">
               <DrawerTitle>{title}</DrawerTitle>
               <DrawerDescription>{description}</DrawerDescription>

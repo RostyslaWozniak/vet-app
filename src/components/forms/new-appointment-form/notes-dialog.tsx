@@ -29,19 +29,21 @@ export function NotesDialog({ field }: NotesDialogProps) {
         description="Dodaj opis"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        contentClassName="max-h-[80vh] sm:w-150"
+        contentClassName="max-h-[80vh] pb-0 md:pb-4"
       >
         {/* <Textarea className="h-32 resize-none" {...field} /> */}
-        <input
-          type="text"
-          {...field}
-          className="rounded-full border p-2"
-          autoFocus
-          onPointerDown={(e) => e.stopPropagation()}
-        />
-        <Button onClick={() => setIsOpen(false)} className="float-right mt-4">
-          Ok
-        </Button>
+        <div className="grid">
+          <input
+            type="text"
+            {...field}
+            className="rounded-full border p-2"
+            autoFocus
+            onPointerDown={(e) => e.stopPropagation()}
+          />
+          <Button onClick={() => setIsOpen(false)} className="float-right mt-4">
+            Ok
+          </Button>
+        </div>
       </DialogWrapper>
       <Button
         type="button"
