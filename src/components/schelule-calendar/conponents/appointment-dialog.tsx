@@ -40,7 +40,7 @@ export function AppointmentDialog({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className="scrollbar-hide flex max-h-[90vh] w-200 gap-3"
-        overflowYScroll
+        contentClassName="overflow-y-scroll"
       >
         <div className="w-full space-y-6 pt-2">
           <Badge

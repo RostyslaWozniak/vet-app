@@ -4,7 +4,7 @@ import { DialogWrapper } from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { formatTimeString } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 type TimeSelectionProps = {
@@ -22,6 +22,7 @@ type TimeSelectionProps = {
   disabled: boolean;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsDateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function TimeSelection({
@@ -30,6 +31,7 @@ export function TimeSelection({
   disabled,
   isOpen,
   setIsOpen,
+  setIsDateDialogOpen,
 }: TimeSelectionProps) {
   return (
     <>
@@ -39,6 +41,17 @@ export function TimeSelection({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       >
+        <Button
+          variant="link"
+          className="mb-3 w-min"
+          onClick={() => {
+            setIsOpen(false);
+            setIsDateDialogOpen(true);
+          }}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Wróć
+        </Button>
         <div className="grid grid-cols-5 gap-2">
           {times?.map((time) => (
             <Button

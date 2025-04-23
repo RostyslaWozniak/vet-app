@@ -53,9 +53,9 @@ export function UpdateAppointmentStatusDialog({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className="scrollbar-hide flex max-h-[90vh] w-120 flex-row-reverse gap-3"
-        overflowYScroll
         closeButton="Cofnij"
         closeButtonVariant={{ variant: "outline", size: "default" }}
+        contentClassName="overflow-y-scroll"
       >
         <LoadingButton
           loading={isAppointmentUpdating}

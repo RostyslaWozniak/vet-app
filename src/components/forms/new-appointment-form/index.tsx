@@ -36,7 +36,7 @@ export function NewAppointmentForm({
     email: string;
   } | null;
 }) {
-  const [isDateDialogOpen, setIsDateDialogOpen] = useState(false);
+  const [isDateDialogOpen, setIsDateDialogOpen] = useState(true);
   const [isTimeDialogOpen, setIsTimeDialogOpen] = useState(false);
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
@@ -149,6 +149,7 @@ export function NewAppointmentForm({
                     disabled={!date}
                     isOpen={isTimeDialogOpen}
                     setIsOpen={setIsTimeDialogOpen}
+                    setIsDateDialogOpen={setIsDateDialogOpen}
                   />
                 </FormItem>
               );

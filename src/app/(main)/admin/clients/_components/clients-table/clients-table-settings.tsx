@@ -30,7 +30,6 @@ export function ClientsTableSetings({
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
         className="scrollbar-hide flex max-h-[90vh] flex-col justify-end gap-3"
-        overflowYScroll
       >
         <RolesToggleForm user={user} setIsEditOpen={setIsEditOpen} />
       </DialogWrapper>

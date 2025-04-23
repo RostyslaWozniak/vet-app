@@ -36,7 +36,7 @@ export function SelectVetServices({
         isOpen={isSelectOpen}
         setIsOpen={setIsSelectOpen}
         className="scrollbar-hide flex max-h-[90vh] flex-col justify-end gap-3"
-        overflowYScroll
+        contentClassName="overflow-y-scroll"
       >
         <SelectVetServicesForm
           services={servicesWithChosenFlag}
