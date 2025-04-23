@@ -77,7 +77,7 @@ export function AppointmentCard({
 const getStatusBadge = (status: $Enums.AppointmentStatus) => {
   const { color, label } = mapAppointmentStatus(status);
   return (
-    <Badge variant="outline" className={cn("", color)}>
+    <Badge variant="outline" className={cn("", color.secondary)}>
       {label}
     </Badge>
   );

@@ -8,13 +8,25 @@ import { EmptyResult } from "@/components/empty-result";
 import { Calendar, Plus } from "lucide-react";
 import { LinkButton } from "@/components/link-button";
 
-export default async function ProfileAppointmentsPage() {
+const APPOINTMENTS_PER_PAGE = 20;
+
+export default async function ProfileAppointmentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page: string; status: string }>;
+}) {
+  const { page, status } = await searchParams;
+
+  const pageNumber = parseInt(page) || 1;
   const { appointments, appointmentsCount } =
     await api.private.appointments.getAll({
-      take: 9,
-      orderBy: "updatedAt",
+      take: APPOINTMENTS_PER_PAGE,
+      skip: (pageNumber - 1) * APPOINTMENTS_PER_PAGE,
+      orderBy: "startTime",
       order: "desc",
     });
+
+  console.log(appointments);
 
   return (
     <div>
@@ -40,7 +52,7 @@ export default async function ProfileAppointmentsPage() {
           ) : appointments.length === 0 ? (
             <EmptyResult
               icon={Calendar}
-              title={`Brak wizyt ze statusem ${mapAppointmentStatus(status as $Enums.AppointmentStatus).label}`}
+              title={`Brak wizyt ze statusem ${mapAppointmentStatus(status as $Enums.AppointmentStatus)?.label}`}
               description="Po umówieniu wizyty pojawią się one tutaj. Możesz łatwo śledzić i
                       zarządzać wszystkimi swoimi wizytami w jednym miejscu."
               actionButton={

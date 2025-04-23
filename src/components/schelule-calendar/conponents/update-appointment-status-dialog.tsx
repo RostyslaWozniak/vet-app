@@ -5,7 +5,6 @@ import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,8 +17,8 @@ export function UpdateAppointmentStatusDialog({
   status: "CONFIRMED" | "COMPLETED";
   setIsAppointmentDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const router = useRouter();
   const isConfirmOperation = status === "CONFIRMED";
+  const utils = api.useUtils();
 
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: updateAppointment, isPending: isAppointmentUpdating } =
@@ -32,7 +31,7 @@ export function UpdateAppointmentStatusDialog({
         );
         setIsOpen(false);
         setIsAppointmentDialogOpen(false);
-        router.refresh();
+        void utils.vet.appointments.getAllOwn.invalidate();
       },
       onError: (error) => {
         toast.error(error.message);
