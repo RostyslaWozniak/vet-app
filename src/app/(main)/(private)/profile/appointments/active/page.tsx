@@ -1,5 +1,5 @@
 import { api } from "@/trpc/server";
-import { AppointmentsSection } from "../_components/appointments-section";
+import { AppointmentsSection } from "../../_components/appointments-section";
 import { EmptyResult } from "@/components/empty-result";
 import { Calendar, Plus } from "lucide-react";
 import { LinkButton } from "@/components/link-button";
@@ -17,25 +17,25 @@ export default async function ActiveAppointmentsPage({
   const pageNumber = parseInt(page) || 1;
 
   const {
-    appointments: finishedAppointments,
-    appointmentsCount: finishedAppointmentsCount,
-  } = await api.private.appointments.getAll({
+    appointments: activeAppointments,
+    appointmentsCount: activeAppointmentsCount,
+  } = await api.private.appointments.getAllActive({
     take: APPOINTMENTS_PER_PAGE,
     skip: (pageNumber - 1) * APPOINTMENTS_PER_PAGE,
     orderBy: "startTime",
-    order: "desc",
+    order: "asc",
   });
 
   return (
     <div>
       <AppointmentsSection
-        title="Wszystkie twoje wizyty"
-        appointments={finishedAppointments}
-        appointmentsCount={finishedAppointmentsCount}
+        title="Twoje zaplanowane wizyty"
+        appointments={activeAppointments}
+        appointmentsCount={activeAppointmentsCount}
         emptyComponent={() => (
           <EmptyResult
             icon={Calendar}
-            title="Brak wizyt"
+            title="Brak nadchodzących wizyt"
             description="Po umówieniu wizyty pojawią się one tutaj. Możesz łatwo śledzić i
             zarządzać wszystkimi swoimi wizytami w jednym miejscu."
             actionButton={
@@ -46,11 +46,11 @@ export default async function ActiveAppointmentsPage({
           />
         )}
       />
-      {finishedAppointmentsCount / APPOINTMENTS_PER_PAGE > 1 && (
+      {activeAppointmentsCount / APPOINTMENTS_PER_PAGE > 1 && (
         <div className="my-8 flex justify-center md:justify-end">
           <Pagination
             totalPages={Math.ceil(
-              finishedAppointmentsCount / APPOINTMENTS_PER_PAGE,
+              activeAppointmentsCount / APPOINTMENTS_PER_PAGE,
             )}
           />
         </div>

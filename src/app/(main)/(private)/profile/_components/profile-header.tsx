@@ -27,7 +27,9 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
         </Avatar>
       </div>
       <div className="text-center md:text-start">
-        <h2 className="text-xl font-bold md:text-2xl">{user.name}</h2>
+        <h2 className="text-primary text-xl font-bold md:text-2xl">
+          {user.name}
+        </h2>
         <p className="text-muted-foreground text-sm md:text-base">
           {user.email}
         </p>

@@ -1,10 +1,8 @@
-import { ProfileAppointmentsView } from "./_components/profile-appointments-view";
-import { H2 } from "@/components/typography";
 import { LinkButton } from "@/components/link-button";
 import { api } from "@/trpc/server";
 import { EmptyResult } from "@/components/empty-result";
 import { Calendar, Clock, Plus } from "lucide-react";
-import type { RouterOutputs } from "@/trpc/react";
+import { AppointmentsSection } from "./_components/appointments-section";
 
 const MIN_APPPOINTMENTS_TO_SHOW = 1;
 
@@ -27,10 +25,10 @@ export default async function ProfilePage() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <AppointmentsSection
-        title="Aktywne wizyty"
-        moreHref="/profile/appointments"
+        title="Zaplanowane wizyty"
+        moreHref="/profile/appointments/active"
         appointments={activeAppointments}
         appointmentsCount={activeAppointmentsCount}
         emptyComponent={() => (
@@ -49,7 +47,7 @@ export default async function ProfilePage() {
       />
       <AppointmentsSection
         title="Zakończone wizyty"
-        moreHref="/profile/appointments"
+        moreHref="/profile/appointments/finished"
         appointments={finishedAppointments}
         appointmentsCount={finishedAppointmentsCount}
         emptyComponent={() => (
@@ -65,42 +63,6 @@ export default async function ProfilePage() {
           />
         )}
       />
-    </div>
-  );
-}
-
-function AppointmentsSection({
-  appointments,
-  appointmentsCount,
-  title,
-  moreHref,
-  emptyComponent: EmptyComponent,
-}: {
-  appointments: RouterOutputs["private"]["appointments"]["getAll"]["appointments"];
-  appointmentsCount: number;
-  title: string;
-  moreHref: string;
-  emptyComponent: React.ElementType;
-}) {
-  const isEmpty = appointmentsCount === 0;
-  return (
-    <div className="max-w-3xl">
-      <div className="flex items-center justify-between">
-        <H2 className="text-muted-foreground my-4 !text-start text-lg md:!text-xl">
-          {title} ({appointmentsCount})
-        </H2>
-        {!isEmpty && (
-          <LinkButton href={moreHref} variant="link" size="sm">
-            Zobacz wszystkie
-          </LinkButton>
-        )}
-      </div>
-
-      {!isEmpty ? (
-        <ProfileAppointmentsView appointments={appointments} />
-      ) : (
-        <EmptyComponent />
-      )}
     </div>
   );
 }

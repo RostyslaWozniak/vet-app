@@ -1,13 +1,13 @@
 import { api } from "@/trpc/server";
-import { AppointmentsSection } from "../_components/appointments-section";
+import { AppointmentsSection } from "../../_components/appointments-section";
 import { EmptyResult } from "@/components/empty-result";
-import { Calendar, Plus } from "lucide-react";
+import { Clock, Plus } from "lucide-react";
 import { LinkButton } from "@/components/link-button";
 import Pagination from "@/components/pagination";
 
 const APPOINTMENTS_PER_PAGE = 9;
 
-export default async function ActiveAppointmentsPage({
+export default async function HistoryAppointmentsPage({
   searchParams,
 }: {
   searchParams: Promise<{ page: string }>;
@@ -19,7 +19,7 @@ export default async function ActiveAppointmentsPage({
   const {
     appointments: finishedAppointments,
     appointmentsCount: finishedAppointmentsCount,
-  } = await api.private.appointments.getAll({
+  } = await api.private.appointments.getAllHistory({
     take: APPOINTMENTS_PER_PAGE,
     skip: (pageNumber - 1) * APPOINTMENTS_PER_PAGE,
     orderBy: "startTime",
@@ -29,15 +29,14 @@ export default async function ActiveAppointmentsPage({
   return (
     <div>
       <AppointmentsSection
-        title="Wszystkie twoje wizyty"
+        title="Twoja historia wizyt"
         appointments={finishedAppointments}
         appointmentsCount={finishedAppointmentsCount}
         emptyComponent={() => (
           <EmptyResult
-            icon={Calendar}
-            title="Brak wizyt"
-            description="Po umówieniu wizyty pojawią się one tutaj. Możesz łatwo śledzić i
-            zarządzać wszystkimi swoimi wizytami w jednym miejscu."
+            icon={Clock}
+            title="Brak wczeszniejszych wizyt"
+            description="Tutaj znajdziesz swoje wszystkie poprzednie wizyty."
             actionButton={
               <LinkButton href="/appointments/new" className="mt-6 w-full">
                 <Plus /> Umów wizytę

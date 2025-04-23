@@ -102,6 +102,32 @@ export const privateAppointmentsRouter = createTRPCRouter({
         appointmentsCount,
       };
     }),
+  getAllHistory: privateProcedure
+    .input(getInputObjectSchema)
+    .query(async ({ ctx, input }) => {
+      const now = new Date();
+      const where: Prisma.AppointmentWhereInput = {
+        userId: ctx.user.id,
+        startTime: {
+          lt: now,
+        },
+      };
+      const appointmentsCount = await getAppointmentsCount(where);
+      const appointments = await ctx.db.appointment.findMany({
+        where,
+        orderBy: {
+          [input.orderBy]: input.order,
+        },
+        take: input.take,
+        skip: input.skip,
+        select: GET_APPOINTMENT_SELECT_FIELDS,
+      });
+
+      return {
+        appointments,
+        appointmentsCount,
+      };
+    }),
 
   cancel: privateProcedure
     .input(
