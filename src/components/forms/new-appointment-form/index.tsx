@@ -192,9 +192,8 @@ export function NewAppointmentForm({
           control={form.control}
           name="guestNotes"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="relative">
               <NotesDialog field={field} />
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -203,9 +202,9 @@ export function NewAppointmentForm({
           <LoadingButton
             loading={isCreating}
             type="submit"
-            className="sm:auto w-full"
+            className="sm:auto w-full md:w-min"
           >
-            Potwierdź
+            Zarezerwuj wizytę
           </LoadingButton>
         </div>
       </form>
