@@ -2,7 +2,7 @@ import { z } from "zod";
 import { privateProcedure } from "../../procedures/private-procedure";
 import { createTRPCRouter } from "../../trpc";
 import { TRPCError } from "@trpc/server";
-import { type Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { db } from "@/server/db";
 
 const getInputObjectSchema = z
@@ -36,28 +36,7 @@ export const privateAppointmentsRouter = createTRPCRouter({
         },
         take: input.take,
         skip: input.skip,
-        select: {
-          id: true,
-          status: true,
-          startTime: true,
-          endTime: true,
-          service: {
-            select: {
-              name: true,
-              description: true,
-              durationInMinutes: true,
-            },
-          },
-          vetSchedule: {
-            select: {
-              user: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-        },
+        select: GET_APPOINTMENT_SELECT_FIELDS,
       });
       return {
         appointments,
@@ -85,28 +64,37 @@ export const privateAppointmentsRouter = createTRPCRouter({
         },
         take: input.take,
         skip: input.skip,
-        select: {
-          id: true,
-          status: true,
-          startTime: true,
-          endTime: true,
-          service: {
-            select: {
-              name: true,
-              description: true,
-              durationInMinutes: true,
-            },
-          },
-          vetSchedule: {
-            select: {
-              user: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
+        select: GET_APPOINTMENT_SELECT_FIELDS,
+      });
+
+      return {
+        appointments,
+        appointmentsCount,
+      };
+    }),
+
+  getAllFinished: privateProcedure
+    .input(getInputObjectSchema)
+    .query(async ({ ctx, input }) => {
+      const now = new Date();
+      const where: Prisma.AppointmentWhereInput = {
+        userId: ctx.user.id,
+        startTime: {
+          lt: now,
         },
+        status: {
+          equals: "COMPLETED",
+        },
+      };
+      const appointmentsCount = await getAppointmentsCount(where);
+      const appointments = await ctx.db.appointment.findMany({
+        where,
+        orderBy: {
+          [input.orderBy]: input.order,
+        },
+        take: input.take,
+        skip: input.skip,
+        select: GET_APPOINTMENT_SELECT_FIELDS,
       });
 
       return {
@@ -150,3 +138,28 @@ function getAppointmentsCount(where: Prisma.AppointmentWhereInput) {
     where,
   });
 }
+
+const GET_APPOINTMENT_SELECT_FIELDS =
+  Prisma.validator<Prisma.AppointmentSelect>()({
+    id: true,
+    status: true,
+    startTime: true,
+    endTime: true,
+    service: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        durationInMinutes: true,
+      },
+    },
+    vetSchedule: {
+      select: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    },
+  });

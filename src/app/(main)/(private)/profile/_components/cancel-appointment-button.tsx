@@ -52,7 +52,6 @@ export function CancelAppointmentButton({
         onClick={() => setIsCancelOpen((prev) => !prev)}
         variant="destructive"
         size="sm"
-        className="right-2 bottom-2 h-8 w-full text-xs sm:w-auto md:absolute"
       >
         Anuluj wizytę
       </Button>
