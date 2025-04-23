@@ -32,7 +32,13 @@ export function NotesDialog({ field }: NotesDialogProps) {
         contentClassName="max-h-[80vh] sm:w-150"
       >
         {/* <Textarea className="h-32 resize-none" {...field} /> */}
-        <input type="text" {...field} className="rounded-full border p-2" />
+        <input
+          type="text"
+          {...field}
+          className="rounded-full border p-2"
+          autoFocus
+          onPointerDown={(e) => e.stopPropagation()}
+        />
         <Button onClick={() => setIsOpen(false)} className="float-right mt-4">
           Ok
         </Button>
