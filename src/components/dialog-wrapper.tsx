@@ -24,24 +24,24 @@ type DialogProps = {
   children?: React.ReactNode;
   closeButton?: string;
   closeButtonVariant?: VariantProps<typeof buttonVariants>;
+  contentClassName?: string;
   className?: string;
   description: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
-  overflowYScroll?: boolean;
 };
 
 export const DialogWrapper = ({
   children,
   closeButton,
   closeButtonVariant = { variant: "default", size: "lg" },
+  contentClassName,
   className,
   isOpen,
   setIsOpen,
   title,
   description,
-  overflowYScroll = false,
 }: DialogProps) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   return (
@@ -51,9 +51,7 @@ export const DialogWrapper = ({
           <DialogContent
             className={cn(
               "flex h-min max-h-[90vh] max-w-min min-w-100 flex-col sm:max-w-min",
-              {
-                "overflow-y-auto": overflowYScroll,
-              },
+              contentClassName,
             )}
           >
             <DialogHeader>

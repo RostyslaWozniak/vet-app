@@ -29,7 +29,7 @@ export function NotesDialog({ field }: NotesDialogProps) {
         description="Dodaj opis"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        className="max-h-[85vh] sm:w-150"
+        contentClassName="max-h-[80vh] sm:w-150"
       >
         <Textarea className="h-32 resize-none" {...field} />
         <Button onClick={() => setIsOpen(false)} className="float-right mt-4">
