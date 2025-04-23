@@ -2,7 +2,7 @@
 
 import { DialogWrapper } from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+// import { Textarea } from "@/components/ui/textarea";
 import { PlusSquare } from "lucide-react";
 import { useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
@@ -31,7 +31,8 @@ export function NotesDialog({ field }: NotesDialogProps) {
         setIsOpen={setIsOpen}
         contentClassName="max-h-[80vh] sm:w-150"
       >
-        <Textarea className="h-32 resize-none" {...field} />
+        {/* <Textarea className="h-32 resize-none" {...field} /> */}
+        <input type="text" {...field} className="rounded-full border p-2" />
         <Button onClick={() => setIsOpen(false)} className="float-right mt-4">
           Ok
         </Button>

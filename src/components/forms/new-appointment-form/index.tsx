@@ -110,7 +110,7 @@ export function NewAppointmentForm({
           </div>
         )}
 
-        <div className="flex flex-row gap-4 md:flex-row md:items-start">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start">
           <FormField
             control={form.control}
             name="date"
