@@ -14,6 +14,7 @@ import type {
 import { pl } from "date-fns/locale";
 import type { AvailabilityType } from "../types/availability";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
+import type { $Enums } from "@prisma/client";
 
 /**
  * Generates an array of week days starting from the given date
@@ -59,11 +60,16 @@ export function generateTimeSlots(
 export function filterAppointmentsForWeek(
   appointments: AppointmentType[] | undefined,
   weekDays: WeekDayInfo[],
+  statuses: $Enums.AppointmentStatus[],
 ): AppointmentType[] {
   if (!appointments) return [];
   return appointments.filter((appointment) => {
     const appointmentDate = new Date(appointment.startTime);
-    return weekDays.some((day) => isSameDay(day.date, appointmentDate));
+    return weekDays.some(
+      (day) =>
+        isSameDay(day.date, appointmentDate) &&
+        statuses.includes(appointment.status),
+    );
   });
 }
 

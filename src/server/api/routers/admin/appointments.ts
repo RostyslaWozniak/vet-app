@@ -3,6 +3,7 @@ import { adminProcedure } from "../../procedures/admin-procedure";
 import { createTRPCRouter } from "../../trpc";
 import { isBefore, isAfter } from "date-fns";
 import { TRPCError } from "@trpc/server";
+import { $Enums } from "@prisma/client";
 
 export const adminAppointmentsRouter = createTRPCRouter({
   getAllByUserId: adminProcedure
@@ -11,6 +12,16 @@ export const adminAppointmentsRouter = createTRPCRouter({
         userId: z.string().uuid(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
+        statuses: z
+          .array(
+            z.enum([
+              $Enums.AppointmentStatus.CANCELLED,
+              $Enums.AppointmentStatus.COMPLETED,
+              $Enums.AppointmentStatus.PENDING,
+              $Enums.AppointmentStatus.CONFIRMED,
+            ]),
+          )
+          .optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -23,6 +34,11 @@ export const adminAppointmentsRouter = createTRPCRouter({
             gte: input.startDate,
             lte: input.endDate,
           },
+          ...(input.statuses && {
+            status: {
+              in: input.statuses,
+            },
+          }),
         },
         orderBy: {
           updatedAt: "asc",
@@ -31,7 +47,15 @@ export const adminAppointmentsRouter = createTRPCRouter({
           id: true,
           startTime: true,
           endTime: true,
-          userId: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phoneNumber: true,
+              photo: true,
+            },
+          },
           contactName: true,
           contactEmail: true,
           contactPhone: true,

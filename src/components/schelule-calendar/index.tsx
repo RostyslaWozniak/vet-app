@@ -24,7 +24,6 @@ import { useQueryState } from "nuqs";
 import { getWeekDateRange } from "@/lib/get-month-date-range";
 import { getDateFromWeekAndYear } from "@/lib/formatters";
 import { pl } from "date-fns/locale";
-import { Badge } from "../ui/badge";
 
 type ScheduleProps = {
   weekStartDate: Date;
@@ -52,6 +51,13 @@ export function ScheduleCalendar({
     defaultValue: todayYear,
     parse: parseInt,
   });
+
+  const [statuses, setStatuses] = useState<$Enums.AppointmentStatus[]>([
+    $Enums.AppointmentStatus.CONFIRMED,
+    $Enums.AppointmentStatus.PENDING,
+    $Enums.AppointmentStatus.COMPLETED,
+    $Enums.AppointmentStatus.CANCELLED,
+  ]);
 
   const [cellSize, setCellSize] = useState(CALENDAR_CONFIG.DEFAULT_CELL_SIZE);
 
@@ -87,8 +93,8 @@ export function ScheduleCalendar({
 
   // Filter appointments for the current week view
   const visibleAppointments = useMemo(
-    () => filterAppointmentsForWeek(appointments, weekDays),
-    [weekDays, appointments],
+    () => filterAppointmentsForWeek(appointments, weekDays, statuses),
+    [weekDays, appointments, statuses],
   );
 
   // Navigation handlers
@@ -121,14 +127,29 @@ export function ScheduleCalendar({
               Tydz. {week}
             </WeekPicker>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               {Object.values($Enums.AppointmentStatus).map((status) => {
                 const { color, label } = mapAppointmentStatus(status);
 
                 return (
-                  <Badge key={status} className={color.default}>
+                  <button
+                    key={status}
+                    className={cn(
+                      color.default,
+                      "cursor-pointer rounded-full border-none px-3 py-1 text-xs font-semibold",
+                      {
+                        "bg-muted text-muted-foreground":
+                          !statuses.includes(status),
+                      },
+                    )}
+                    onClick={() =>
+                      statuses.includes(status)
+                        ? setStatuses(statuses.filter((s) => s !== status))
+                        : setStatuses([...statuses, status])
+                    }
+                  >
                     {label}
-                  </Badge>
+                  </button>
                 );
               })}
             </div>

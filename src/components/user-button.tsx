@@ -71,11 +71,9 @@ export function UserButton() {
             )}
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutButton className="w-full">
-                Wyloguj <LogOut className="text-destructive-foreground" />
-              </LogOutButton>
-            </DropdownMenuItem>
+            <LogOutButton className="w-full" size="sm">
+              Wyloguj <LogOut className="text-destructive-foreground" />
+            </LogOutButton>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

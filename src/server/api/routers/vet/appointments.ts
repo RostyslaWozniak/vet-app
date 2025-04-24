@@ -3,6 +3,7 @@ import { createTRPCRouter } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { vetProcedure } from "../../procedures/vet-procedure";
 import { isAfter, isBefore } from "date-fns";
+import { $Enums } from "@prisma/client";
 
 export const vetAppointmentsRouter = createTRPCRouter({
   getAllOwn: vetProcedure
@@ -10,14 +11,33 @@ export const vetAppointmentsRouter = createTRPCRouter({
       z.object({
         startDate: z.date().optional(),
         endDate: z.date().optional(),
+        statuses: z
+          .array(
+            z.enum([
+              $Enums.AppointmentStatus.CANCELLED,
+              $Enums.AppointmentStatus.COMPLETED,
+              $Enums.AppointmentStatus.PENDING,
+              $Enums.AppointmentStatus.CONFIRMED,
+            ]),
+          )
+          .optional(),
       }),
     )
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx, input }) => {
       const appointments = await ctx.db.appointment.findMany({
         where: {
           vetSchedule: {
             userId: ctx.user.id,
           },
+          startTime: {
+            gte: input.startDate,
+            lte: input.endDate,
+          },
+          ...(input.statuses && {
+            status: {
+              in: input.statuses,
+            },
+          }),
         },
         orderBy: {
           updatedAt: "asc",
@@ -26,7 +46,15 @@ export const vetAppointmentsRouter = createTRPCRouter({
           id: true,
           startTime: true,
           endTime: true,
-          userId: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phoneNumber: true,
+              photo: true,
+            },
+          },
           contactName: true,
           contactEmail: true,
           contactPhone: true,

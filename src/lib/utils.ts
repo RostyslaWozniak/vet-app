@@ -29,3 +29,7 @@ export function getInitials(name: string) {
     .join("")
     .toUpperCase();
 }
+
+export function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

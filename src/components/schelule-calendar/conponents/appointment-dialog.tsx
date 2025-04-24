@@ -39,13 +39,13 @@ export function AppointmentDialog({
         description="Czy napewno chcesz anulować wizytę? Ta operacja nie będzie mogła być odwrócona!"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        className="scrollbar-hide flex max-h-[90vh] w-200 gap-3"
+        className="scrollbar-hide flex max-h-[90vh] w-260 gap-3"
       >
         <div className="w-full space-y-6 pt-2">
           <Badge
             className={cn(
               "absolute top-12 right-4 border-none px-3 py-1",
-              status.color,
+              status.color.default,
             )}
           >
             {status.label}
@@ -123,18 +123,27 @@ export function AppointmentDialog({
                   <span>{appointment.contactEmail}</span>
                 </div>
               )}
-              {appointment.contactPhone && (
+              {appointment.user ? (
                 <div className="flex items-center gap-2 text-sm">
                   <Phone className="text-card-foreground h-4 w-4" />
-                  <span>{appointment.contactPhone}</span>
+                  <span>{appointment.user.phoneNumber}</span>
                 </div>
+              ) : (
+                appointment.contactPhone && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="text-card-foreground h-4 w-4" />
+                    <span>{appointment.contactPhone}</span>
+                  </div>
+                )
               )}
-              <LinkButton
-                href={`/vet/appointments/${appointment.userId}`}
-                variant="link"
-              >
-                Przejdź do klienta
-              </LinkButton>
+              {appointment.user && (
+                <LinkButton
+                  href={`/vet/appointments/${appointment.user.id}`}
+                  variant="link"
+                >
+                  Przejdź do klienta
+                </LinkButton>
+              )}
             </div>
           </div>
 

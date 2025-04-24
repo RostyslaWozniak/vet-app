@@ -1,10 +1,17 @@
 import type { $Enums } from "@prisma/client";
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+};
+
 export type AppointmentType = {
   startTime: Date;
   endTime: Date;
   id: string;
-  userId: string | null;
+  user: User | null;
   contactName: string | null;
   contactEmail: string | null;
   contactPhone: string | null;

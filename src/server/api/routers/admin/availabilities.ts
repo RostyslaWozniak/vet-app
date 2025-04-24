@@ -4,7 +4,11 @@ import { createTRPCRouter } from "../../trpc";
 
 export const adminAvailabilitiesRouter = createTRPCRouter({
   getAllByUserId: adminProcedure
-    .input(z.object({ userId: z.string().uuid() }))
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const vetSchedule = await ctx.db.vetSchedule.findUnique({
         where: {
