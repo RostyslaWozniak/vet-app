@@ -102,7 +102,7 @@ export function calculateAppointmentPosition(
  * Formats a time range for display
  */
 export function formatTimeRange(startTime: Date, endTime: Date): string {
-  return `${format(startTime, "HH:mm")} - ${format(endTime, "HH:mm")}`;
+  return `${format(startTime, "HH:mm", { locale: pl })} - ${format(endTime, "HH:mm")}`;
 }
 
 export function getCallendarRangeHours(
