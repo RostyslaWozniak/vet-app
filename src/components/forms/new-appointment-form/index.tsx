@@ -156,38 +156,40 @@ export function NewAppointmentForm({
             }}
           />
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:items-start">
-          <FormField
-            control={form.control}
-            name="guestName"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <div className="flex h-5 items-center gap-4">
-                  <FormLabel>Imię*</FormLabel>
-                  <FormMessage className="text-sm" />
-                </div>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="guestEmail"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <div className="flex h-5 items-center gap-4">
-                  <FormLabel>Email*</FormLabel>
-                  <FormMessage className="text-sm" />
-                </div>
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
+        {!user && (
+          <div className="flex flex-col gap-4 md:flex-row md:items-start">
+            <FormField
+              control={form.control}
+              name="guestName"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <div className="flex h-5 items-center gap-4">
+                    <FormLabel>Imię*</FormLabel>
+                    <FormMessage className="text-sm" />
+                  </div>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="guestEmail"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <div className="flex h-5 items-center gap-4">
+                    <FormLabel>Email*</FormLabel>
+                    <FormMessage className="text-sm" />
+                  </div>
+                  <FormControl>
+                    <Input type="email" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
         <FormField
           control={form.control}
           name="guestNotes"

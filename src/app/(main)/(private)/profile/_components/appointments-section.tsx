@@ -20,11 +20,16 @@ export function AppointmentsSection({
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between">
-        <H2 className="text-muted-foreground my-4 !text-start text-lg md:!text-xl">
+        <H2 className="text-muted-foreground my-4 !text-start text-base md:!text-xl">
           {title} ({appointmentsCount})
         </H2>
         {moreHref && !isEmpty && (
-          <LinkButton href={moreHref} variant="link" size="sm">
+          <LinkButton
+            href={moreHref}
+            variant="link"
+            size="sm"
+            className="text-xs sm:text-sm"
+          >
             Zobacz wszystkie
           </LinkButton>
         )}

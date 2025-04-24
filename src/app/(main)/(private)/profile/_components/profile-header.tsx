@@ -4,17 +4,14 @@ import { LinkButton } from "@/components/link-button";
 import { Edit, LogOut } from "lucide-react";
 import { LogOutButton } from "@/auth/components/log-out-button";
 import type { FullUser } from "@/auth/current-user";
+import { getInitials } from "@/lib/utils";
 
 type ProfileHeaderProps = {
   user: FullUser;
 };
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
-  const initials = user.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const initials = getInitials(user.name);
 
   return (
     <div className="relative flex flex-col items-center rounded-lg border p-4 md:flex-row md:gap-x-12 md:p-6">

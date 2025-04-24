@@ -12,7 +12,6 @@ export default async function SignIn({
     <div className="my-24 flex justify-center md:my-0">
       <FormContainer
         title="Logowanie"
-        // description="Zaloguj się do swojego konta"
         error={oauthError}
         linkLabel="Nie masz jeszcze konta? Zarejestruj się!"
         href={`/sign-up`}

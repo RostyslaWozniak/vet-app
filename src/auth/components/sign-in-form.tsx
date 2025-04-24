@@ -27,7 +27,9 @@ export function SignInForm() {
 
   async function onSubmit(data: SignInSchema) {
     const error = await signIn(data);
-    toast.error(error);
+    if (error) {
+      toast.error(error);
+    }
   }
 
   return (
