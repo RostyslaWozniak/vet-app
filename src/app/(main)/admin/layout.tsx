@@ -19,7 +19,7 @@ export default async function AdminLayout({
 
   return (
     <SessionProvider user={user}>
-      <MaxWidthWrapper className="relative -my-8 flex min-h-[calc(100vh-200px)] w-full max-w-[1800px] flex-grow justify-between">
+      <MaxWidthWrapper className="relative -my-8 flex min-h-[calc(100vh-200px)] w-full max-w-[1600px] flex-grow justify-between">
         <AdminNav />
         <div className="relative grow">{children}</div>
       </MaxWidthWrapper>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { getISOWeek, getISOWeeksInYear, isSameDay } from "date-fns";
+import { formatDate, getISOWeek, getISOWeeksInYear, isSameDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AppointmentDialog } from "./conponents/appointment-dialog";
@@ -23,6 +23,8 @@ import { api } from "@/trpc/react";
 import { useQueryState } from "nuqs";
 import { getWeekDateRange } from "@/lib/get-month-date-range";
 import { getDateFromWeekAndYear } from "@/lib/formatters";
+import { pl } from "date-fns/locale";
+import { Badge } from "../ui/badge";
 
 type ScheduleProps = {
   weekStartDate: Date;
@@ -104,11 +106,11 @@ export function ScheduleCalendar({
   };
 
   return (
-    <div className="relative h-full w-full p-4">
+    <div className="relative h-full xl:p-4">
       <div className="h-full min-h-[calc(100vh-2rem)]">
         {/* Calendar Header */}
-        <div className="p-4">
-          <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+        <div className="xl:p-4">
+          <div className="flex flex-col gap-4 sm:items-center sm:justify-between xl:flex-row">
             {/* Navigation Controls */}
             <WeekPicker
               isCurrentWeek={week === todayWeek && year === todayYear}
@@ -116,34 +118,32 @@ export function ScheduleCalendar({
               navigateToPreviousWeek={navigateToPreviousWeek}
               navigateToToday={navigateToToday}
             >
-              Tydz. {week}, {year}
+              Tydz. {week}
             </WeekPicker>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               {Object.values($Enums.AppointmentStatus).map((status) => {
                 const { color, label } = mapAppointmentStatus(status);
 
                 return (
-                  <div key={status} className="flex items-center gap-2">
-                    <div
-                      className={cn("aspect-square h-4 rounded-full", color)}
-                    />
-                    <p className="font-semibold">{label}</p>
-                  </div>
+                  <Badge key={status} className={color.default}>
+                    {label}
+                  </Badge>
                 );
               })}
             </div>
 
             {/* Cell Size Controls */}
             <div className="flex items-center gap-4">
-              <h3 className="font-semibold">Rozmiar komórki:</h3>
+              <h3 className="text-sm font-semibold">Rozmiar komórki:</h3>
               <div className="space-x-2">
                 {CALENDAR_CONFIG.CELL_SIZES.map(({ label, value }) => (
                   <Button
                     key={label}
                     size="icon"
-                    variant={value === cellSize ? "default" : "secondary"}
+                    variant={value === cellSize ? "default" : "outline"}
                     onClick={() => setCellSize(value)}
+                    className="h-6 w-6"
                   >
                     {label}
                   </Button>
@@ -154,10 +154,10 @@ export function ScheduleCalendar({
         </div>
 
         {/* Calendar Content */}
-        <div className="flex-1 p-4">
-          <div className="relative h-full overflow-hidden rounded-xl border shadow-sm">
+        <div className="scrollbar-hide -mx-4 overflow-x-scroll py-4">
+          <div className="relative h-full min-w-300 overflow-hidden xl:rounded-xl xl:border xl:shadow-sm">
             {isAppointmentsLoading && (
-              <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70">
+              <div className="absolute inset-0 z-50 flex max-w-screen items-center justify-center bg-white/70">
                 <Loader className="animate-spin" />
               </div>
             )}
@@ -188,25 +188,26 @@ export function ScheduleCalendar({
 // Component for the week header row
 function WeekHeaderRow({ weekDays }: { weekDays: WeekDayInfo[] }) {
   return (
-    <div className="grid grid-cols-[50px_repeat(7,1fr)] border-b">
+    <div className="grid grid-cols-[50px_repeat(7,1fr)] overflow-hidden border-b">
       <div className="text-muted-foreground p-2 text-center text-xs"></div>
       {weekDays.map((day, index) => (
         <div
           key={index}
-          className={cn("border-l p-2 text-center", {
+          className={cn("relative border-l p-2 text-center", {
             "bg-muted": !day.startTime && !day.endTime,
           })}
         >
           <div className="text-muted-foreground text-xs font-medium">
             {day.name}
           </div>
+
           <div
             className={cn(
-              "mx-auto mt-1 flex h-8 w-8 items-center justify-center text-lg font-medium",
+              "mx-auto mt-1 flex h-8 w-min items-center justify-center px-2 font-medium text-nowrap",
               day.isToday && "bg-primary text-primary-foreground rounded-full",
             )}
           >
-            {day.dayOfMonth}
+            {formatDate(day.date, "d MMM", { locale: pl })}
           </div>
           <div>
             {day.startTime} - {day.endTime}
@@ -291,7 +292,7 @@ function DayColumns({
                   <div
                     key={index}
                     className={cn(
-                      "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pt-0.5 pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:scale-[1.03] hover:shadow-lg",
+                      "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:min-h-10 hover:scale-[1.03] hover:shadow-lg",
 
                       color.default,
                     )}

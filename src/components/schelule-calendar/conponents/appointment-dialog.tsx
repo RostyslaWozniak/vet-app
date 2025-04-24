@@ -40,7 +40,6 @@ export function AppointmentDialog({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className="scrollbar-hide flex max-h-[90vh] w-200 gap-3"
-        contentClassName="overflow-y-scroll"
       >
         <div className="w-full space-y-6 pt-2">
           <Badge
@@ -51,9 +50,9 @@ export function AppointmentDialog({
           >
             {status.label}
           </Badge>
-          <div className="grid grid-cols-3 gap-x-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {/* Service and Status Section */}
-            <div className="bg-card flex flex-col rounded-lg p-4">
+            <div className="bg-card flex flex-col gap-y-2 rounded-lg p-4">
               <h3 className="text-lg font-semibold">
                 {appointment.service.name}
               </h3>

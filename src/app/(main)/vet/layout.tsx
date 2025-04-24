@@ -16,9 +16,9 @@ export default async function VetLayout({ children }: { children: ReactNode }) {
 
   return (
     <SessionProvider user={user}>
-      <MaxWidthWrapper className="relative -my-8 flex min-h-[calc(100vh-200px)] w-full flex-grow justify-between">
+      <MaxWidthWrapper className="relative flex min-h-[calc(100vh-200px)] w-full max-w-[1600px] flex-grow flex-col justify-between xl:flex-row">
         <VetNav />
-        <div className="relative grow">{children}</div>
+        <div className="relative mt-8 flex-grow xl:mt-0">{children}</div>
       </MaxWidthWrapper>
     </SessionProvider>
   );

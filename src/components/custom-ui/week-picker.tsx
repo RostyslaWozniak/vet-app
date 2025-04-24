@@ -30,19 +30,19 @@ export default function WeekPicker({
         Dzisiaj
       </Button>
       <div className="flex flex-grow items-center justify-center gap-2">
-        <Button variant="outline" size="icon" onClick={navigateToPreviousWeek}>
+        <Button variant="ghost" size="icon" onClick={navigateToPreviousWeek}>
           <ChevronLeft className="h-4 w-4" />
         </Button>
 
         <div
-          className={cn("min-w-36 text-center text-lg font-medium", {
+          className={cn("min-w-20 text-center font-medium", {
             "text-primary": isCurrentWeek,
           })}
         >
           {children}
         </div>
 
-        <Button variant="outline" size="icon" onClick={navigateToNextWeek}>
+        <Button variant="ghost" size="icon" onClick={navigateToNextWeek}>
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>

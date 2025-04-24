@@ -53,24 +53,26 @@ export default async function VetDashboardPage({
     },
   });
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+    <div className="flex min-h-screen flex-col">
+      <div className="flex-1 space-y-4">
         <MonthPicker />
 
         <AppointmentStats appointments={appointments} />
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
-            <CardHeader>
-              <CardTitle>Statusy wizyty</CardTitle>
-              <CardDescription>
-                Podział wizyt według ich aktualnego statusu
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <AppointmentStatusChart appointments={appointments} />
-            </CardContent>
-          </Card>
+        <div className="scrollbar-hide -mx-2.5 max-w-screen gap-4 overflow-x-auto sm:mx-0">
+          <div className="flex px-2.5">
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Statusy wizyty</CardTitle>
+                <CardDescription>
+                  Podział wizyt według ich aktualnego statusu
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <AppointmentStatusChart appointments={appointments} />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

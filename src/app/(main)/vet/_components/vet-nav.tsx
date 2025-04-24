@@ -1,7 +1,7 @@
 "use client";
 
 import { SidebarNav } from "@/components/sidebar-nav";
-import { Calendar, Home, PawPrint, Settings } from "lucide-react";
+import { Calendar, Clock, Home, PawPrint } from "lucide-react";
 
 const sidebarItems = [
   {
@@ -20,10 +20,15 @@ const sidebarItems = [
     icon: PawPrint,
   },
   {
-    href: "/vet/settings",
-    label: "Ustawienia",
-    icon: Settings,
+    href: "/vet/schedule/availability",
+    label: "Dostępność",
+    icon: Clock,
   },
+  // {
+  //   href: "/vet/settings",
+  //   label: "Ustawienia",
+  //   icon: Settings,
+  // },
 ];
 
 export function VetNav() {

@@ -96,7 +96,7 @@ export default function MonthPicker() {
   };
 
   return (
-    <div className="flex items-center justify-center gap-4 p-4">
+    <div className="flex flex-col-reverse items-center justify-center gap-2 md:flex-row md:gap-4 md:p-4">
       <Button
         variant={
           month === currentMonth && year === currentYear ? "default" : "outline"
@@ -106,10 +106,11 @@ export default function MonthPicker() {
           updateDateParams(currentDate.getMonth(), currentDate.getFullYear());
         }}
         aria-label="Today"
+        className="w-full sm:w-auto"
       >
         Dzisiaj
       </Button>
-      <div className="flex flex-grow items-center justify-center gap-2 pr-20">
+      <div className="flex items-center justify-center gap-2 md:flex-grow md:pr-20">
         <Button
           variant="outline"
           size="icon"
