@@ -4,8 +4,7 @@ import { getCurrentUser } from "@/auth/current-user";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { SessionProvider } from "../../../session-provider";
 import { notFound } from "next/navigation";
-import { LinkButton } from "@/components/link-button";
-import { CalendarSearch, History, Plus, User } from "lucide-react";
+import { ProfileNav } from "./_components/profile-nav";
 
 export default async function PrivateLayout({
   children,
@@ -22,23 +21,9 @@ export default async function PrivateLayout({
 
   return (
     <SessionProvider user={user}>
-      <MaxWidthWrapper className="max-w-[1000px]">
+      <MaxWidthWrapper className="max-w-[800px]">
         <ProfileHeader user={user} />
-        <nav className="scrollbar-hide -mx-2.5 mt-6 flex gap-x-2 overflow-scroll px-2.5">
-          <LinkButton variant="outline" href="/profile">
-            <User /> Mój profil
-          </LinkButton>
-          <LinkButton variant="outline" href="/profile/appointments/history">
-            <History /> Historia wizyt
-          </LinkButton>
-          <LinkButton variant="outline" href="/appointments/new">
-            <Plus className="text-primary-foreground bg-primary min-h-5 min-w-5 rounded-full stroke-4 p-0.5" />{" "}
-            Nowa wizyta
-          </LinkButton>
-          <LinkButton variant="outline" href="/profile/appointments">
-            <CalendarSearch /> Wszystkie wizyty
-          </LinkButton>
-        </nav>
+        <ProfileNav />
         <div className="relative mt-6 mb-14 min-h-60">{children}</div>
       </MaxWidthWrapper>
     </SessionProvider>
