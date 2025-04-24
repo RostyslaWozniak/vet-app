@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
-import { CatIcon, Lock, LogIn, LogOut, UserIcon } from "lucide-react";
+import { CatIcon, Lock, LogOut, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
 import { api } from "@/trpc/react";
@@ -79,13 +79,8 @@ export function UserButton() {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <LinkButton
-          variant="outline"
-          size="icon"
-          href="/sign-in"
-          className="p-4.75"
-        >
-          <LogIn className="min-h-5 min-w-5" />
+        <LinkButton variant="outline" size="sm" href="/sign-in" className="">
+          Zaloguj
         </LinkButton>
       )}
     </>
