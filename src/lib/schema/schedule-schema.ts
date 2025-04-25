@@ -11,13 +11,13 @@ export const scheduleFormSchema = z.object({
           .string()
           .regex(
             /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/,
-            "Time must be in the format HH:MM",
+            "Czas musi być w formacie GG:MM",
           ),
         endTime: z
           .string()
           .regex(
             /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/,
-            "Time must be in the format HH:MM",
+            "Czas musi być w formacie GG:MM",
           ),
       }),
     )
@@ -35,7 +35,7 @@ export const scheduleFormSchema = z.object({
         if (overlaps) {
           ctx.addIssue({
             code: "custom",
-            message: "Availability overlaps with another",
+            message: "Dostępność pokrywa się z inną",
             path: [index],
           });
         }
@@ -45,7 +45,8 @@ export const scheduleFormSchema = z.object({
         ) {
           ctx.addIssue({
             code: "custom",
-            message: "End time must be after start time",
+            message:
+              "Czas zakończenia musi być późniejszy niż czas rozpoczęcia",
             path: [index],
           });
         }

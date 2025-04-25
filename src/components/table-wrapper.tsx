@@ -15,15 +15,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyResult } from "./empty-result";
+import { TableIcon } from "lucide-react";
+import type { JSX } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  emptyTableComponent?: JSX.Element;
 }
 
 export function TableWrapper<TData, TValue>({
   columns,
   data,
+  emptyTableComponent = (
+    <EmptyResult
+      title="Brak wyników"
+      icon={TableIcon}
+      className="border-none"
+    />
+  ),
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -69,7 +80,7 @@ export function TableWrapper<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                Brak danych
+                {emptyTableComponent}
               </TableCell>
             </TableRow>
           )}

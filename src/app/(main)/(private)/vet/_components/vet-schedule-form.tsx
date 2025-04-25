@@ -92,7 +92,7 @@ export function VetScheduleForm({
                   {mapDayOfWeek(dayOfWeek)}
                 </div>
               </div>
-              <div className="flex flex-grow flex-col gap-2">
+              <div className="flex min-h-10 flex-grow flex-col gap-2">
                 {groupedAvailabilityFields[dayOfWeek] ? (
                   groupedAvailabilityFields[dayOfWeek].map(
                     (field, labelIndex) => (
@@ -153,7 +153,7 @@ export function VetScheduleForm({
                     ),
                   )
                 ) : (
-                  <div className="text-muted-foreground grid min-h-12 flex-grow place-items-center">
+                  <div className="text-muted-foreground grid flex-grow place-items-center">
                     Brak dostępności
                   </div>
                 )}

@@ -121,7 +121,7 @@ export const MultiSelect = React.forwardRef<
       onValueChange,
       variant,
       defaultValue = [],
-      placeholder = "Select options",
+      placeholder = "Wybierz opcje",
       maxCount = 3,
       modalPopover = false,
       className,
@@ -274,7 +274,7 @@ export const MultiSelect = React.forwardRef<
         >
           <Command>
             <CommandInput
-              placeholder="Search..."
+              placeholder="Szukaj..."
               onKeyDown={handleInputKeyDown}
             />
             <CommandList>

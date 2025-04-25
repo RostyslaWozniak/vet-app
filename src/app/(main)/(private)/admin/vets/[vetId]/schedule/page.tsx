@@ -1,3 +1,4 @@
+import { EmptyResult } from "@/components/empty-result";
 import { LinkButton } from "@/components/link-button";
 import { ScheduleCalendar } from "@/components/schelule-calendar";
 import { getCallendarRangeHours } from "@/components/schelule-calendar/utils/helpers";
@@ -5,7 +6,7 @@ import { H1 } from "@/components/typography";
 import { getWeekDateRange } from "@/lib/get-month-date-range";
 import { db } from "@/server/db";
 import { api } from "@/trpc/server";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 
 export default async function SchedulePage({
   params,
@@ -50,13 +51,22 @@ export default async function SchedulePage({
           <H1 className="pr-20 !text-2xl">{vetUser?.name}</H1>
         </div>
       </div>
-      <ScheduleCalendar
-        availabilities={availabilities}
-        timesRange={timesRange}
-        weekStartDate={weekStartDate}
-        weekEndDate={weekEndDate}
-        vetId={vetId}
-      />
+      {availabilities.length > 0 ? (
+        <ScheduleCalendar
+          availabilities={availabilities}
+          timesRange={timesRange}
+          weekStartDate={weekStartDate}
+          weekEndDate={weekEndDate}
+          vetId={vetId}
+        />
+      ) : (
+        <EmptyResult
+          title="Brak dostępności weterynarza"
+          description={`Weterynarz ${vetUser?.name} nie dodał jeszcze swojej dostępności. Może to zrobić w swoim panelu w zakładce „Dostępność”.`}
+          icon={Clock}
+          className="mt-8"
+        />
+      )}
     </div>
   );
 }

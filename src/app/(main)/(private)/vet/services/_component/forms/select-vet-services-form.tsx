@@ -61,7 +61,7 @@ export function SelectVetServicesForm({
           name="services"
           render={({ field }) => (
             <FormItem>
-              <FormControl className="min-w-100">
+              <FormControl className="sm:min-w-100">
                 <MultiSelect
                   className="w-full items-start"
                   options={services.map((service) => ({

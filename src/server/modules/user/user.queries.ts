@@ -5,6 +5,7 @@ export class UserQueries {
     id: true,
     name: true,
     email: true,
+    phoneNumber: true,
     photo: true,
     roles: true,
   });

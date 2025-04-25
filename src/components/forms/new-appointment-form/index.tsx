@@ -55,12 +55,15 @@ export function NewAppointmentForm({
     roundingMethod: "ceil",
   });
 
-  const { data: validTimes, isLoading: isGettingValidTimes } =
-    api.public.schedule.getValidTimesFromSchedule.useQuery({
-      nearestValidDate,
-      endDate,
-      service,
-    });
+  const {
+    data: validTimes,
+    isLoading: isGettingValidTimes,
+    error: validTimesError,
+  } = api.public.schedule.getValidTimesFromSchedule.useQuery({
+    nearestValidDate,
+    endDate,
+    service,
+  });
 
   const router = useRouter();
 
@@ -70,6 +73,7 @@ export function NewAppointmentForm({
         toast.success("Pomyślnie zapisano wizytę.");
         router.push(user ? "/profile" : "/");
       },
+
       onError: ({ message }) => {
         toast.error(message);
       },
@@ -97,6 +101,12 @@ export function NewAppointmentForm({
     form.resetField("startTime");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.watch("date")]);
+
+  useEffect(() => {
+    if (validTimesError) {
+      toast.error(validTimesError.message);
+    }
+  }, [validTimesError]);
 
   return (
     <Form {...form}>
@@ -128,6 +138,7 @@ export function NewAppointmentForm({
                   setIsOpen={setIsDateDialogOpen}
                   setIsTimeDialogOpen={setIsTimeDialogOpen}
                   handleCalendarMonthChange={handleCalendarMonthChange}
+                  isUser={!!user}
                 />
               </FormItem>
             )}

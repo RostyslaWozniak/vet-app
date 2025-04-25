@@ -20,6 +20,7 @@ import {
 import type { $Enums } from "@prisma/client";
 import { fromZonedTime } from "date-fns-tz";
 import type { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
+import { TRPCError } from "@trpc/server";
 
 export const publicScheduleRouter = createTRPCRouter({
   getValidTimesFromSchedule: publicProcedure
@@ -65,7 +66,11 @@ export const publicScheduleRouter = createTRPCRouter({
           endTime: true,
         },
       });
-      if (availabilities == null) return [];
+      if (availabilities.length === 0)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Brak dostępnych terminów",
+        });
 
       const groupedAvailabilities = groupBy(availabilities, (a) => a.dayOfWeek);
 

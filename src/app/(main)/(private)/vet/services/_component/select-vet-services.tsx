@@ -2,14 +2,17 @@
 
 import { DialogWrapper } from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { SelectVetServicesForm } from "./forms/select-vet-services-form";
 import type { RouterOutputs } from "@/trpc/react";
+import { cn } from "@/lib/utils";
 
 type SelectVetServicesProps = {
   allServices: RouterOutputs["vet"]["service"]["getAll"];
   selectedServices: RouterOutputs["vet"]["service"]["getAllOwn"];
+  trigerClassName?: string;
+  trigerText?: string;
 };
 
 export type SelectableServiceType =
@@ -18,6 +21,8 @@ export type SelectableServiceType =
 export function SelectVetServices({
   allServices,
   selectedServices,
+  trigerClassName,
+  trigerText = "Wybierz usługi",
 }: SelectVetServicesProps) {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
@@ -35,8 +40,7 @@ export function SelectVetServices({
         description="Wybierz usługi, które chcesz oferować w swojej klinice, i nie zapomnij zapisać zmiany."
         isOpen={isSelectOpen}
         setIsOpen={setIsSelectOpen}
-        className="scrollbar-hide flex max-h-[90vh] flex-col justify-end gap-3"
-        contentClassName="overflow-y-scroll"
+        className="scrollbar-hide flex max-h-[90vh] flex-col justify-end gap-3 sm:w-125"
       >
         <SelectVetServicesForm
           services={servicesWithChosenFlag}
@@ -44,10 +48,10 @@ export function SelectVetServices({
         />
       </DialogWrapper>
       <Button
-        className="absolute top-0 right-0"
+        className={cn(trigerClassName)}
         onClick={() => setIsSelectOpen((prev) => !prev)}
       >
-        <Edit /> Edytuj usługi
+        <Plus /> {trigerText}
       </Button>
     </div>
   );

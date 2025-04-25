@@ -20,28 +20,39 @@ export const publicServicesRouter = createTRPCRouter({
     )
     .query(async ({ input }) => {
       const { take, skip, search, orderBy, order } = {
-        take: 10,
+        take: 9,
         skip: 0,
         orderBy: "updatedAt",
-        order: "asc",
+        order: "desc",
         ...input,
       };
 
       return db.service.findMany({
         where: {
           isActive: true,
-          ...(search
-            ? {
+          vetServices: {
+            some: {
+              vetId: {
+                not: undefined,
+              },
+            },
+          },
+          ...(search && {
+            OR: [
+              {
                 name: {
                   contains: search,
                   mode: "insensitive",
                 },
+              },
+              {
                 description: {
                   contains: search,
                   mode: "insensitive",
                 },
-              }
-            : {}),
+              },
+            ],
+          }),
         },
         orderBy: {
           [orderBy]: order,

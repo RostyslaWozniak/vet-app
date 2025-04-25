@@ -45,7 +45,7 @@ export default async function ServiceIdPage({
         </BackButton>
 
         <div>
-          <Card className="mx-auto max-w-4xl">
+          <Card className="mx-auto max-w-3xl">
             <CardHeader>
               <CardTitle className="text-2xl font-normal">
                 Rezerwacja usługi <br />

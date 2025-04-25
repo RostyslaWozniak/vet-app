@@ -1,4 +1,3 @@
-import { db } from "@/server/db";
 import { ServiceCard } from "@/components/cards/service-card";
 import Link from "next/link";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
@@ -9,6 +8,7 @@ import { SearchForm } from "@/components/forms/search-form";
 import { cn } from "@/lib/utils";
 import { COLORS } from "@/lib/constants";
 import { EmptyResult } from "@/components/empty-result";
+import { api } from "@/trpc/server";
 
 export const dynamic = "force-dynamic";
 
@@ -19,36 +19,8 @@ export default async function NewAppointmentPage({
 }) {
   const { search } = await searchParams;
 
-  const services = await db.service.findMany({
-    where: {
-      isActive: true,
-      vetServices: {
-        some: {
-          vetId: {
-            not: undefined,
-          },
-        },
-      },
-
-      ...(search
-        ? {
-            OR: [
-              {
-                name: {
-                  contains: search,
-                  mode: "insensitive",
-                },
-              },
-              {
-                description: {
-                  contains: search,
-                  mode: "insensitive",
-                },
-              },
-            ],
-          }
-        : {}),
-    },
+  const services = await api.public.services.getAll({
+    search,
   });
   return (
     <section>

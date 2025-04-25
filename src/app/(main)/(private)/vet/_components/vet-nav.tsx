@@ -20,7 +20,7 @@ const sidebarItems = [
     icon: PawPrint,
   },
   {
-    href: "/vet/schedule/availability",
+    href: "/vet/availability",
     label: "Dostępność",
     icon: Clock,
   },

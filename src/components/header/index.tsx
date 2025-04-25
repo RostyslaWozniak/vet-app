@@ -8,7 +8,7 @@ import { Separator } from "../ui/separator";
 export async function Header() {
   return (
     <header className="bg-card/60 text-card-foreground top-0 z-30 h-16 w-full backdrop-blur md:sticky">
-      <MaxWidthWrapper className="flex h-full max-w-[1800px] items-center justify-between">
+      <MaxWidthWrapper className="flex h-full max-w-[1600px] items-center justify-between">
         <Link href="/" className="font-montserrat text-3xl font-bold">
           <span className="text-primary">Vet</span>App
         </Link>

@@ -22,13 +22,11 @@ export async function middleware(request: NextRequest) {
 
 async function middlewareAuth(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith(vetRoutes)) {
-    console.log("HERE");
     const user = await getUserFromSession(request.cookies);
     if (user == null) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
     if (!user.roles.includes("VET")) {
-      console.log({ user });
       return NextResponse.redirect(new URL("/", request.url));
     }
   }

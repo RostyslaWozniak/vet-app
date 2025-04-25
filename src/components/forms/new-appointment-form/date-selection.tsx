@@ -23,6 +23,7 @@ type DateSelectionProps = {
   validTimes: Date[] | undefined;
   isOpen: boolean;
   isGettingValidTimes: boolean;
+  isUser: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTimeDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleCalendarMonthChange: (month: number, year: number) => void;
@@ -33,6 +34,7 @@ export function DateSelection({
   validTimes,
   isOpen,
   isGettingValidTimes,
+  isUser,
   setIsOpen,
   setIsTimeDialogOpen,
   handleCalendarMonthChange,
@@ -43,6 +45,12 @@ export function DateSelection({
     setIsOpen(false);
     setIsTimeDialogOpen(true);
   }
+
+  const currentDate = new Date();
+
+  const currentTimeInMs = currentDate.getTime();
+
+  const maxTimeInMs = currentTimeInMs + 14 * 24 * 60 * 60 * 1000; // 14 days in ms
 
   return (
     <>
@@ -68,9 +76,11 @@ export function DateSelection({
           selected={field.value}
           onSelect={(e) => handleSelectDate(e)}
           disabled={(date: string | number | Date) =>
-            !validTimes?.some((time) => isSameDay(date, time)) ||
-            date < new Date()
+            !validTimes?.some((time) => isSameDay(date, time))
           }
+          fromMonth={new Date()}
+          fromDate={new Date()}
+          toDate={isUser ? undefined : new Date(maxTimeInMs)}
           initialFocus
         />
       </DialogWrapper>

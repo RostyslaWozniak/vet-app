@@ -18,22 +18,20 @@ export class VetScheduleService {
         userId,
       });
       vetScheduleId = newSchedule.id;
-      if (data.availabilities.length > 0) {
-        await VetScheduleAvailabilityService.createMany({
-          availabilities: data.availabilities,
-          vetScheduleId,
-        });
-      }
+
+      await VetScheduleAvailabilityService.createMany({
+        availabilities: data.availabilities,
+        vetScheduleId,
+      });
     } else {
       vetScheduleId = existingSchedule.id;
-      if (data.availabilities.length > 0) {
-        await VetScheduleAvailabilityService.deleteMany(vetScheduleId);
 
-        await VetScheduleAvailabilityService.createMany({
-          availabilities: data.availabilities,
-          vetScheduleId,
-        });
-      }
+      await VetScheduleAvailabilityService.deleteMany(vetScheduleId);
+
+      await VetScheduleAvailabilityService.createMany({
+        availabilities: data.availabilities,
+        vetScheduleId,
+      });
     }
   }
 

@@ -1,16 +1,16 @@
+"use client";
+
 import type React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LinkButton } from "@/components/link-button";
 import { Edit, LogOut } from "lucide-react";
 import { LogOutButton } from "@/auth/components/log-out-button";
-import type { FullUser } from "@/auth/current-user";
 import { getInitials } from "@/lib/utils";
+import { useSession } from "@/app/session-provider";
 
-type ProfileHeaderProps = {
-  user: FullUser;
-};
+export function ProfileHeader() {
+  const { user } = useSession();
 
-export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const initials = getInitials(user.name);
 
   return (

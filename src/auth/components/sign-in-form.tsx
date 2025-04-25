@@ -15,8 +15,11 @@ import { signIn } from "@/auth/actions/sign-in-action";
 import { PasswordInput } from "./password-input";
 import LoadingButton from "@/components/loading-button";
 import { toast } from "sonner";
+import { useTransition } from "react";
 
 export function SignInForm() {
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -26,10 +29,12 @@ export function SignInForm() {
   });
 
   async function onSubmit(data: SignInSchema) {
-    const error = await signIn(data);
-    if (error) {
-      toast.error(error);
-    }
+    startTransition(async () => {
+      const error = await signIn(data);
+      if (error) {
+        toast.error(error);
+      }
+    });
   }
 
   return (
@@ -82,11 +87,7 @@ export function SignInForm() {
             </FormItem>
           )}
         />
-        <LoadingButton
-          loading={form.formState.isSubmitting}
-          type="submit"
-          className="w-full"
-        >
+        <LoadingButton loading={isPending} type="submit" className="w-full">
           Zaloguj
         </LoadingButton>
       </form>

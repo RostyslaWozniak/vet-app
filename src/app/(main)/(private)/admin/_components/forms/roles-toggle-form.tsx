@@ -18,9 +18,11 @@ import {
   toggleRoleSchema,
   type ToggleRoleSchema,
 } from "@/lib/schema/toggle-role-schema";
-// import { toggleRole } from "@/server/actions/admin/toggle-role";
 import LoadingButton from "@/components/loading-button";
-// import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { mapRoles } from "@/lib/map-roles";
 
 export function RolesToggleForm({
   user,
@@ -32,7 +34,20 @@ export function RolesToggleForm({
   };
   setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  // const router = useRouter();
+  const router = useRouter();
+  const { mutate: changeRoles, isPending } =
+    api.admin.user.chageRoles.useMutation({
+      onSuccess: () => {
+        setIsEditOpen(false);
+        router.refresh();
+        toast.success("Rola została zmieniona.");
+      },
+      onError: () => {
+        setIsEditOpen(false);
+        toast.error("Coś poszło nie tak. Spróbuj ponownie.");
+      },
+    });
+
   const form = useForm<ToggleRoleSchema>({
     resolver: zodResolver(toggleRoleSchema),
     defaultValues: {
@@ -42,20 +57,7 @@ export function RolesToggleForm({
   });
 
   async function onSubmit(data: ToggleRoleSchema) {
-    console.log(data);
-    setIsEditOpen(false);
-    // try {
-    //   const error = await toggleRole(data);
-    //   if (error) {
-    //     toast.error("Wystąpił błąd. Spróbuj ponownie.");
-    //   } else {
-    //     toast.success("Uprawnienia zaktualizowane");
-    //     router.refresh();
-    //   }
-    //   setIsEditOpen(false);
-    // } catch {
-    //   toast.error("Wystąpił błąd. Spróbuj ponownie.");
-    // }
+    changeRoles(data);
   }
 
   return (
@@ -73,7 +75,7 @@ export function RolesToggleForm({
                 <MultiSelect
                   options={rolesList.map((role) => ({
                     value: role,
-                    label: role.toLocaleUpperCase(),
+                    label: mapRoles([role]),
                   }))}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -92,7 +94,8 @@ export function RolesToggleForm({
           variant="default"
           type="submit"
           className="w-full"
-          loading={form.formState.isSubmitting}
+          loading={isPending}
+          disabled={!form.formState.isDirty}
         >
           Zapisz
         </LoadingButton>

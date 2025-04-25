@@ -12,7 +12,7 @@ export const toggleRoleSchema = z.object({
   roles: z
     .array(z.enum(rolesList))
     .min(1)
-    .nonempty("Please select at least one role."),
+    .nonempty("Wybierz przynajmniej jedna role"),
 });
 
 export type ToggleRoleSchema = z.infer<typeof toggleRoleSchema>;

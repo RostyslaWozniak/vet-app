@@ -53,7 +53,7 @@ export default async function VetDashboardPage({
     },
   });
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-col">
       <div className="flex-1 space-y-4">
         <MonthPicker />
 

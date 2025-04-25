@@ -24,12 +24,13 @@ export function generateWeekDays(
   availabilities: AvailabilityType[],
 ): WeekDayInfo[] {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Start from Monday
-
+  console.log({ availabilities });
   return Array.from({ length: 7 }).map((_, index) => {
     const date = addDays(weekStart, index);
     const availability = availabilities.find(
       (availability) => availability.dayOfWeek === DAYS_OF_WEEK_IN_ORDER[index],
     );
+
     return {
       name: format(date, "EEEE", { locale: pl }),
       date: date,

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { formatDate, getISOWeek, getISOWeeksInYear, isSameDay } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, groupBy } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AppointmentDialog } from "./conponents/appointment-dialog";
 import type { AppointmentType, WeekDayInfo } from "./types/appointment";
@@ -24,6 +24,7 @@ import { useQueryState } from "nuqs";
 import { getWeekDateRange } from "@/lib/get-month-date-range";
 import { getDateFromWeekAndYear } from "@/lib/formatters";
 import { pl } from "date-fns/locale";
+import { mapDayOfWeek } from "@/lib/schema/map-day-of-week";
 
 type ScheduleProps = {
   weekStartDate: Date;
@@ -85,6 +86,11 @@ export function ScheduleCalendar({
     [currentDate, availabilities],
   );
 
+  const grouppedAvailabilities = useMemo(
+    () => groupBy(availabilities, (a) => a.dayOfWeek),
+    [availabilities],
+  );
+
   // Generate time slots
   const timeSlots = useMemo(
     () => generateTimeSlots(timesRange.visibleHours, timesRange.startHour),
@@ -96,6 +102,7 @@ export function ScheduleCalendar({
     () => filterAppointmentsForWeek(appointments, weekDays, statuses),
     [weekDays, appointments, statuses],
   );
+  console.log(weekDays);
 
   // Navigation handlers
   const navigateToToday = async () => {
@@ -183,7 +190,10 @@ export function ScheduleCalendar({
               </div>
             )}
             {/* Week Header Row */}
-            <WeekHeaderRow weekDays={weekDays} />
+            <WeekHeaderRow
+              weekDays={weekDays}
+              grouppedAvailabilities={grouppedAvailabilities}
+            />
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-[50px_repeat(7,1fr)]">
@@ -207,7 +217,14 @@ export function ScheduleCalendar({
 }
 
 // Component for the week header row
-function WeekHeaderRow({ weekDays }: { weekDays: WeekDayInfo[] }) {
+function WeekHeaderRow({
+  weekDays,
+  grouppedAvailabilities,
+}: {
+  weekDays: WeekDayInfo[];
+  grouppedAvailabilities: Record<string, AvailabilityType[]>;
+}) {
+  console.log({ grouppedAvailabilities });
   return (
     <div className="grid grid-cols-[50px_repeat(7,1fr)] overflow-hidden border-b">
       <div className="text-muted-foreground p-2 text-center text-xs"></div>
@@ -229,9 +246,6 @@ function WeekHeaderRow({ weekDays }: { weekDays: WeekDayInfo[] }) {
             )}
           >
             {formatDate(day.date, "d MMM", { locale: pl })}
-          </div>
-          <div>
-            {day.startTime} - {day.endTime}
           </div>
         </div>
       ))}
