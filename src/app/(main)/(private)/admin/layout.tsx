@@ -16,7 +16,7 @@ export default async function AdminLayout({
   if (!user.roles.includes("ADMIN")) return notFound();
 
   return (
-    <MaxWidthWrapper className="relative flex min-h-[calc(100vh-200px)] w-full max-w-[1600px] flex-grow justify-between">
+    <MaxWidthWrapper className="relative my-8 flex w-full max-w-[1600px] flex-grow justify-between">
       <AdminNav />
       <div className="relative grow">{children}</div>
     </MaxWidthWrapper>

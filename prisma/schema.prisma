@@ -124,7 +124,6 @@ model Appointment {
     createdAt DateTime          @default(now()) @map("created_at")
     updatedAt DateTime          @updatedAt @map("updated_at")
 
-    // @@unique([startTime, vetScheduleId, status], name: "start_time_vet_schedule_id_unique")
     @@map("appointments")
 }
 

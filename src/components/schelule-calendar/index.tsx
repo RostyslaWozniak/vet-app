@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { formatDate, getISOWeek, getISOWeeksInYear, isSameDay } from "date-fns";
-import { cn, groupBy } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AppointmentDialog } from "./conponents/appointment-dialog";
 import type { AppointmentType, WeekDayInfo } from "./types/appointment";
@@ -24,7 +24,6 @@ import { useQueryState } from "nuqs";
 import { getWeekDateRange } from "@/lib/get-month-date-range";
 import { getDateFromWeekAndYear } from "@/lib/formatters";
 import { pl } from "date-fns/locale";
-import { mapDayOfWeek } from "@/lib/schema/map-day-of-week";
 
 type ScheduleProps = {
   weekStartDate: Date;
@@ -86,11 +85,6 @@ export function ScheduleCalendar({
     [currentDate, availabilities],
   );
 
-  const grouppedAvailabilities = useMemo(
-    () => groupBy(availabilities, (a) => a.dayOfWeek),
-    [availabilities],
-  );
-
   // Generate time slots
   const timeSlots = useMemo(
     () => generateTimeSlots(timesRange.visibleHours, timesRange.startHour),
@@ -102,7 +96,6 @@ export function ScheduleCalendar({
     () => filterAppointmentsForWeek(appointments, weekDays, statuses),
     [weekDays, appointments, statuses],
   );
-  console.log(weekDays);
 
   // Navigation handlers
   const navigateToToday = async () => {
@@ -120,7 +113,7 @@ export function ScheduleCalendar({
 
   return (
     <div className="relative h-full xl:p-4">
-      <div className="h-full min-h-[calc(100vh-2rem)]">
+      <div className="h-full">
         {/* Calendar Header */}
         <div className="xl:p-4">
           <div className="flex flex-col gap-4 sm:items-center sm:justify-between xl:flex-row">
@@ -190,10 +183,7 @@ export function ScheduleCalendar({
               </div>
             )}
             {/* Week Header Row */}
-            <WeekHeaderRow
-              weekDays={weekDays}
-              grouppedAvailabilities={grouppedAvailabilities}
-            />
+            <WeekHeaderRow weekDays={weekDays} />
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-[50px_repeat(7,1fr)]">
@@ -217,14 +207,7 @@ export function ScheduleCalendar({
 }
 
 // Component for the week header row
-function WeekHeaderRow({
-  weekDays,
-  grouppedAvailabilities,
-}: {
-  weekDays: WeekDayInfo[];
-  grouppedAvailabilities: Record<string, AvailabilityType[]>;
-}) {
-  console.log({ grouppedAvailabilities });
+function WeekHeaderRow({ weekDays }: { weekDays: WeekDayInfo[] }) {
   return (
     <div className="grid grid-cols-[50px_repeat(7,1fr)] overflow-hidden border-b">
       <div className="text-muted-foreground p-2 text-center text-xs"></div>
@@ -232,7 +215,7 @@ function WeekHeaderRow({
         <div
           key={index}
           className={cn("relative border-l p-2 text-center", {
-            "bg-muted": !day.startTime && !day.endTime,
+            "bg-slate-200": !day.startTimes.length && !day.endTimes.length,
           })}
         >
           <div className="text-muted-foreground text-xs font-medium">
@@ -246,6 +229,13 @@ function WeekHeaderRow({
             )}
           >
             {formatDate(day.date, "d MMM", { locale: pl })}
+          </div>
+          <div>
+            {day.startTimes.map((startTime, i) => (
+              <div key={i}>
+                {startTime} - {day.endTimes[i]}
+              </div>
+            ))}
           </div>
         </div>
       ))}
@@ -292,64 +282,79 @@ function DayColumns({
 }) {
   return (
     <>
-      {weekDays.map((day, dayIndex) => (
-        <div
-          key={dayIndex}
-          className={cn("relative border-l", {
-            "bg-muted": !day.startTime && !day.endTime,
-          })}
-        >
-          {/* Time Grid Cells */}
-          {timeSlots.map((_, timeIndex) => (
-            <div
-              key={timeIndex}
-              className="border-b"
-              style={{ height: `${cellSize}px` }}
-            ></div>
-          ))}
+      {weekDays.map((day, dayIndex) => {
+        const slots: string[] = [];
 
-          {/* Appointment Blocks */}
-          {visibleAppointments
-            .filter((appointment) =>
-              isSameDay(day.date, new Date(appointment.startTime)),
-            )
-            .map((appointment, index) => {
-              const positionStyle = calculateAppointmentPosition(
-                new Date(appointment.startTime),
-                new Date(appointment.endTime),
-                cellSize,
-                dayStartHour,
-              );
-              const { color } = mapAppointmentStatus(appointment.status);
+        const startHours = day.startTimes.map((startTime) =>
+          Number(startTime.split(":")[0]),
+        );
+        const visbleHours = day.startTimes.map(
+          (startTime, i) =>
+            Number(day.endTimes[i]?.split(":")[0]) -
+            Number(startTime.split(":")[0]),
+        );
 
-              return (
-                <AppointmentDialog key={index} appointment={appointment}>
-                  <div
-                    key={index}
-                    className={cn(
-                      "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:min-h-10 hover:scale-[1.03] hover:shadow-lg",
+        startHours.forEach((startHour, i) => {
+          const result = generateTimeSlots(visbleHours[i]!, startHour);
+          slots.push(...result);
+        });
 
-                      color.default,
-                    )}
-                    style={{
-                      ...positionStyle,
-                      left: "4px",
-                      right: "4px",
-                    }}
-                  >
-                    <div>
-                      {formatTimeRange(
-                        new Date(appointment.startTime),
-                        new Date(appointment.endTime),
+        console.log("startHours", startHours);
+        console.log("visbleHours", visbleHours);
+        return (
+          <div key={dayIndex} className={cn("relative border-l")}>
+            {/* Time Grid Cells */}
+            {timeSlots.map((timeSlot, timeIndex) => (
+              <div
+                key={timeIndex}
+                className={cn("border-b", {
+                  "bg-slate-200": !slots.includes(timeSlot),
+                })}
+                style={{ height: `${cellSize}px` }}
+              />
+            ))}
+
+            {/* Appointment Blocks */}
+            {visibleAppointments
+              .filter((appointment) =>
+                isSameDay(day.date, new Date(appointment.startTime)),
+              )
+              .map((appointment, index) => {
+                const positionStyle = calculateAppointmentPosition(
+                  new Date(appointment.startTime),
+                  new Date(appointment.endTime),
+                  cellSize,
+                  dayStartHour,
+                );
+                const { color } = mapAppointmentStatus(appointment.status);
+                return (
+                  <AppointmentDialog key={index} appointment={appointment}>
+                    <div
+                      key={index}
+                      className={cn(
+                        "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:min-h-10 hover:scale-[1.03] hover:shadow-lg",
+                        color.default,
                       )}
+                      style={{
+                        ...positionStyle,
+                        left: "4px",
+                        right: "4px",
+                      }}
+                    >
+                      <div>
+                        {formatTimeRange(
+                          new Date(appointment.startTime),
+                          new Date(appointment.endTime),
+                        )}
+                      </div>
+                      <div>{appointment.contactName}</div>
                     </div>
-                    <div>{appointment.contactName}</div>
-                  </div>
-                </AppointmentDialog>
-              );
-            })}
-        </div>
-      ))}
+                  </AppointmentDialog>
+                );
+              })}
+          </div>
+        );
+      })}
     </>
   );
 }
