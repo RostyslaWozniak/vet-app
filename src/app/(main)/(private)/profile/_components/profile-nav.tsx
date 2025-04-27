@@ -9,6 +9,7 @@ import {
   CalendarSearch,
   Calendar,
   Clock,
+  PawPrintIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -23,18 +24,24 @@ const PROFILE_NAV_ITEMS = [
   { id: 3, label: "Nowa wizyta", icon: Plus, href: "/appointments/new" },
   {
     id: 4,
+    label: "Moje pupile",
+    icon: PawPrintIcon,
+    href: "/profile/pets",
+  },
+  {
+    id: 5,
     label: "Wszystkie wizyty",
     icon: CalendarSearch,
     href: "/profile/appointments",
   },
   {
-    id: 5,
+    id: 6,
     label: "Zaplanowane wizyty",
     icon: Calendar,
     href: "/profile/appointments/active",
   },
   {
-    id: 6,
+    id: 7,
     label: "Zakończone wizyty",
     icon: Clock,
     href: "/profile/appointments/finished",
@@ -44,7 +51,7 @@ const PROFILE_NAV_ITEMS = [
 export function ProfileNav() {
   const pathname = usePathname();
   return (
-    <nav className="scrollbar-hide -mx-2.5 mt-6 flex gap-2 overflow-scroll px-2.5 md:flex-wrap">
+    <nav className="scrollbar-hide -mx-2.5 flex gap-2 overflow-scroll px-2.5 py-2 md:flex-wrap">
       {PROFILE_NAV_ITEMS.map(({ id, label, icon: Icon, href }) => (
         <LinkButton
           key={id}

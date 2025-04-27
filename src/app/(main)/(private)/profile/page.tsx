@@ -2,11 +2,15 @@ import { LinkButton } from "@/components/link-button";
 import { api } from "@/trpc/server";
 import { EmptyResult } from "@/components/empty-result";
 import { Calendar, Clock, Plus } from "lucide-react";
-import { AppointmentsSection } from "./_components/appointments-section";
+import { AppointmentsSection } from "./_components/appointments/appointments-section";
+import { PetsSection } from "./_components/pets/pets-section";
+import { db } from "@/server/db";
+import { getCurrentUser } from "@/auth/current-user";
 
 const MIN_APPPOINTMENTS_TO_SHOW = 1;
 
 export default async function ProfilePage() {
+  const user = await getCurrentUser({ redirectIfNotFound: true });
   const {
     appointments: activeAppointments,
     appointmentsCount: activeAppointmentsCount,
@@ -23,9 +27,15 @@ export default async function ProfilePage() {
     orderBy: "startTime",
     order: "desc",
   });
+  const pets = await db.pet.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      <PetsSection pets={pets} />
       <AppointmentsSection
         title="Zaplanowane wizyty"
         moreHref="/profile/appointments/active"

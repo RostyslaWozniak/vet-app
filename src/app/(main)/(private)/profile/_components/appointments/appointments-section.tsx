@@ -1,7 +1,7 @@
 import { LinkButton } from "@/components/link-button";
 import { H2 } from "@/components/typography";
 import type { RouterOutputs } from "@/trpc/react";
-import { ProfileAppointmentsView } from "./profile-appointments-view";
+import { AppointmentCard } from "./appointment-card";
 
 export function AppointmentsSection({
   appointments,
@@ -36,7 +36,11 @@ export function AppointmentsSection({
       </div>
 
       {!isEmpty ? (
-        <ProfileAppointmentsView appointments={appointments} />
+        <div className="space-y-4">
+          {appointments.map((appointment) => (
+            <AppointmentCard key={appointment.id} appointment={appointment} />
+          ))}
+        </div>
       ) : (
         <EmptyComponent />
       )}

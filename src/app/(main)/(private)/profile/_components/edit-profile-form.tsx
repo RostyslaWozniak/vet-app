@@ -46,7 +46,7 @@ export function EditProfileFrom() {
     defaultValues: {
       name: user.name,
       email: user.email,
-      phoneNumber: user.phoneNumber,
+      phoneNumber: user.phoneNumber ?? undefined,
       photo: user.photo ?? "",
     },
   });

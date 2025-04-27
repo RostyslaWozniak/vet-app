@@ -1,5 +1,5 @@
 import { api } from "@/trpc/server";
-import { AppointmentsSection } from "../../_components/appointments-section";
+import { AppointmentsSection } from "../../_components/appointments/appointments-section";
 import { EmptyResult } from "@/components/empty-result";
 import { Calendar, Plus } from "lucide-react";
 import { LinkButton } from "@/components/link-button";

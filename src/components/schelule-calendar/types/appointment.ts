@@ -4,7 +4,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber: string | null;
 };
 
 export type AppointmentType = {

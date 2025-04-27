@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface LinkButtonProps extends ButtonProps {
   href: string;
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   external?: boolean;
 }
 

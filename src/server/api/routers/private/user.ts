@@ -3,7 +3,7 @@ import { createTRPCRouter } from "../../trpc";
 import { updateUserProfile } from "@/lib/schema/user";
 import { TRPCError } from "@trpc/server";
 
-export const publicUserRouter = createTRPCRouter({
+export const privateUserRouter = createTRPCRouter({
   updateProfile: privateProcedure
     .input(
       updateUserProfile.catch(({ error }) => {

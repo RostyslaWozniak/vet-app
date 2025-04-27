@@ -11,7 +11,8 @@ model User {
     id            String             @id @default(uuid())
     name          String
     email         String             @unique
-    phoneNumber   String             @default("+48 777 777 777") @map("phone_number")
+    phoneNumber   String?            @map("phone_number")
+    pets          Pet[]
     password      String?
     salt          String?
     roles         Roles[]            @default([CLIENT])
@@ -97,15 +98,19 @@ model VetService {
     vetId     String     @map("vet_id")
     vet       VetProfile @relation(fields: [vetId], references: [id], name: "VetProfileServices")
     serviceId String     @map("service_id")
-    service   Service    @relation(fields: [serviceId], references: [id], name: "VetServices")
+    service   Service    @relation(fields: [serviceId], references: [id], name: "VetServices", onDelete: Cascade)
 
+    @@unique([vetId, serviceId])
     @@map("vet_services")
 }
 
 model Appointment {
     id     String  @id @default(uuid())
     userId String? @map("user_id")
-    user   User?   @relation(fields: [userId], references: [id])
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    petId String? @map("pet_id")
+    pet   Pet?    @relation(fields: [petId], references: [id], onDelete: SetNull)
 
     contactName  String? @map("contact_name")
     contactEmail String? @map("contact_email")
@@ -115,7 +120,7 @@ model Appointment {
     vetSchedule   VetSchedule @relation(fields: [vetScheduleId], references: [id])
 
     serviceId String  @map("service_id")
-    service   Service @relation(fields: [serviceId], references: [id])
+    service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
     startTime DateTime @map("start_time")
     endTime   DateTime @map("end_time")
@@ -125,6 +130,25 @@ model Appointment {
     updatedAt DateTime          @updatedAt @map("updated_at")
 
     @@map("appointments")
+}
+
+model Pet {
+    id       String    @id @default(uuid())
+    name     String
+    species  String
+    breed    String?
+    birthday DateTime?
+    photo    String?
+
+    userId String @map("user_id")
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    appointments Appointment[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("pets")
 }
 
 enum ScheduleDayOfWeek {
