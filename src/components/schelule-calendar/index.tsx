@@ -299,8 +299,6 @@ function DayColumns({
           slots.push(...result);
         });
 
-        console.log("startHours", startHours);
-        console.log("visbleHours", visbleHours);
         return (
           <div key={dayIndex} className={cn("relative border-l")}>
             {/* Time Grid Cells */}
