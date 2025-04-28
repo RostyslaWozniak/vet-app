@@ -35,8 +35,7 @@ export function AppointmentDialog({
   return (
     <>
       <DialogWrapper
-        title=" Szczegóły wizyty"
-        description="Czy napewno chcesz anulować wizytę? Ta operacja nie będzie mogła być odwrócona!"
+        title="Szczegóły wizyty"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className="scrollbar-hide flex max-h-[90vh] w-260 gap-3"

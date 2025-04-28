@@ -26,7 +26,7 @@ type DialogProps = {
   closeButtonVariant?: VariantProps<typeof buttonVariants>;
   contentClassName?: string;
   className?: string;
-  description: string;
+  description?: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
@@ -41,7 +41,7 @@ export const DialogWrapper = ({
   isOpen,
   setIsOpen,
   title,
-  description,
+  description = "",
 }: DialogProps) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   return (
