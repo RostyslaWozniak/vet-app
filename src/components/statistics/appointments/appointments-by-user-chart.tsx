@@ -72,7 +72,7 @@ export function AppointmentsByUserChart({
 
   return (
     <>
-      <div className="space-x-2">
+      <div className="space-y-2 space-x-2">
         {charts.map(({ name, value }) => (
           <Button
             key={value}

@@ -10,7 +10,7 @@ export default async function VetLayout({ children }: { children: ReactNode }) {
   if (!user.roles.includes("VET")) return notFound();
 
   return (
-    <MaxWidthWrapper className="relative flex min-h-[calc(100vh-200px)] w-full max-w-[1600px] flex-grow flex-col justify-between xl:flex-row">
+    <MaxWidthWrapper className="relative my-8 flex min-h-[calc(100vh-200px)] w-full max-w-[1600px] flex-grow flex-col justify-between xl:flex-row">
       <VetNav />
       <div className="relative mt-8 flex-grow">{children}</div>
     </MaxWidthWrapper>

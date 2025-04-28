@@ -54,10 +54,10 @@ export default async function AdminDashboardPage({
 
   return (
     <div className="flex w-full flex-col">
-      <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+      <div className="flex-1 space-y-4 pt-6 md:p-8">
         <MonthPicker />
         <AppointmentStats appointments={appointments} />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <div className="-mx -mx-2.5 grid gap-4 overflow-x-auto px-2.5 md:grid-cols-2 lg:grid-cols-7">
           <Card className="col-span-3">
             <CardHeader>
               <CardTitle>Statusy wizyty</CardTitle>
