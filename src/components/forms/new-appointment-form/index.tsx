@@ -185,6 +185,7 @@ export function NewAppointmentForm({
                   <FormMessage className="text-sm" />
                 </div>
                 <PetSelection
+                  serviceId={service.id}
                   field={field}
                   isOpen={isPetDialogOpen}
                   setIsOpen={setIsPetDialogOpen}

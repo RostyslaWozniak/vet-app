@@ -24,6 +24,7 @@ type PetSelectionProps = {
     },
     "petId"
   >;
+  serviceId: string;
   disabled: boolean;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,6 +34,7 @@ type PetSelectionProps = {
 export function PetSelection({
   field,
   disabled,
+  serviceId,
   isOpen,
   setIsOpen,
   setIsTimeDialogOpen,
@@ -65,7 +67,7 @@ export function PetSelection({
                 <div
                   key={pet.id}
                   onClick={() => {
-                    field.onChange(pet.id);
+                    field.onChange(field.value === pet.id ? undefined : pet.id);
                   }}
                   className={cn("cursor-pointer", {
                     "text-primary": pet.id === field.value,
@@ -77,15 +79,13 @@ export function PetSelection({
             ) : (
               <EmptyResult />
             )}
-            <AddPetButton href="/profile/pets/add?redirect=/appointments/new/9cfad619-56d1-4d99-9143-745c2bc667a9" />
+            <AddPetButton
+              href={`/profile/pets/add?redirect=/appointments/new/${serviceId}`}
+            />
           </div>
         }
         <div className="mt-4 flex justify-end">
-          <Button
-            onClick={() => setIsOpen(false)}
-            className="w-full sm:w-auto"
-            size="lg"
-          >
+          <Button onClick={() => setIsOpen(false)} className="w-full sm:w-auto">
             Ok
           </Button>
         </div>

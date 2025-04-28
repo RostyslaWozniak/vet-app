@@ -10,7 +10,7 @@ export default async function ProfileAddPetPage({
   return (
     <div>
       <BackButton className="-mx-2.5 mb-2.5" />
-      <AddEditPetForm redirect={redirect} />
+      <AddEditPetForm redirectUrl={redirect} />
     </div>
   );
 }
