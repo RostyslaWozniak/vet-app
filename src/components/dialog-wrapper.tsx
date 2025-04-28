@@ -27,15 +27,15 @@ type DialogProps = {
   contentClassName?: string;
   className?: string;
   description?: string;
+  title: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
 };
 
 export const DialogWrapper = ({
   children,
   closeButton,
-  closeButtonVariant = { variant: "default", size: "lg" },
+  closeButtonVariant = { variant: "outline", size: "default" },
   contentClassName,
   className,
   isOpen,
@@ -59,26 +59,28 @@ export const DialogWrapper = ({
               <DialogDescription>{description}</DialogDescription>
             </DialogHeader>
             <div className={cn("grow", className)}>
-              {children}
               {closeButton && (
                 <DialogClose
                   className={cn(
-                    "self-end justify-self-end",
+                    "mr-2 self-end justify-self-end",
                     buttonVariants(closeButtonVariant),
                   )}
                 >
                   {closeButton}
                 </DialogClose>
               )}
+              {children}
             </div>
           </DialogContent>
         </Dialog>
       ) : (
         <Drawer open={isOpen} onOpenChange={setIsOpen} disablePreventScroll>
-          <DrawerContent className={cn("px-2.5 pb-12", contentClassName)}>
+          <DrawerContent className={cn("px-2.5", contentClassName)}>
             <DrawerHeader className="text-left">
-              <DrawerTitle>{title}</DrawerTitle>
-              <DrawerDescription>{description}</DrawerDescription>
+              <DrawerTitle className="text-xl">{title}</DrawerTitle>
+              <DrawerDescription className="text-base">
+                {description}
+              </DrawerDescription>
             </DrawerHeader>
             {children}
             <DrawerFooter className="pt-2">

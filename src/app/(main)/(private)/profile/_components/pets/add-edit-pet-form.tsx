@@ -16,32 +16,64 @@ import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { petFormSchema, type PetFromSchema } from "@/lib/schema/pet";
+import type { Pet } from "../../pets/page";
+import { formatYearsAndMonthsToNumber } from "@/lib/formatters";
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
-export function AddEditPetForm() {
+type AddEditPetFormProps =
+  | {
+      pet: Pet;
+      setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    }
+  | {
+      pet?: undefined;
+      setIsDialogOpen?: undefined;
+    };
+
+export function AddEditPetForm({ pet, setIsDialogOpen }: AddEditPetFormProps) {
   const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 640px)");
 
-  const { mutate: createPet, isPending: isPetCreating } =
-    api.private.pet.create.useMutation({
-      onSuccess: () => {
-        toast.success("Pupila dodano");
-        router.push("/profile/pets");
-      },
-      onError: ({ message }) => {
-        toast.error(message);
-      },
-    });
+  const { mutate, isPending } = pet
+    ? api.private.pet.update.useMutation({
+        onSuccess: () => {
+          toast.success("Dane pupila zapisano");
+          setIsDialogOpen(false);
+          router.refresh();
+        },
+        onError: ({ message }) => {
+          toast.error(message);
+        },
+      })
+    : api.private.pet.create.useMutation({
+        onSuccess: () => {
+          toast.success("Pupila dodano");
+          router.push("/profile/pets");
+        },
+        onError: ({ message }) => {
+          toast.error(message);
+        },
+      });
+
   const form = useForm<PetFromSchema>({
     resolver: zodResolver(petFormSchema),
     defaultValues: {
-      name: "",
-      species: "",
-      breed: "",
-      age: 0,
+      name: pet?.name ?? "",
+      species: pet?.species ?? "",
+      breed: pet?.breed ?? "",
+      age: pet?.birthday
+        ? formatYearsAndMonthsToNumber(pet.birthday)
+        : undefined,
     },
   });
 
   function onSubmit(values: PetFromSchema) {
-    createPet(values);
+    if (pet) {
+      mutate({ ...values, petId: pet.id });
+    } else {
+      mutate(values);
+    }
   }
 
   return (
@@ -105,13 +137,25 @@ export function AddEditPetForm() {
           )}
         />
         <div className="flex justify-end">
+          {pet && (
+            <Button
+              type="button"
+              variant="outline"
+              size={isMobile ? "lg" : "default"}
+              className="hidde mr-2 sm:flex"
+              onClick={() => setIsDialogOpen(false)}
+            >
+              Anuluj
+            </Button>
+          )}
           <LoadingButton
-            loading={isPetCreating}
+            loading={isPending}
             disabled={!form.formState.isDirty}
             type="submit"
             className="w-full sm:w-auto"
+            size={isMobile ? "lg" : "default"}
           >
-            Dodaj pupila
+            {pet ? "Zapisz" : "Dodaj pupila"}
           </LoadingButton>
         </div>
       </form>

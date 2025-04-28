@@ -19,7 +19,12 @@ export function BackButton({ children, className, ...props }: BackButtonProps) {
       className={cn("", className)}
       {...props}
     >
-      {children ?? <ArrowLeft />}
+      {children ?? (
+        <>
+          <ArrowLeft />
+          Powrót
+        </>
+      )}
     </Button>
   );
 }

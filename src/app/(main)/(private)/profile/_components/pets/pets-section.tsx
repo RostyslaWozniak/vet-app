@@ -1,7 +1,8 @@
 import { Avatar } from "@/components/custom-ui/avatar";
 import { LinkButton } from "@/components/link-button";
 import { H2 } from "@/components/typography";
-import { CatIcon, PlusIcon } from "lucide-react";
+import { CatIcon, PawPrintIcon } from "lucide-react";
+import Link from "next/link";
 
 type Pet = {
   id: string;
@@ -29,7 +30,7 @@ export function PetsSection({ pets }: { pets: Pet[] }) {
       </div>
       <div className="scrollbar-hide -mx-2.5 flex items-start gap-x-2 overflow-x-scroll px-2.5 py-2 lg:gap-x-4">
         {pets.length > 0 ? (
-          pets.map((pet) => <PetCard key={pet.id} pet={pet} />)
+          pets.map((pet) => <PetItem key={pet.id} pet={pet} />)
         ) : (
           <EmptyResult />
         )}
@@ -39,9 +40,13 @@ export function PetsSection({ pets }: { pets: Pet[] }) {
   );
 }
 
-function PetCard({ pet }: { pet: Pet }) {
+function PetItem({ pet }: { pet: Pet }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg px-2 pt-3 pb-2">
+    <div className="relative isolate flex flex-col items-center justify-center rounded-lg px-2 pt-3 pb-2">
+      <Link
+        href={`/profile/pets/${pet.id}`}
+        className="absolute inset-0 z-50"
+      />
       <Avatar
         photo={pet.photo}
         name={pet.name}
@@ -63,14 +68,14 @@ function EmptyResult() {
 
 function AddPetButton() {
   return (
-    <div className="text-primary border-primary relative my-auto flex h-24 w-24 flex-col items-center justify-center rounded-lg border px-2 py-3 lg:h-28 lg:w-28">
+    <div className="text-primary border-primary relative my-auto flex h-24 min-w-24 flex-col items-center justify-center rounded-lg border px-2 py-3 lg:h-28 lg:w-28">
       <LinkButton
         variant={"link"}
         href="/profile/pets/add"
         className="absolute inset-0 h-auto rounded-lg"
       />
       <div className="flex flex-grow items-center justify-center">
-        <PlusIcon className="min-h-10 min-w-10" />
+        <PawPrintIcon className="min-h-10 min-w-10" />
       </div>
       <h3 className="text-xs font-medium">Dodaj pupila</h3>
     </div>

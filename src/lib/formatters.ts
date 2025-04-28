@@ -1,7 +1,3 @@
-// const dateFormatter = new Intl.DateTimeFormat(undefined, {
-//   dateStyle: "medium",
-// });
-
 import {
   addYears,
   differenceInMonths,
@@ -42,7 +38,10 @@ export function getDateFromAge(age: number | undefined) {
   return now;
 }
 
-export function formatYearsAndMonths(fromDate: Date, toDate = new Date()) {
+export function formatYearsAndMonthsToString(
+  fromDate: Date,
+  toDate = new Date(),
+) {
   const years = differenceInYears(toDate, fromDate);
   const datePlusYears = addYears(fromDate, years);
   const months = differenceInMonths(toDate, datePlusYears);
@@ -60,4 +59,15 @@ export function formatYearsAndMonths(fromDate: Date, toDate = new Date()) {
   }
 
   return parts.join(", ");
+}
+export function formatYearsAndMonthsToNumber(
+  fromDate: Date,
+  toDate = new Date(),
+) {
+  const years = differenceInYears(toDate, fromDate);
+  const datePlusYears = addYears(fromDate, years);
+  const months = differenceInMonths(toDate, datePlusYears);
+
+  const monthsPart = months > 0 ? `.${months}` : ".0"; // always valid decimal
+  return Number(`${years}${monthsPart}`);
 }
