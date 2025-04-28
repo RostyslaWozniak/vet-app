@@ -12,6 +12,7 @@ import { mapAppointmentStatus } from "@/lib/map-appointment-status";
 import type { $Enums } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 export function AppointmentCard({
   appointment,
@@ -37,6 +38,16 @@ export function AppointmentCard({
               {appointment.vetSchedule.user.name}
             </span>
           </div>
+          {appointment.pet && (
+            <div className="text-foreground relative inline-block text-sm">
+              Pupil:{" "}
+              <span className="font-semibold">{appointment.pet.name}</span>
+              <Link
+                href={`/profile/pets/${appointment.pet.id}`}
+                className="absolute inset-0"
+              />
+            </div>
+          )}
         </div>
         <div>{getStatusBadge(appointment.status)}</div>
       </CardContent>

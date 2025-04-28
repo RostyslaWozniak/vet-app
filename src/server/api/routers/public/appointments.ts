@@ -15,6 +15,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
         guestEmail: z.string().email().min(1, "Required"),
         guestName: z.string().min(1, "Required"),
         guestNotes: z.string().optional(),
+        petId: z.string().optional(),
         serviceId: z.string(),
       }),
     )
@@ -100,6 +101,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
               serviceId: input.serviceId,
               startTime: startDate,
               endTime: endDate,
+              petId: input.petId,
             },
           });
         }

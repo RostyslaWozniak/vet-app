@@ -7,6 +7,7 @@ const appointmentSchemaBase = z.object({
   guestEmail: z.string().min(1, "Jest wymagane").email("Nie poprawny email"),
   guestName: z.string().min(1, "Jest wymagane"),
   guestNotes: z.string().optional(),
+  petId: z.string().optional(),
 });
 
 export const appointmentFromSchema = z

@@ -11,6 +11,7 @@ const getInputObjectSchema = z
     skip: z.number().optional().default(0),
     order: z.enum(["asc", "desc"]).optional().default("desc"),
     orderBy: z.enum(["startTime", "updatedAt"]).optional().default("startTime"),
+    petId: z.string().nullish(),
   })
   .optional()
   .default({
@@ -18,6 +19,7 @@ const getInputObjectSchema = z
     skip: 0,
     order: "desc",
     orderBy: "startTime",
+    petId: null,
   });
 
 export const privateAppointmentsRouter = createTRPCRouter({
@@ -26,6 +28,7 @@ export const privateAppointmentsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const where: Prisma.AppointmentWhereInput = {
         userId: ctx.user.id,
+        ...(input.petId && { petId: input.petId }),
       };
 
       const appointmentsCount = await getAppointmentsCount(where);
@@ -177,6 +180,12 @@ const GET_APPOINTMENT_SELECT_FIELDS =
         name: true,
         description: true,
         durationInMinutes: true,
+      },
+    },
+    pet: {
+      select: {
+        id: true,
+        name: true,
       },
     },
     vetSchedule: {

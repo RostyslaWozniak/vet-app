@@ -15,9 +15,9 @@ export const dynamic = "force-dynamic";
 export default async function NewAppointmentPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search: string }>;
+  searchParams: Promise<{ search: string; petId: string }>;
 }) {
-  const { search } = await searchParams;
+  const { search, petId } = await searchParams;
 
   const services = await api.public.services.getAll({
     search,
@@ -46,7 +46,7 @@ export default async function NewAppointmentPage({
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, i) => (
               <Link
-                href={`/appointments/new/${service.id}`}
+                href={`/appointments/new/${service.id}${petId ? `?petId=${petId}` : ""}`}
                 key={service.id}
                 className="grid"
               >

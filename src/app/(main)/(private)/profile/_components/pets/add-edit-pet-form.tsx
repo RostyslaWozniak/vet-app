@@ -25,13 +25,19 @@ type AddEditPetFormProps =
   | {
       pet: Pet;
       setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+      redirect?: string;
     }
   | {
       pet?: undefined;
       setIsDialogOpen?: undefined;
+      redirect?: string;
     };
 
-export function AddEditPetForm({ pet, setIsDialogOpen }: AddEditPetFormProps) {
+export function AddEditPetForm({
+  pet,
+  setIsDialogOpen,
+  redirect,
+}: AddEditPetFormProps) {
   const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 640px)");
 
@@ -47,9 +53,14 @@ export function AddEditPetForm({ pet, setIsDialogOpen }: AddEditPetFormProps) {
         },
       })
     : api.private.pet.create.useMutation({
-        onSuccess: () => {
+        onSuccess: ({ id }) => {
           toast.success("Pupila dodano");
-          router.push("/profile/pets");
+          if (redirect) {
+            router.push(`${redirect}?petId=${id}`);
+            router.refresh();
+          } else {
+            router.push("/profile/pets");
+          }
         },
         onError: ({ message }) => {
           toast.error(message);

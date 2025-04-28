@@ -25,19 +25,23 @@ import { TimeSelection } from "./time-selection";
 import { useEffect, useState } from "react";
 import { NotesDialog } from "./notes-dialog";
 import { getMonthRange } from "@/lib/get-month-date-range";
+import { PetSelection } from "./pet-selection";
 
 export function NewAppointmentForm({
   service,
   user,
+  petId,
 }: {
   service: { id: string; durationInMinutes: number };
   user: {
     name: string;
     email: string;
   } | null;
+  petId: string | null;
 }) {
   const [isDateDialogOpen, setIsDateDialogOpen] = useState(true);
   const [isTimeDialogOpen, setIsTimeDialogOpen] = useState(false);
+  const [isPetDialogOpen, setIsPetDialogOpen] = useState(false);
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
 
@@ -84,6 +88,7 @@ export function NewAppointmentForm({
     defaultValues: {
       guestName: user?.name ?? "",
       guestEmail: user?.email ?? "",
+      petId: petId ?? "",
     },
   });
 
@@ -158,15 +163,38 @@ export function NewAppointmentForm({
                     field={field}
                     times={validTimes?.filter((time) => isSameDay(time, date))}
                     disabled={!date}
+                    isPetChoosen={!!form.getValues("petId")}
                     isOpen={isTimeDialogOpen}
                     setIsOpen={setIsTimeDialogOpen}
                     setIsDateDialogOpen={setIsDateDialogOpen}
+                    setIsPetDialogOpen={user ? setIsPetDialogOpen : undefined}
                   />
                 </FormItem>
               );
             }}
           />
         </div>
+        {user && (
+          <FormField
+            control={form.control}
+            name="petId"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <div className="flex h-5 items-center gap-4">
+                  <FormLabel>Zwierzak (opjonalnie)</FormLabel>
+                  <FormMessage className="text-sm" />
+                </div>
+                <PetSelection
+                  field={field}
+                  isOpen={isPetDialogOpen}
+                  setIsOpen={setIsPetDialogOpen}
+                  setIsTimeDialogOpen={setIsTimeDialogOpen}
+                  disabled={false}
+                />
+              </FormItem>
+            )}
+          />
+        )}
         {!user && (
           <div className="flex flex-col gap-4 md:flex-row md:items-start">
             <FormField

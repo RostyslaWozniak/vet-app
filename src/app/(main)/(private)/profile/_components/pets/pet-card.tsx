@@ -3,6 +3,7 @@ import type { Pet } from "../../pets/page";
 import { PetCardMore } from "./pet-card-more";
 import { BoneIcon, CakeIcon, PawPrintIcon } from "lucide-react";
 import { formatYearsAndMonthsToString } from "@/lib/formatters";
+import Link from "next/link";
 
 export function PetCard({ pet }: { pet: Pet }) {
   return (
@@ -10,6 +11,7 @@ export function PetCard({ pet }: { pet: Pet }) {
       key={pet.id}
       className="relative flex min-h-38 flex-col gap-4 rounded-lg border p-3 lg:p-4"
     >
+      <Link href={`/profile/pets/${pet.id}`} className="absolute inset-0" />
       <div className="absolute top-1 right-1">
         <PetCardMore pet={pet} />
       </div>

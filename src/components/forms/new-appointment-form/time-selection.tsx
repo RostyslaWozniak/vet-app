@@ -21,8 +21,10 @@ type TimeSelectionProps = {
   times: Date[] | undefined;
   disabled: boolean;
   isOpen: boolean;
+  isPetChoosen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPetDialogOpen: React.Dispatch<React.SetStateAction<boolean>> | undefined;
 };
 
 export function TimeSelection({
@@ -30,8 +32,10 @@ export function TimeSelection({
   times,
   disabled,
   isOpen,
+  isPetChoosen,
   setIsOpen,
   setIsDateDialogOpen,
+  setIsPetDialogOpen,
 }: TimeSelectionProps) {
   return (
     <>
@@ -65,6 +69,8 @@ export function TimeSelection({
               onClick={() => {
                 field.onChange(time);
                 setIsOpen(false);
+                if (setIsPetDialogOpen && !isPetChoosen)
+                  setIsPetDialogOpen(true);
               }}
             >
               {formatTimeString(time)}

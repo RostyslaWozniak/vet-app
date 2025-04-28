@@ -15,10 +15,13 @@ import { NewAppointmentForm } from "@/components/forms/new-appointment-form";
 
 export default async function ServiceIdPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ serviceId: string }>;
+  searchParams: Promise<{ petId: string }>;
 }) {
   const { serviceId } = await params;
+  const { petId } = await searchParams;
 
   const user = await getCurrentUser({ withFullUser: true });
 
@@ -62,7 +65,7 @@ export default async function ServiceIdPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <NewAppointmentForm service={service} user={user} />
+              <NewAppointmentForm service={service} user={user} petId={petId} />
             </CardContent>
           </Card>
         </div>

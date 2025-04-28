@@ -46,13 +46,16 @@ export const privatePetRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const birthday = getDateFromAge(input.age);
       try {
-        await ctx.db.pet.create({
+        return await ctx.db.pet.create({
           data: {
             name: input.name,
             species: input.species,
             birthday,
             breed: input.breed,
             userId: ctx.user.id,
+          },
+          select: {
+            id: true,
           },
         });
       } catch (err) {

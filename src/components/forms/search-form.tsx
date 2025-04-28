@@ -21,6 +21,7 @@ export function SearchForm({
   autoFocus = false,
 }: SearchFormProps) {
   const router = useRouter();
+  const [isFirstRender, setIsFirstRender] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useQueryState(`${searchKey}`, {
     defaultValue: "",
@@ -28,10 +29,14 @@ export function SearchForm({
   const debouncedSearch = useDebounce(search, 500);
 
   useEffect(() => {
+    if (isFirstRender) return setIsFirstRender(false);
+
     router.push(
       `${path}${debouncedSearch ? `?${searchKey}=${debouncedSearch}` : ""}`,
     );
+
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, path, router, searchKey]);
   return (
     <form className="relative flex items-center gap-2">

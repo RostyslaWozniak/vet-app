@@ -72,7 +72,10 @@ export function PetCardMore({ pet }: { pet: Pet }) {
                 "text-muted-foreground relative w-full justify-start text-start",
               )}
             >
-              <Link href={`/appointments/new`} className="absolute inset-0" />
+              <Link
+                href={`/appointments/new?petId=${pet.id}`}
+                className="absolute inset-0"
+              />
               <PlusIcon className="text-primary-foreground bg-primary rounded-full stroke-4 p-0.5" />{" "}
               Umów wizytę
             </DropdownMenuItem>
@@ -105,7 +108,7 @@ export function PetCardMore({ pet }: { pet: Pet }) {
             contentClassName="pb-0"
           >
             <LinkButton
-              href={`/appointments/new`}
+              href={`/appointments/new?petId=${pet.id}`}
               variant="ghost"
               className="text-muted-foreground h-12 w-full justify-start gap-x-6 text-start"
             >
