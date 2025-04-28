@@ -27,7 +27,7 @@ export async function ServicesSection() {
         <H2 className="text-start text-2xl md:hidden">Usługi</H2>
         {services.length > 0 ? (
           <>
-            <div className="mb-8 grid grid-cols-9 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mb-8 grid w-full grid-cols-9 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service, i) => (
                 <MotionWrapper
                   key={service.id}
