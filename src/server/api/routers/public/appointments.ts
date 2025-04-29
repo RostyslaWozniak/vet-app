@@ -5,8 +5,8 @@ import { TRPCError } from "@trpc/server";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 import { getCurrentUser } from "@/auth/current-user";
-import { fromZonedTime } from "date-fns-tz";
-import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
+// import { fromZonedTime } from "date-fns-tz";
+// import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
 
 export const publicAppointmentsRouter = createTRPCRouter({
   create: publicProcedure
@@ -21,10 +21,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const startDate = fromZonedTime(
-        new Date(input.startTime),
-        TIME_ZONE_CONFIG.location,
-      );
+      const startDate = new Date(input.startTime);
       const startTime = startDate.getTime();
 
       if (startTime < Date.now()) {
@@ -48,10 +45,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
           message: "Usługa nie istnieje",
         });
 
-      const endDate = fromZonedTime(
-        new Date(startTime + service.durationInMinutes * 60000),
-        TIME_ZONE_CONFIG.location,
-      ); // Appointment's end time
+      const endDate = new Date(startTime + service.durationInMinutes * 60000);
 
       const availabilities = await ctx.db.vetScheduleAvailability.findMany({
         where: {
