@@ -18,10 +18,10 @@ import {
   setMinutes,
 } from "date-fns";
 import type { $Enums } from "@prisma/client";
-// import { fromZonedTime, toZonedTime } from "date-fns-tz";
+import { fromZonedTime } from "date-fns-tz";
 import type { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import { TRPCError } from "@trpc/server";
-// import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
+import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
 
 export const publicScheduleRouter = createTRPCRouter({
   getValidTimesFromSchedule: publicProcedure
@@ -166,30 +166,21 @@ function getAvailabilities(
   if (availabilities == null) return [];
 
   return availabilities.map(({ startTime, endTime }) => {
-    const start = setMinutes(
-      setHours(date, parseInt(startTime.split(":")[0]!)),
-      parseInt(startTime.split(":")[1]!),
+    const start = fromZonedTime(
+      setMinutes(
+        setHours(date, parseInt(startTime.split(":")[0]!)),
+        parseInt(startTime.split(":")[1]!),
+      ),
+      TIME_ZONE_CONFIG.location,
     );
 
-    const end = setMinutes(
-      setHours(date, parseInt(endTime.split(":")[0]!)),
-      parseInt(endTime.split(":")[1]!),
+    const end = fromZonedTime(
+      setMinutes(
+        setHours(date, parseInt(endTime.split(":")[0]!)),
+        parseInt(endTime.split(":")[1]!),
+      ),
+      TIME_ZONE_CONFIG.location,
     );
-    // const start = fromZonedTime(
-    //   setMinutes(
-    //     setHours(date, parseInt(startTime.split(":")[0]!)),
-    //     parseInt(startTime.split(":")[1]!),
-    //   ),
-    //   "Europe/Warsaw",
-    // );
-
-    // const end = fromZonedTime(
-    //   setMinutes(
-    //     setHours(date, parseInt(endTime.split(":")[0]!)),
-    //     parseInt(endTime.split(":")[1]!),
-    //   ),
-    //   "Europe/Warsaw",
-    // );
     return { start, end };
   });
 }
