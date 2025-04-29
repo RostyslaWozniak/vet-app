@@ -77,7 +77,6 @@ export const publicAppointmentsRouter = createTRPCRouter({
           message: "Brak dostepnych terminow",
         });
       }
-
       const appointments = await ctx.db.appointment.findMany({
         where: {
           startTime: {
@@ -132,7 +131,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
               serviceId: input.serviceId,
               startTime: startDate,
               endTime: endDate,
-              petId: input.petId,
+              ...(input.petId && { petId: input.petId }),
             },
           });
         }
