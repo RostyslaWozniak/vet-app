@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 import { getCurrentUser } from "@/auth/current-user";
-import { toZonedTime } from "date-fns-tz";
+import { fromZonedTime } from "date-fns-tz";
 import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
 
 export const publicAppointmentsRouter = createTRPCRouter({
@@ -21,7 +21,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const startDate = toZonedTime(
+      const startDate = fromZonedTime(
         new Date(input.startTime),
         TIME_ZONE_CONFIG.location,
       );
@@ -48,7 +48,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
           message: "Usługa nie istnieje",
         });
 
-      const endDate = toZonedTime(
+      const endDate = fromZonedTime(
         new Date(startTime + service.durationInMinutes * 60000),
         TIME_ZONE_CONFIG.location,
       ); // Appointment's end time
