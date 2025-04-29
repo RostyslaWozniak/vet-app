@@ -34,6 +34,9 @@ export const publicAppointmentsRouter = createTRPCRouter({
         where: {
           id: input.serviceId,
         },
+        select: {
+          durationInMinutes: true,
+        },
       });
       if (!service)
         throw new TRPCError({
@@ -74,9 +77,36 @@ export const publicAppointmentsRouter = createTRPCRouter({
       if (!isAvailable) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Brak dostepnych terminow",
+          message: "Coś poszło nie tak. Spróbuj ponownie.",
         });
       }
+
+      const appointments = await ctx.db.appointment.findMany({
+        where: {
+          startTime: {
+            gte: new Date(new Date(startDate).setHours(0, 0, 0, 0)),
+            lte: new Date(new Date(startDate).setHours(23, 59, 59, 999)),
+          },
+        },
+        select: {
+          vetScheduleId: true,
+          startTime: true,
+          endTime: true,
+        },
+      });
+
+      appointments.forEach((appointment) => {
+        if (
+          vetScheduleIds.includes(appointment.vetScheduleId) &&
+          startDate >= new Date(appointment.startTime) &&
+          startDate < new Date(appointment.endTime)
+        ) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Termin jest zajety. Spróbuj ponownie.",
+          });
+        }
+      });
 
       try {
         const currentUser = await getCurrentUser();
@@ -101,7 +131,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
               serviceId: input.serviceId,
               startTime: startDate,
               endTime: endDate,
-              petId: input.petId,
+              ...(input.petId && { petId: input.petId }),
             },
           });
         }

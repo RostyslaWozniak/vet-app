@@ -22,8 +22,6 @@ export default async function SchedulePage({
 
   const timesRange = getCallendarRangeHours(availabilities);
 
-  console.log({ availabilities });
-
   return (
     <>
       {availabilities.length > 0 ? (
