@@ -95,7 +95,10 @@ export const publicAppointmentsRouter = createTRPCRouter({
         },
       });
 
-      appointments.forEach((appointment) => {
+      appointments.forEach((appointment, i) => {
+        console.log(
+          `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
+        );
         if (
           vetScheduleIds.includes(appointment.vetScheduleId) &&
           startDate >= new Date(appointment.startTime) &&
