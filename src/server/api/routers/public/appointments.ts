@@ -6,6 +6,7 @@ import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 import { getCurrentUser } from "@/auth/current-user";
 import { env } from "@/env";
+import { toZonedTime } from "date-fns-tz";
 
 export const publicAppointmentsRouter = createTRPCRouter({
   create: publicProcedure
@@ -77,7 +78,8 @@ export const publicAppointmentsRouter = createTRPCRouter({
       if (!isAvailable) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Coś poszło nie tak. Spróbuj ponownie.",
+          // message: "Coś poszło nie tak. Spróbuj ponownie.",
+          message: `START TIME: ${startDate.toString()}, END TIME: ${endDate.toString()} - ${toZonedTime(input.startTime, "Europe/Warsaw").toString()}`,
         });
       }
 
@@ -106,7 +108,8 @@ export const publicAppointmentsRouter = createTRPCRouter({
         ) {
           throw new TRPCError({
             code: "CONFLICT",
-            message: "Termin jest zajety. Spróbuj ponownie.",
+            // message: "Termin jest zajety. Spróbuj ponownie.",
+            message: `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
           });
         }
       });
