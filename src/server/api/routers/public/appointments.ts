@@ -92,18 +92,18 @@ export const publicAppointmentsRouter = createTRPCRouter({
       });
 
       appointments.forEach((appointment, i) => {
-        console.log(
-          `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
-        );
         if (
           vetScheduleIds.includes(appointment.vetScheduleId) &&
           startDate >= new Date(appointment.startTime) &&
           startDate < new Date(appointment.endTime)
         ) {
+          console.error(
+            `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
+          );
           throw new TRPCError({
             code: "CONFLICT",
-            // message: "Termin jest zajety. Spróbuj ponownie.",
-            message: `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
+            message: "Termin jest zajety. Spróbuj ponownie.",
+            // message: `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
           });
         }
       });

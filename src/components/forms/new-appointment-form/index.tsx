@@ -77,12 +77,12 @@ export function NewAppointmentForm({
     api.public.appointments.create.useMutation({
       onSuccess: () => {
         toast.success("Pomyślnie zapisano wizytę.");
-        // router.push(user ? "/profile" : "/");
+        router.push(user ? "/profile" : "/");
       },
 
       onError: ({ message }) => {
-        // void utils.public.schedule.getValidTimesFromSchedule.invalidate();
-        // form.setValue("date", undefined as unknown as Date);
+        void utils.public.schedule.getValidTimesFromSchedule.invalidate();
+        form.setValue("date", undefined as unknown as Date);
         toast.error(message);
       },
     });
@@ -104,13 +104,6 @@ export function NewAppointmentForm({
       startTime: values.startTime.toString(),
       serviceId: service.id,
     });
-    // createAppointment({
-    //   ...values,
-    //   startTime: new Date(
-    //     "Wed Apr 30 2025 10:45:00 GMT+0200 (czas środkowoeuropejski letni)",
-    //   ).toString(),
-    //   serviceId: service.id,
-    // });
   }
 
   useEffect(() => {
