@@ -78,6 +78,37 @@ export const publicAppointmentsRouter = createTRPCRouter({
         });
       }
 
+      const appointments = await ctx.db.appointment.findMany({
+        where: {
+          startTime: {
+            gte: new Date(new Date(startDate).setHours(0, 0, 0, 0)),
+            lte: new Date(new Date(startDate).setHours(23, 59, 59, 999)),
+          },
+        },
+        select: {
+          vetScheduleId: true,
+          startTime: true,
+          endTime: true,
+        },
+      });
+
+      appointments.forEach((appointment, i) => {
+        console.log(
+          `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
+        );
+        if (
+          vetScheduleIds.includes(appointment.vetScheduleId) &&
+          startDate >= new Date(appointment.startTime) &&
+          startDate < new Date(appointment.endTime)
+        ) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            // message: "Termin jest zajety. Spróbuj ponownie.",
+            message: `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
+          });
+        }
+      });
+
       try {
         const currentUser = await getCurrentUser();
         if (!currentUser) {
