@@ -21,7 +21,6 @@ import type { $Enums } from "@prisma/client";
 import { fromZonedTime } from "date-fns-tz";
 import type { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import { TRPCError } from "@trpc/server";
-import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
 
 export const publicScheduleRouter = createTRPCRouter({
   getValidTimesFromSchedule: publicProcedure
@@ -171,7 +170,7 @@ function getAvailabilities(
         setHours(date, parseInt(startTime.split(":")[0]!)),
         parseInt(startTime.split(":")[1]!),
       ),
-      TIME_ZONE_CONFIG.location,
+      "Europe/Warsaw",
     );
 
     const end = fromZonedTime(
@@ -179,7 +178,7 @@ function getAvailabilities(
         setHours(date, parseInt(endTime.split(":")[0]!)),
         parseInt(endTime.split(":")[1]!),
       ),
-      TIME_ZONE_CONFIG.location,
+      "Europe/Warsaw",
     );
     return { start, end };
   });

@@ -5,8 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 import { getCurrentUser } from "@/auth/current-user";
-// import { fromZonedTime } from "date-fns-tz";
-// import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
+import { env } from "@/env";
 
 export const publicAppointmentsRouter = createTRPCRouter({
   create: publicProcedure
@@ -35,9 +34,6 @@ export const publicAppointmentsRouter = createTRPCRouter({
         where: {
           id: input.serviceId,
         },
-        select: {
-          durationInMinutes: true,
-        },
       });
       if (!service)
         throw new TRPCError({
@@ -45,7 +41,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
           message: "Usługa nie istnieje",
         });
 
-      const endDate = new Date(startTime + service.durationInMinutes * 60000);
+      const endDate = new Date(startTime + service.durationInMinutes * 60000); // Appointment's end time
 
       const availabilities = await ctx.db.vetScheduleAvailability.findMany({
         where: {
@@ -69,10 +65,6 @@ export const publicAppointmentsRouter = createTRPCRouter({
         },
       });
 
-      console.error(
-        `START TIME: ${startDate.toString()}, END TIME: ${endDate.toString()}}`,
-      );
-
       const { isAvailable, vetScheduleIds } = checkIfIsDateAvailable(
         startDate,
         endDate,
@@ -80,42 +72,11 @@ export const publicAppointmentsRouter = createTRPCRouter({
       );
 
       if (!isAvailable) {
-        console.log({ startDate, endDate });
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Brak dostępności. Spróbuj ponownie. BAD_REQUEST",
+          message: "Brak dostepnych terminow",
         });
       }
-
-      const appointments = await ctx.db.appointment.findMany({
-        where: {
-          startTime: {
-            gte: new Date(new Date(startDate).setHours(0, 0, 0, 0)),
-            lte: new Date(new Date(startDate).setHours(23, 59, 59, 999)),
-          },
-        },
-        select: {
-          vetScheduleId: true,
-          startTime: true,
-          endTime: true,
-        },
-      });
-
-      appointments.forEach((appointment, i) => {
-        console.log(
-          `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
-        );
-        if (
-          vetScheduleIds.includes(appointment.vetScheduleId) &&
-          startDate >= new Date(appointment.startTime) &&
-          startDate < new Date(appointment.endTime)
-        ) {
-          throw new TRPCError({
-            code: "CONFLICT",
-            message: "Termin jest zajety. Spróbuj ponownie. CONFLICT",
-          });
-        }
-      });
 
       try {
         const currentUser = await getCurrentUser();
@@ -140,7 +101,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
               serviceId: input.serviceId,
               startTime: startDate,
               endTime: endDate,
-              ...(input.petId && { petId: input.petId }),
+              petId: input.petId,
             },
           });
         }
@@ -167,8 +128,7 @@ function checkIfIsDateAvailable(
   // Get the day of the week for startDate (0 = Sunday, 1 = Monday, etc.)
   const appointmentDayOfWeek = startDate.getDay();
 
-  // const deployedHoursDelay = env.NODE_ENV === "production" ? 2 : 0;
-  const deployedHoursDelay = 0;
+  const deployedHoursDelay = env.NODE_ENV === "production" ? 2 : 0;
   // Convert startTime and endTime of appointment into minutes since midnight
   const startMinutes =
     (startDate.getHours() + deployedHoursDelay) * 60 + startDate.getMinutes();
