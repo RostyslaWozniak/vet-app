@@ -5,8 +5,8 @@ import { TRPCError } from "@trpc/server";
 import { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import type { $Enums } from "@prisma/client";
 import { getCurrentUser } from "@/auth/current-user";
-import { env } from "@/env";
 import { toZonedTime } from "date-fns-tz";
+import { TIME_ZONE_CONFIG } from "@/lib/configs/time-zone-config";
 
 export const publicAppointmentsRouter = createTRPCRouter({
   create: publicProcedure
@@ -21,7 +21,10 @@ export const publicAppointmentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const startDate = new Date(input.startTime);
+      const startDate = toZonedTime(
+        new Date(input.startTime),
+        TIME_ZONE_CONFIG.location,
+      );
       const startTime = startDate.getTime();
 
       if (startTime < Date.now()) {
@@ -45,7 +48,10 @@ export const publicAppointmentsRouter = createTRPCRouter({
           message: "Usługa nie istnieje",
         });
 
-      const endDate = new Date(startTime + service.durationInMinutes * 60000); // Appointment's end time
+      const endDate = toZonedTime(
+        new Date(startTime + service.durationInMinutes * 60000),
+        TIME_ZONE_CONFIG.location,
+      ); // Appointment's end time
 
       const availabilities = await ctx.db.vetScheduleAvailability.findMany({
         where: {
@@ -69,6 +75,10 @@ export const publicAppointmentsRouter = createTRPCRouter({
         },
       });
 
+      console.error(
+        `START TIME: ${startDate.toString()}, END TIME: ${endDate.toString()}}`,
+      );
+
       const { isAvailable, vetScheduleIds } = checkIfIsDateAvailable(
         startDate,
         endDate,
@@ -76,10 +86,10 @@ export const publicAppointmentsRouter = createTRPCRouter({
       );
 
       if (!isAvailable) {
+        console.log({ startDate, endDate });
         throw new TRPCError({
           code: "BAD_REQUEST",
-          // message: "Coś poszło nie tak. Spróbuj ponownie.",
-          message: `START TIME: ${startDate.toString()}, END TIME: ${endDate.toString()} - ${toZonedTime(input.startTime, "Europe/Warsaw").toString()}`,
+          message: "Brak dostępności. Spróbuj ponownie. BAD_REQUEST",
         });
       }
 
@@ -108,8 +118,7 @@ export const publicAppointmentsRouter = createTRPCRouter({
         ) {
           throw new TRPCError({
             code: "CONFLICT",
-            // message: "Termin jest zajety. Spróbuj ponownie.",
-            message: `${i}. START TIME: ${startDate.toString()} - ${new Date(appointment.startTime).toString()}, END TIME: ${endDate.toString()} - ${new Date(appointment.endTime).toString()}`,
+            message: "Termin jest zajety. Spróbuj ponownie. CONFLICT",
           });
         }
       });
@@ -164,7 +173,8 @@ function checkIfIsDateAvailable(
   // Get the day of the week for startDate (0 = Sunday, 1 = Monday, etc.)
   const appointmentDayOfWeek = startDate.getDay();
 
-  const deployedHoursDelay = env.NODE_ENV === "production" ? 2 : 0;
+  // const deployedHoursDelay = env.NODE_ENV === "production" ? 2 : 0;
+  const deployedHoursDelay = 0;
   // Convert startTime and endTime of appointment into minutes since midnight
   const startMinutes =
     (startDate.getHours() + deployedHoursDelay) * 60 + startDate.getMinutes();

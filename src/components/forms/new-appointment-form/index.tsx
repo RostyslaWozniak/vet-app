@@ -77,12 +77,12 @@ export function NewAppointmentForm({
     api.public.appointments.create.useMutation({
       onSuccess: () => {
         toast.success("Pomyślnie zapisano wizytę.");
-        router.push(user ? "/profile" : "/");
+        // router.push(user ? "/profile" : "/");
       },
 
       onError: ({ message }) => {
-        void utils.public.schedule.getValidTimesFromSchedule.invalidate();
-        form.setValue("date", undefined as unknown as Date);
+        // void utils.public.schedule.getValidTimesFromSchedule.invalidate();
+        // form.setValue("date", undefined as unknown as Date);
         toast.error(message);
       },
     });
