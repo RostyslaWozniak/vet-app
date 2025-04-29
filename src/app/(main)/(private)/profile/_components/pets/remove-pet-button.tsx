@@ -23,7 +23,7 @@ export function RemovePetButton({
       onSuccess: () => {
         toast.success("Zwirzaka usunięto");
         setIsDeleteOpen(false);
-        router.refresh();
+        router.push("/profile");
       },
       onError: ({ message }) => {
         toast.error(message);
