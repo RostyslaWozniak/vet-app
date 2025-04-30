@@ -22,6 +22,8 @@ import { fromZonedTime } from "date-fns-tz";
 import type { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import { TRPCError } from "@trpc/server";
 
+const DAYS_OFF = [new Date("2025-05-01"), new Date("2025-05-03")];
+
 export const publicScheduleRouter = createTRPCRouter({
   getValidTimesFromSchedule: publicProcedure
     .input(
@@ -96,6 +98,12 @@ export const publicScheduleRouter = createTRPCRouter({
       }));
 
       return timesInOrder.filter((intervalDate) => {
+        if (
+          DAYS_OFF.some(
+            (date) => date.toDateString() === intervalDate.toDateString(),
+          )
+        )
+          return false;
         const availabilities = getAvailabilities(
           groupedAvailabilities,
           intervalDate,
