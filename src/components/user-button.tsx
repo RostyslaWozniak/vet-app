@@ -16,16 +16,16 @@ import UserAvatar from "./user-avatar";
 import { CatIcon, Lock, LogOut, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
-import { api } from "@/trpc/react";
+
+import { useSession } from "@/app/session-provider";
 
 export function UserButton() {
+  const { user } = useSession();
   const pathname = usePathname();
-  const { data: user, isLoading } = api.public.user.getCurrentUser.useQuery();
+
   return (
     <>
-      {isLoading ? (
-        <div className="bg-background h-10 w-10 animate-pulse rounded-full" />
-      ) : user ? (
+      {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className={cn("flex-none cursor-pointer rounded-full")}>

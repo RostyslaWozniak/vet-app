@@ -20,13 +20,17 @@ import LoadingButton from "@/components/loading-button";
 import { updateUserProfile, type UpdateUserProfile } from "@/lib/schema/user";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { TriangleAlert } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function EditProfileFrom() {
   const { user } = useSession();
   const router = useRouter();
+
+  if (!user) {
+    redirect("/sign-in");
+  }
 
   const { mutate: updateProfile, isPending: isUpdating } =
     api.private.user.updateProfile.useMutation({

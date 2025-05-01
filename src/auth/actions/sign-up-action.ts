@@ -2,15 +2,27 @@
 
 import { generateSalt, hashPassword } from "@/auth/core/password-hasher";
 import { createUserSession } from "@/auth/core/session";
-import { signUpSchema } from "../schemas/sign-up-schema";
+import { signUpSchema, type SignUpSchema } from "../schemas/sign-up-schema";
 import { db } from "@/server/db";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import type { FullUser } from "../current-user";
 
-export async function signUp(unsafeData: unknown) {
+export async function signUp(unsafeData: SignUpSchema): Promise<
+  | {
+      error: string;
+      user: null;
+    }
+  | {
+      user: FullUser;
+      error: null;
+    }
+> {
   const validData = signUpSchema.safeParse(unsafeData);
   if (!validData.success) {
-    return validData.error.issues[0]?.message ?? "Validation error";
+    return {
+      error: validData.error.issues[0]?.message ?? "Validation error",
+      user: null,
+    };
   }
 
   const { name, email, password } = validData.data;
@@ -18,7 +30,7 @@ export async function signUp(unsafeData: unknown) {
   const existingUser = await db.user.findUnique({ where: { email } });
 
   if (existingUser) {
-    return "User already exists";
+    return { error: "User already exists", user: null };
   }
 
   try {
@@ -34,13 +46,26 @@ export async function signUp(unsafeData: unknown) {
       },
     });
     if (!user) {
-      return "Failed to create user";
+      return { error: "Failed to create user", user: null };
     }
 
     await createUserSession(user, await cookies());
+    return {
+      error: null,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        roles: user.roles,
+        photo: user.photo,
+      },
+    };
   } catch (err) {
     console.log(err);
-    return "Failed to create user";
+    return {
+      error: "Nie udało się stworzyć konta. Spróbuj ponownie",
+      user: null,
+    };
   }
-  redirect("/profile");
 }

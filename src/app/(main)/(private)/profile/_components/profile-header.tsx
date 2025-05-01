@@ -9,9 +9,12 @@ import { useSession } from "@/app/session-provider";
 // import { useState } from "react";
 // import { toast } from "sonner";
 import { Avatar } from "@/components/custom-ui/avatar";
+import { redirect } from "next/navigation";
 
 export function ProfileHeader() {
   const { user } = useSession();
+
+  if (!user) redirect("/sign-in");
 
   // const [imageUrl, setImageUrl] = useState(user.photo ?? "");
 

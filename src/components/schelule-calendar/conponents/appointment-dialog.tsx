@@ -1,7 +1,7 @@
 "use client";
 
 import { DialogWrapper } from "@/components/dialog-wrapper";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import type { AppointmentType } from "../types/appointment";
 import { Separator } from "@/components/ui/separator";
@@ -26,6 +26,8 @@ export function AppointmentDialog({
   const { user } = useSession();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+
+  if (!user) redirect("/sign-in");
 
   const isAdmin = user.roles.includes("ADMIN") && pathname.startsWith("/admin");
   const isVet = user.roles.includes("VET") && pathname.startsWith("/vet");

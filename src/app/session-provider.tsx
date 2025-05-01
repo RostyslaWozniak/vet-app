@@ -1,22 +1,37 @@
 "use client";
 
 import type { FullUser } from "@/auth/current-user";
-import { createContext, useContext } from "react";
+import type { $Enums } from "@prisma/client";
+import { createContext, useContext, useState } from "react";
 
 type SessionContextType = {
-  user: FullUser;
+  user: FullUser | null;
+  setUser: React.Dispatch<
+    React.SetStateAction<{
+      id: string;
+      name: string;
+      email: string;
+      phoneNumber: string | null;
+      roles: $Enums.Roles[];
+      photo: string | null;
+    } | null>
+  >;
 };
 
 const SessionContext = createContext<SessionContextType | null>(null);
 
 type SessionProviderProps = {
   children: React.ReactNode;
-  user: FullUser;
+  user: FullUser | null;
 };
 
-export const SessionProvider = ({ children, user }: SessionProviderProps) => {
+export const SessionProvider = ({
+  children,
+  user: currentUser,
+}: SessionProviderProps) => {
+  const [user, setUser] = useState(currentUser);
   return (
-    <SessionContext.Provider value={{ user }}>
+    <SessionContext.Provider value={{ user, setUser }}>
       {children}
     </SessionContext.Provider>
   );

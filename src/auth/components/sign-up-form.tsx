@@ -15,8 +15,16 @@ import { signUp } from "@/auth/actions/sign-up-action";
 import { toast } from "sonner";
 import { PasswordInput } from "./password-input";
 import LoadingButton from "@/components/loading-button";
+import { useTransition } from "react";
+import { useSession } from "@/app/session-provider";
+import { useRouter } from "next/navigation";
 
 export function SignUpForm() {
+  const [isPending, startTransition] = useTransition();
+
+  const { setUser } = useSession();
+  const router = useRouter();
+
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -27,8 +35,16 @@ export function SignUpForm() {
   });
 
   async function onSubmit(data: SignUpSchema) {
-    const error = await signUp(data);
-    toast.error(error);
+    startTransition(async () => {
+      const res = await signUp(data);
+      if (res?.error) {
+        toast.error(res.error);
+      }
+      if (res?.user) {
+        router.push("/profile");
+        setUser(res.user);
+      }
+    });
   }
 
   return (
@@ -99,11 +115,7 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
-        <LoadingButton
-          loading={form.formState.isSubmitting}
-          type="submit"
-          className="w-full"
-        >
+        <LoadingButton loading={isPending} type="submit" className="w-full">
           Zarejestruj
         </LoadingButton>
       </form>

@@ -6,7 +6,7 @@ import { TestemonialsSection } from "@/components/sections/testemonials-section"
 import { FAQSection } from "@/components/sections/faq-section";
 import { ContactSection } from "@/components/sections/contact-section";
 
-export const dynamic = "force-static";
+// export const dynamic = "force-static";
 
 export const metadata = {
   title: "Strona główna",

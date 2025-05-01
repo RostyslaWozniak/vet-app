@@ -16,9 +16,14 @@ import { PasswordInput } from "./password-input";
 import LoadingButton from "@/components/loading-button";
 import { toast } from "sonner";
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "@/app/session-provider";
 
 export function SignInForm() {
   const [isPending, startTransition] = useTransition();
+
+  const { setUser } = useSession();
+  const router = useRouter();
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -30,9 +35,13 @@ export function SignInForm() {
 
   async function onSubmit(data: SignInSchema) {
     startTransition(async () => {
-      const error = await signIn(data);
-      if (error) {
-        toast.error(error);
+      const res = await signIn(data);
+      if (res?.error) {
+        toast.error(res.error);
+      }
+      if (res?.user) {
+        router.push(res?.redirectUrl);
+        setUser(res.user);
       }
     });
   }
