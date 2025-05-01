@@ -5,13 +5,15 @@ import { logOut } from "../actions/logout-action";
 import { toast } from "sonner";
 import LoadingButton from "@/components/loading-button";
 import { useTransition } from "react";
-import { wait } from "@/lib/utils";
+import { useSession } from "@/app/session-provider";
 
 export function LogOutButton({ children, className, ...props }: ButtonProps) {
+  const { setUser } = useSession();
+
   const [isPending, startTransition] = useTransition();
   function hadnleLogOut() {
     startTransition(async () => {
-      await wait(1000);
+      setUser(null);
       const error = await logOut();
       if (error) {
         toast.error(error);

@@ -10,6 +10,7 @@ import { useSession } from "@/app/session-provider";
 // import { toast } from "sonner";
 import { Avatar } from "@/components/custom-ui/avatar";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export function ProfileHeader() {
   const { user } = useSession();
@@ -49,9 +50,15 @@ export function ProfileHeader() {
         <p className="text-muted-foreground text-sm md:text-base">
           {user.email}
         </p>
-        <p className="text-muted-foreground text-sm md:text-base">
-          {user.phoneNumber}
-        </p>
+        {user.phoneNumber ? (
+          <p className="text-muted-foreground text-sm md:text-base">
+            {user.phoneNumber}
+          </p>
+        ) : (
+          <Link href="/profile/edit" className="text-primary">
+            Dodaj numer telefonu
+          </Link>
+        )}
       </div>
       <LinkButton
         className="absolute top-0 left-0"
