@@ -16,9 +16,10 @@ export const env = createEnv({
     OAUTH_REDIRECT_URL: z.string().url(),
     GOOGLE_AUTH_CLIENT_ID: z.string().min(1),
     GOOGLE_AUTH_CLIENT_SECRET: z.string().min(1),
-    // GOOGLE_CALENDAR_CLIENT_ID: z.string().min(1),
-    // GOOGLE_CALENDAR_CLIENT_SECRET: z.string().min(1),
-    // GOOGLE_CALENDAR_REDIRECT_URI: z.string().url(),
+
+    // UPLOADTHINGS
+    UPLOADTHING_TOKEN: z.string().min(1),
+    UPLOADTHINGS_URL: z.string().url(),
   },
 
   client: {},
@@ -34,9 +35,10 @@ export const env = createEnv({
 
     GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
     GOOGLE_AUTH_CLIENT_SECRET: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-    // GOOGLE_CALENDAR_CLIENT_ID: process.env.GOOGLE_CALENDAR_CLIENT_ID,
-    // GOOGLE_CALENDAR_CLIENT_SECRET: process.env.GOOGLE_CALENDAR_CLIENT_SECRET,
-    // GOOGLE_CALENDAR_REDIRECT_URI: process.env.GOOGLE_CALENDAR_REDIRECT_URI,
+
+    // UPLOADTHINGS
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    UPLOADTHINGS_URL: process.env.UPLOADTHINGS_URL,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

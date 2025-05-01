@@ -17,9 +17,10 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { petFormSchema, type PetFromSchema } from "@/lib/schema/pet";
 import type { Pet } from "../../pets/page";
-import { formatYearsAndMonthsToNumber } from "@/lib/formatters";
+import { getAgeStringFromDate } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { PetAgeSelection } from "./pet-age-selecttion";
 
 type AddEditPetFormProps =
   | {
@@ -74,13 +75,12 @@ export function AddEditPetForm({
       name: pet?.name ?? "",
       species: pet?.species ?? "",
       breed: pet?.breed ?? "",
-      age: pet?.birthday
-        ? formatYearsAndMonthsToNumber(pet.birthday)
-        : undefined,
+      age: pet?.birthday ? getAgeStringFromDate(pet.birthday) : undefined,
     },
   });
 
   function onSubmit(values: PetFromSchema) {
+    console.log(values);
     if (pet) {
       mutate({ ...values, petId: pet.id });
     } else {
@@ -100,7 +100,7 @@ export function AddEditPetForm({
               <FormLabel>Imię*</FormLabel>
 
               <FormControl autoFocus>
-                <Input placeholder="Wpisz swoje imię" {...field} />
+                <Input placeholder="Wpisz imię swojego pupila" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,7 +114,7 @@ export function AddEditPetForm({
             <FormItem>
               <FormLabel>Gatunek*</FormLabel>
               <FormControl>
-                <Input placeholder="Wpisz gatunek pupila" {...field} />
+                <Input placeholder="Wpisz gatunek (Kot, pies...)" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,7 +142,7 @@ export function AddEditPetForm({
             <FormItem>
               <FormLabel>Wiek (opcjonalnie)</FormLabel>
               <FormControl>
-                <Input placeholder="Wpisz wiek swojego pupila" {...field} />
+                <PetAgeSelection field={field} />
               </FormControl>
               <FormMessage />
             </FormItem>

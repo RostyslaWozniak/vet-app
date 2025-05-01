@@ -44,7 +44,7 @@ export const privatePetRouter = createTRPCRouter({
   create: privateProcedure
     .input(petFormSchema)
     .mutation(async ({ ctx, input }) => {
-      const birthday = getDateFromAge(input.age);
+      const birthday = input.age ? getDateFromAge(input.age) : null;
       try {
         return await ctx.db.pet.create({
           data: {
@@ -70,7 +70,7 @@ export const privatePetRouter = createTRPCRouter({
   update: privateProcedure
     .input(petFormSchema.extend({ petId: z.string().uuid().optional() }))
     .mutation(async ({ ctx, input }) => {
-      const birthday = getDateFromAge(input.age);
+      const birthday = input.age ? getDateFromAge(input.age) : null;
       const { data, error } = await tryCatch(
         ctx.db.pet.update({
           where: {

@@ -107,15 +107,12 @@ export function AppointmentsByUserChart({
               }
               labelLine={false}
             >
-              {data.map((entry, index) => {
-                console.log(entry);
-                return (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                );
-              })}
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
             </Pie>
             <Tooltip content={<ChartTooltipContent />} />
           </PieChart>

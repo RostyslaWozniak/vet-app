@@ -3,8 +3,10 @@ import {
   differenceInMonths,
   differenceInYears,
   format,
+  intervalToDuration,
   setISOWeek,
   startOfISOWeek,
+  sub,
 } from "date-fns";
 import { pl } from "date-fns/locale";
 
@@ -22,20 +24,14 @@ export function getDateFromWeekAndYear(week: number, year: number): Date {
   return startOfISOWeek(withWeekSet);
 }
 
-export function getDateFromAge(age: number | undefined) {
-  if (age === undefined) return age;
-  const now = new Date();
-  const years = Math.floor(age);
-  const months = Math.round((age - years) * 12);
+export function getDateFromAge(ageString: string) {
+  const [yearsStr, monthsStr] = ageString.split(".");
 
-  // Subtract years
-  now.setFullYear(now.getFullYear() - years);
+  const years = parseInt(yearsStr!, 10);
+  const months = parseInt(monthsStr!, 10);
 
-  // Subtract months
-  now.setMonth(now.getMonth() - months);
-  now.setHours(0, 0, 0);
-
-  return now;
+  const birthday = sub(new Date(), { years, months });
+  return birthday;
 }
 
 export function formatYearsAndMonthsToString(
@@ -60,14 +56,10 @@ export function formatYearsAndMonthsToString(
 
   return parts.join(", ");
 }
-export function formatYearsAndMonthsToNumber(
-  fromDate: Date,
-  toDate = new Date(),
-) {
-  const years = differenceInYears(toDate, fromDate);
-  const datePlusYears = addYears(fromDate, years);
-  const months = differenceInMonths(toDate, datePlusYears);
 
-  const monthsPart = months > 0 ? `.${months}` : ".0"; // always valid decimal
-  return Number(`${years}${monthsPart}`);
+export function getAgeStringFromDate(date: Date) {
+  const now = new Date();
+  const duration = intervalToDuration({ start: date, end: now });
+
+  return `${duration.years ?? 0}.${duration.months ?? 0}`;
 }
