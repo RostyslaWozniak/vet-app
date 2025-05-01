@@ -71,6 +71,7 @@ export function SpecialOffersSection() {
             <div className="flex flex-col-reverse py-8 md:grid md:grid-cols-9">
               <div className="min-h-96 sm:min-h-auto md:col-span-4">
                 <Image
+                  priority
                   className="absolute bottom-0"
                   src="/images/special-offers.png"
                   alt="Piesek"

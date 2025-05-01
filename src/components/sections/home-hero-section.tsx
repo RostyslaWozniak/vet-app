@@ -50,13 +50,15 @@ export function HomeHeroSection() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="relative right-0 flex max-w-200 flex-col gap-4 overflow-hidden rounded-lg shadow-lg 2xl:absolute"
         >
-          <Image
-            src="/images/home-hero.jpg"
-            alt="Właścicielka z zadowolonem psem"
-            width={800}
-            height={500}
-            className="h-full w-auto object-cover 2xl:aspect-[16/10]"
-          />
+          <div className="h-full w-auto object-cover 2xl:aspect-[16/10]">
+            <Image
+              priority
+              src="/images/home-hero.jpg"
+              alt="Właścicielka z zadowolonem psem"
+              width={800}
+              height={500}
+            />
+          </div>
           <div className="bg-primary/10 absolute inset-0"></div>
         </MotionWrapper>
       </MaxWidthWrapper>
