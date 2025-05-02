@@ -134,7 +134,8 @@ export const publicAppointmentsRouter = createTRPCRouter({
               serviceId: input.serviceId,
               startTime: startDate,
               endTime: endDate,
-              ...(input.petId && { petId: input.petId }),
+              ...(input.petId &&
+                input.petId.length > 0 && { petId: input.petId }),
             },
           });
         }

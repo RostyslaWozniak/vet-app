@@ -92,7 +92,7 @@ export function NewAppointmentForm({
     defaultValues: {
       guestName: user?.name ?? "",
       guestEmail: user?.email ?? "",
-      petId: petId ?? "",
+      petId: petId ?? undefined,
     },
   });
 

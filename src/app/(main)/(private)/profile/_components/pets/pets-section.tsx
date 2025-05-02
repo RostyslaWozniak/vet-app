@@ -1,9 +1,10 @@
 import { Avatar } from "@/components/custom-ui/avatar";
 import { LinkButton } from "@/components/link-button";
 import { H2 } from "@/components/typography";
-import { CatIcon, PawPrintIcon } from "lucide-react";
+import { CatIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import type { Pet } from "../../pets/page";
+import { cn } from "@/lib/utils";
 
 export function PetsSection({ pets }: { pets: Pet[] }) {
   return (
@@ -71,16 +72,27 @@ export function EmptyResult() {
   );
 }
 
-export function AddPetButton({ href }: { href: string }) {
+export function AddPetButton({
+  href,
+  className,
+}: {
+  href: string;
+  className?: string;
+}) {
   return (
-    <div className="text-primary border-primary relative my-auto flex h-24 min-w-24 flex-col items-center justify-center rounded-lg border px-2 py-3 lg:h-28 lg:w-28">
+    <div
+      className={cn(
+        "text-primary border-primary/20 relative mx-2 my-auto flex h-24 min-w-24 flex-col items-center justify-center rounded-lg border px-2 py-3 shadow lg:h-28 lg:w-28",
+        className,
+      )}
+    >
       <LinkButton
         variant={"link"}
         href={href}
         className="absolute inset-0 h-auto rounded-lg"
       />
       <div className="flex flex-grow items-center justify-center">
-        <PawPrintIcon className="min-h-10 min-w-10" />
+        <PlusIcon className="min-h-10 min-w-10" />
       </div>
       <h3 className="text-xs font-medium">Dodaj pupila</h3>
     </div>

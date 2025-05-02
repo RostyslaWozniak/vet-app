@@ -67,11 +67,15 @@ export function PetSelection({
                 <div
                   key={pet.id}
                   onClick={() => {
-                    field.onChange(field.value === pet.id ? undefined : pet.id);
+                    field.onChange(field.value === pet.id ? "" : pet.id);
                   }}
-                  className={cn("cursor-pointer", {
-                    "text-primary": pet.id === field.value,
-                  })}
+                  className={cn(
+                    "cursor-pointer border border-transparent px-2",
+                    {
+                      "text-primary border-primary/20 bg-card rounded-lg shadow":
+                        pet.id === field.value,
+                    },
+                  )}
                 >
                   <PetItem pet={pet} />
                 </div>
@@ -81,6 +85,7 @@ export function PetSelection({
             )}
             <AddPetButton
               href={`/profile/pets/add?redirect=/appointments/new/${serviceId}`}
+              className="mx-2"
             />
           </div>
         }
