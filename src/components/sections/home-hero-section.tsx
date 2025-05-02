@@ -50,12 +50,12 @@ export function HomeHeroSection() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="relative right-0 flex max-w-200 flex-col gap-4 overflow-hidden rounded-lg shadow-lg 2xl:absolute"
         >
-          <div className="object-cover 2xl:aspect-[16/10]">
+          <div className="aspect-video 2xl:aspect-[16/10]">
             <Image
               priority
               src="/images/home-hero.jpg"
               alt="Właścicielka z zadowolonem psem"
-              className="h-full w-auto"
+              className="h-full w-auto object-cover"
               width={800}
               height={500}
             />
