@@ -18,37 +18,23 @@ import { useRouter } from "next/navigation";
 import { petFormSchema, type PetFromSchema } from "@/lib/schema/pet";
 import type { Pet } from "../../pets/page";
 import { getAgeStringFromDate } from "@/lib/formatters";
-import { Button } from "@/components/ui/button";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import { PetAgeSelection } from "./pet-age-selecttion";
 
-type AddEditPetFormProps =
-  | {
-      pet: Pet;
-      setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-      redirectUrl?: string;
-    }
-  | {
-      pet?: undefined;
-      setIsDialogOpen?: undefined;
-      redirectUrl?: string;
-    };
+type AddEditPetFormProps = {
+  pet: Pet | undefined;
+  redirectUrl?: string;
+};
 
-export function AddEditPetForm({
-  pet,
-  setIsDialogOpen,
-  redirectUrl,
-}: AddEditPetFormProps) {
+export function AddEditPetForm({ pet, redirectUrl }: AddEditPetFormProps) {
   const router = useRouter();
   const utils = api.useUtils();
-  const isMobile = useMediaQuery("(max-width: 640px)");
 
   const { mutate, isPending } = pet
     ? api.private.pet.update.useMutation({
         onSuccess: () => {
           toast.success("Dane pupila zapisano");
-          setIsDialogOpen(false);
-          router.refresh();
+
+          router.push("/profile/pets");
         },
         onError: ({ message }) => {
           toast.error(message);
@@ -90,7 +76,7 @@ export function AddEditPetForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-2.5">
         {/* NAME */}
         <FormField
           control={form.control}
@@ -149,23 +135,11 @@ export function AddEditPetForm({
           )}
         />
         <div className="flex justify-end">
-          {pet && (
-            <Button
-              type="button"
-              variant="outline"
-              size={isMobile ? "lg" : "default"}
-              className="hidde mr-2 sm:flex"
-              onClick={() => setIsDialogOpen(false)}
-            >
-              Anuluj
-            </Button>
-          )}
           <LoadingButton
             loading={isPending}
             disabled={!form.formState.isDirty}
             type="submit"
             className="w-full sm:w-auto"
-            size={isMobile ? "lg" : "default"}
           >
             {pet ? "Zapisz" : "Dodaj pupila"}
           </LoadingButton>

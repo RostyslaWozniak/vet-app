@@ -7,13 +7,11 @@ import { toast } from "sonner";
 
 type RemovePetButtonProps = {
   petId: string;
-  isDesktop: boolean;
   setIsDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function RemovePetButton({
   petId,
-  isDesktop,
   setIsDeleteOpen,
 }: RemovePetButtonProps) {
   const router = useRouter();
@@ -38,7 +36,6 @@ export function RemovePetButton({
       loading={isRemoving}
       onClick={handleRemovePet}
       variant="destructive"
-      size={isDesktop ? "default" : "lg"}
     >
       Usuń zwierzaka
     </LoadingButton>

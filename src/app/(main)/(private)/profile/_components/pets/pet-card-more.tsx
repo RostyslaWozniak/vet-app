@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EditIcon, MoreVerticalIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { DialogWrapper } from "@/components/dialog-wrapper";
-import { AddEditPetForm } from "./add-edit-pet-form";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,20 +21,11 @@ import { RemovePetButton } from "./remove-pet-button";
 
 export function PetCardMore({ pet }: { pet: Pet }) {
   const [isDropdownOpen, setIsDropddownOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeletetOpen, setIsDeleteOpen] = useState(false);
 
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   return (
     <>
-      <DialogWrapper
-        title="Edytuj dane"
-        description="Tutaj możesz zedytować dane swojego zwierzaka."
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-      >
-        <AddEditPetForm pet={pet} setIsDialogOpen={setIsEditOpen} />
-      </DialogWrapper>
       <DialogWrapper
         title={`${pet.name} zostanie usuniety(a)`}
         description="Czy napewno chcesz usunąć zwirzaka? Ta operacja nie będzie mogła być odwrócona!"
@@ -45,11 +35,7 @@ export function PetCardMore({ pet }: { pet: Pet }) {
         contentClassName="flex items-end sm:min-w-125"
         className="flex"
       >
-        <RemovePetButton
-          petId={pet.id}
-          isDesktop={isDesktop}
-          setIsDeleteOpen={setIsDeleteOpen}
-        />
+        <RemovePetButton petId={pet.id} setIsDeleteOpen={setIsDeleteOpen} />
       </DialogWrapper>
       {isDesktop ? (
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropddownOpen}>
@@ -80,12 +66,15 @@ export function PetCardMore({ pet }: { pet: Pet }) {
               Umów wizytę
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => setIsEditOpen(true)}
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "text-muted-foreground w-full justify-start text-start",
+                "text-muted-foreground relative w-full justify-start text-start",
               )}
             >
+              <Link
+                href={`/profile/pets/${pet.id}/edit`}
+                className="absolute inset-0"
+              />
               <EditIcon /> Edytuj zwierzaka
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -115,16 +104,13 @@ export function PetCardMore({ pet }: { pet: Pet }) {
               <PlusIcon className="text-primary-foreground bg-primary min-h-5 min-w-5 rounded-full stroke-4 p-0.5" />{" "}
               Umów wizytę
             </LinkButton>
-            <Button
-              onClick={() => {
-                setIsEditOpen(true);
-                setIsDropddownOpen(false);
-              }}
+            <LinkButton
+              href={`/profile/pets/${pet.id}/edit`}
               variant="ghost"
               className="text-muted-foreground h-12 w-full justify-start gap-x-6 text-start"
             >
               <EditIcon /> Edytuj dane zwierzaka
-            </Button>
+            </LinkButton>
 
             <Button
               onClick={() => {
