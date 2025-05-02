@@ -41,7 +41,7 @@ export function SignInForm() {
       }
       if (res?.user) {
         router.push(res?.redirectUrl);
-        setUser(res.user);
+        startTransition(() => setUser(res.user));
       }
     });
   }

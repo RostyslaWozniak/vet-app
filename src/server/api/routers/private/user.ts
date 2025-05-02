@@ -18,12 +18,18 @@ export const privateUserRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.db.user.update({
+        const updatedUser = await ctx.db.user.update({
           where: {
             id: ctx.user.id,
           },
           data: input,
+          select: {
+            name: true,
+            email: true,
+            phoneNumber: true,
+          },
         });
+        return updatedUser;
       } catch (err) {
         console.log(err);
         throw new TRPCError({

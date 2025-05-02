@@ -42,7 +42,7 @@ export function SignUpForm() {
       }
       if (res?.user) {
         router.push("/profile");
-        setUser(res.user);
+        startTransition(() => setUser(res.user));
       }
     });
   }

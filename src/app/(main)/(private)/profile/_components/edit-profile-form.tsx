@@ -25,7 +25,7 @@ import { TriangleAlert } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function EditProfileFrom() {
-  const { user } = useSession();
+  const { user, setUser } = useSession();
   const router = useRouter();
 
   if (!user) {
@@ -34,10 +34,18 @@ export function EditProfileFrom() {
 
   const { mutate: updateProfile, isPending: isUpdating } =
     api.private.user.updateProfile.useMutation({
-      onSuccess: () => {
+      onSuccess: ({ name, email, phoneNumber }) => {
         toast.success("Profil został zaktualizowany");
         router.push("/profile");
-        router.refresh();
+        setUser((prev) => {
+          if (prev == null) return null;
+          return {
+            ...prev,
+            name,
+            email,
+            phoneNumber,
+          };
+        });
       },
       onError: ({ message }) => {
         toast.error(message);
