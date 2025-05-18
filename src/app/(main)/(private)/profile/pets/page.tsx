@@ -1,10 +1,11 @@
 import { LinkButton } from "@/components/link-button";
 import { H2 } from "@/components/typography";
-import { PlusIcon } from "lucide-react";
+import { FrownIcon, Plus, PlusIcon } from "lucide-react";
 import { api } from "@/trpc/server";
 import type { RouterOutputs } from "@/trpc/react";
 import { AddPetButtonLink } from "../_components/pets/add-pet-button-link";
 import { PetCard } from "../_components/pets/pet-card";
+import { EmptyResult } from "@/components/empty-result";
 
 export type Pet = RouterOutputs["private"]["pet"]["getAllOwn"][number];
 
@@ -27,13 +28,26 @@ export default async function ProfilePetsPage() {
           </LinkButton>
         )}
       </div>
-      <div className="grid gap-x-4 gap-y-6 md:grid-cols-2">
-        {pets.map((pet) => (
-          <PetCard key={pet.id} pet={pet} />
-        ))}
+      {pets.length > 0 ? (
+        <div className="grid gap-x-4 gap-y-6 md:grid-cols-2">
+          {pets.map((pet) => (
+            <PetCard key={pet.id} pet={pet} />
+          ))}
 
-        <AddPetButtonLink />
-      </div>
+          <AddPetButtonLink />
+        </div>
+      ) : (
+        <EmptyResult
+          icon={FrownIcon}
+          title="Brak zwierzaków"
+          description="Po dodaniu zwierzaka pojawią się one tutaj."
+          actionButton={
+            <LinkButton href="/profile/pets/add" className="mt-6 w-full">
+              <Plus /> Dodaj zwierzaka
+            </LinkButton>
+          }
+        />
+      )}
     </div>
   );
 }

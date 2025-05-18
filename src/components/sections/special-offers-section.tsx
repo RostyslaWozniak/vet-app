@@ -79,7 +79,7 @@ export function SpecialOffersSection() {
                   height={400}
                 />
               </div>
-              <div className="flex flex-col items-start gap-4 p-6 md:col-span-5">
+              <div className="z-10 flex flex-col items-start gap-4 p-6 md:col-span-5">
                 <H4 className="text-secondary-foreground !text-4xl [text-shadow:_0_3px_3px_rgba(0,0,0,0.2)] sm:!text-5xl">
                   Zadbaj o zdrowie swojego pupila
                 </H4>

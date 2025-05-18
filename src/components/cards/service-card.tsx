@@ -9,19 +9,24 @@ import {
 import type { RouterOutputs } from "@/trpc/react";
 import { H3 } from "../typography";
 import { cn } from "@/lib/utils";
+import { LinkButton } from "../link-button";
 
 type ServiceCardProps = {
   service: RouterOutputs["public"]["services"]["getAll"][number];
+  href?: string;
   className?: string;
   showDescription?: boolean;
   descriptionClassName?: string;
+  bookButton?: boolean;
 };
 
 export function ServiceCard({
   service,
+  href,
   className,
   showDescription = false,
   descriptionClassName,
+  bookButton = false,
 }: ServiceCardProps) {
   return (
     <Card
@@ -46,11 +51,16 @@ export function ServiceCard({
           </CardDescription>
         )}
       </CardContent>
-      <CardFooter className="px-1 sm:px-4">
+      <CardFooter className="flex items-center justify-between px-1 sm:px-4">
         <div className="text-muted-foreground flex items-center text-sm">
           <Clock className="mr-1 w-4" />
           {service.durationInMinutes} min
         </div>
+        {bookButton && (
+          <LinkButton href={href ?? `/appointments/new/${service.id}`}>
+            Umów wizytę
+          </LinkButton>
+        )}
       </CardFooter>
     </Card>
   );

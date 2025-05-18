@@ -3,9 +3,9 @@
 import { useQueryState } from "nuqs";
 import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
-import { Loader } from "lucide-react";
+import { LoaderIcon } from "lucide-react";
 
 type SearchFormProps = {
   path: string;
@@ -21,8 +21,8 @@ export function SearchForm({
   autoFocus = false,
 }: SearchFormProps) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [isFirstRender, setIsFirstRender] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useQueryState(`${searchKey}`, {
     defaultValue: "",
   });
@@ -30,26 +30,31 @@ export function SearchForm({
 
   useEffect(() => {
     if (isFirstRender) return setIsFirstRender(false);
+    startTransition(() => {
+      router.push(
+        `${path}${debouncedSearch ? `?${searchKey}=${debouncedSearch}` : ""}`,
+      );
+    });
 
-    router.push(
-      `${path}${debouncedSearch ? `?${searchKey}=${debouncedSearch}` : ""}`,
-    );
-
-    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, path, router, searchKey]);
   return (
-    <form className="relative flex items-center gap-2">
-      <Input
-        autoFocus={autoFocus}
-        placeholder={inputPlaceholder}
-        value={search}
-        onChange={async (e) => {
-          await setSearch(e.target.value);
-          if (!isLoading) setIsLoading(true);
-        }}
-      />
-      {isLoading && <Loader className="absolute right-2 animate-spin" />}
-    </form>
+    <>
+      <form className="relative flex items-center gap-2">
+        <Input
+          autoFocus={autoFocus}
+          placeholder={inputPlaceholder}
+          value={search}
+          onChange={async (e) => {
+            await setSearch(e.target.value);
+          }}
+        />
+      </form>
+      {isPending && (
+        <div className="bg-card/10 fixed inset-0 flex items-center justify-center backdrop-blur-[2px]">
+          <LoaderIcon className="animate-spin" />
+        </div>
+      )}
+    </>
   );
 }

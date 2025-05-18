@@ -27,8 +27,7 @@ export function ServiceTableSetings({
         description="Make changes to your product here. Do not forget to save changes."
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
-        className="scrollbar-hide flex max-h-[90vh] w-[1000px] flex-col justify-end gap-3"
-        contentClassName="overflow-y-scroll"
+        className="scrollbar-hide flex max-h-[90vh] flex-col justify-end gap-3 sm:min-w-160"
       >
         <CreateUpdateServiceForm
           service={service}

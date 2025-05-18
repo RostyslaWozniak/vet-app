@@ -1,5 +1,5 @@
 import { LinkButton } from "@/components/link-button";
-import { PawPrintIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 export function AddPetButtonLink() {
   return (
@@ -10,12 +10,9 @@ export function AddPetButtonLink() {
         className="absolute inset-0 h-auto rounded-lg"
       />
       <div className="flex flex-grow items-center justify-center">
-        <PawPrintIcon className="min-h-14 min-w-14 stroke-[1.5px]" />
+        <PlusIcon className="min-h-14 min-w-14 stroke-[1.5px]" />
       </div>
-      <div className="flex items-center text-sm font-medium">
-        <PlusIcon className="mr-2" />
-        Dodaj pupila
-      </div>
+      <div className="flex items-center font-medium">Dodaj pupila</div>
     </div>
   );
 }
