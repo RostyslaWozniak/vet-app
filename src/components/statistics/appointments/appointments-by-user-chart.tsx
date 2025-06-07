@@ -30,7 +30,8 @@ const charts = [
   { name: "Wszystkie", value: "total" },
   { name: "Dzisiaj", value: "today" },
   { name: "Zakończone", value: "completed" },
-  { name: "Nadchodzące", value: "upcoming" },
+  { name: "Potwierdzone", value: "confirmed" },
+  { name: "Oczekujące", value: "pending" },
   { name: "Anulowane", value: "cancelled" },
 ] as const;
 
@@ -53,11 +54,9 @@ export function AppointmentsByUserChart({
       name,
       total: appointments.length,
       completed: appointments.filter((a) => a.status === "COMPLETED").length,
-      upcoming: appointments.filter(
-        (a) =>
-          (a.status === "CONFIRMED" || a.status === "PENDING") &&
-          a.startTime > new Date(),
-      ).length,
+
+      confirmed: appointments.filter((a) => a.status === "CONFIRMED").length,
+      pending: appointments.filter((a) => a.status === "PENDING").length,
       cancelled: appointments.filter((a) => a.status === "CANCELLED").length,
       today: appointments.filter((a) => {
         const appointmentDate = new Date(a.startTime);
@@ -103,7 +102,7 @@ export function AppointmentsByUserChart({
               dataKey={activeChart}
               nameKey="name"
               label={({ name, percent }) =>
-                `${name}: ${(percent * 100).toFixed(0)}%`
+                percent === 0 ? "" : `${name}: ${(percent * 100).toFixed(0)}%`
               }
               labelLine={false}
             >

@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { getUserFromSession } from "./core/session";
+import { getUserFromSession, removeUserFromSession } from "./core/session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/server/db";
@@ -45,7 +45,10 @@ async function _getCurrentUser({
   if (withFullUser) {
     const fullUser = await getUserFromDb(user.id);
     // This should never happen
-    if (fullUser == null) throw new Error("User not found in database");
+    if (fullUser == null) {
+      // await removeUserFromSession(await cookies());
+      throw new Error("User not found");
+    }
     return fullUser;
   }
 

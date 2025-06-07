@@ -330,12 +330,12 @@ function DayColumns({
                     <div
                       key={index}
                       className={cn(
-                        "border-foreground absolute cursor-pointer overflow-hidden rounded-sm border-[1px] pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:min-h-10 hover:scale-[1.03] hover:shadow-lg",
+                        "absolute cursor-pointer overflow-hidden rounded-[8px] rounded-l-none border-[1px] border-l-8 pl-2 text-xs font-bold shadow-md transition-transform duration-200 ease-in-out hover:z-20 hover:min-h-10 hover:scale-[1.03] hover:shadow-lg",
                         color.default,
                       )}
                       style={{
                         ...positionStyle,
-                        left: "4px",
+                        left: "0px",
                         right: "4px",
                       }}
                     >

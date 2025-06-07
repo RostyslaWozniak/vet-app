@@ -23,6 +23,7 @@ import type { DAYS_OF_WEEK_IN_ORDER } from "@/data/constants";
 import { TRPCError } from "@trpc/server";
 
 const DAYS_OFF = [new Date("2025-05-01"), new Date("2025-05-03")];
+const SLOT_STEP_IN_MIN = 15;
 
 export const publicScheduleRouter = createTRPCRouter({
   getValidTimesFromSchedule: publicProcedure
@@ -38,7 +39,7 @@ export const publicScheduleRouter = createTRPCRouter({
 
       const timesInOrder = eachMinuteOfInterval(
         { start: nearestValidDate, end: endDate },
-        { step: 15 },
+        { step: SLOT_STEP_IN_MIN },
       );
 
       if (!timesInOrder.length) return [];
@@ -92,11 +93,6 @@ export const publicScheduleRouter = createTRPCRouter({
         },
       });
 
-      const appointmentTimes = appointments.map((a) => ({
-        start: a.startTime,
-        end: a.endTime,
-      }));
-
       return timesInOrder.filter((intervalDate) => {
         if (
           DAYS_OFF.some(
@@ -116,8 +112,11 @@ export const publicScheduleRouter = createTRPCRouter({
 
         return availabilities.some((availability) => {
           return (
-            appointmentTimes.every((eventTime) => {
-              return !areIntervalsOverlapping(eventTime, eventInterval);
+            appointments.every((eventTime) => {
+              return !areIntervalsOverlapping(
+                { start: eventTime.startTime, end: eventTime.endTime },
+                eventInterval,
+              );
             }) &&
             isWithinInterval(eventInterval.start, availability) &&
             isWithinInterval(eventInterval.end, availability)

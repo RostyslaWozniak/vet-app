@@ -5,7 +5,7 @@ export function mapAppointmentStatus(status: $Enums.AppointmentStatus) {
     case "COMPLETED":
       return {
         color: {
-          default: "bg-completed text-primary-foreground font-semibold",
+          default: "bg-completed text-primary-foreground font-semibold ",
           secondary:
             "bg-completed/5 text-completed font-semibold border-completed",
         },
