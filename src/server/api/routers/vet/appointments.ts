@@ -7,6 +7,8 @@ import { $Enums } from "@prisma/client";
 import { sendTextEmail } from "@/lib/services/resend";
 import { pl } from "date-fns/locale";
 
+import { format as timezoneFormat } from "date-fns-tz";
+
 export const vetAppointmentsRouter = createTRPCRouter({
   getAllOwn: vetProcedure
     .input(
@@ -129,7 +131,7 @@ export const vetAppointmentsRouter = createTRPCRouter({
           await sendTextEmail({
             email: appointment.contactEmail,
             subject: "Potwierdzenie wizyty",
-            text: `Twoja wizyta została potwierdzona przez weterynarza. Zapraszamy ${format(appointment.startTime, "dd MMMM", { locale: pl })} o godzinie ${format(appointment.startTime, "HH:mm", { locale: pl })} na wizytę "${appointment.service.name}".`,
+            text: `Twoja wizyta została potwierdzona przez weterynarza. Zapraszamy ${format(appointment.startTime, "dd MMMM", { locale: pl })} o godzinie ${timezoneFormat(appointment.startTime, "HH:mm", { locale: pl, timeZone: "Europe/Warsaw" })} na wizytę "${appointment.service.name}".`,
           });
         } else if (input.status === "COMPLETED") {
           await sendTextEmail({
