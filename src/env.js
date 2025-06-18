@@ -26,6 +26,8 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1),
     RESEND_DOMAIN: z.string().min(1),
     RESEND_FROM_NAME: z.string().min(1),
+
+    CRON_SECRET: z.string().min(1),
   },
 
   client: {},
@@ -47,10 +49,13 @@ export const env = createEnv({
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     UPLOADTHINGS_URL: process.env.UPLOADTHINGS_URL,
 
-    // resend
+    // RESEND
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     RESEND_DOMAIN: process.env.RESEND_DOMAIN,
     RESEND_FROM_NAME: process.env.RESEND_FROM_NAME,
+
+    // CRON
+    CRON_SECRET: process.env.CRON_SECRET,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

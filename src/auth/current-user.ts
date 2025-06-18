@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { getUserFromSession, removeUserFromSession } from "./core/session";
+import { getUserFromSession } from "./core/session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/server/db";

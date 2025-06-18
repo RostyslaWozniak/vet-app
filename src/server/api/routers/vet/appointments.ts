@@ -2,8 +2,10 @@ import { z } from "zod";
 import { createTRPCRouter } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { vetProcedure } from "../../procedures/vet-procedure";
-import { isAfter, isBefore } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 import { $Enums } from "@prisma/client";
+import { sendTextEmail } from "@/lib/services/resend";
+import { pl } from "date-fns/locale";
 
 export const vetAppointmentsRouter = createTRPCRouter({
   getAllOwn: vetProcedure
@@ -102,6 +104,41 @@ export const vetAppointmentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const appointment = await ctx.db.appointment.findUnique({
+        where: {
+          id: input.appointmentId,
+        },
+        select: {
+          contactEmail: true,
+          startTime: true,
+          service: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+      if (!appointment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Wizyta nie została znaleziona",
+        });
+      }
+      if (appointment.contactEmail) {
+        if (input.status === "CONFIRMED") {
+          await sendTextEmail({
+            email: appointment.contactEmail,
+            subject: "Potwierdzenie wizyty",
+            text: `Twoja wizyta została potwierdzona przez weterynarza. Zapraszamy ${format(appointment.startTime, "dd MMMM", { locale: pl })} o godzinie ${format(appointment.startTime, "HH:mm", { locale: pl })} na wizytę "${appointment.service.name}".`,
+          });
+        } else if (input.status === "COMPLETED") {
+          await sendTextEmail({
+            email: appointment.contactEmail,
+            subject: "Zakonczenie wizyty",
+            text: `Twoja wizyta "${appointment.service.name}" została zakonczona.`,
+          });
+        }
+      }
       try {
         await ctx.db.appointment.update({
           where: {

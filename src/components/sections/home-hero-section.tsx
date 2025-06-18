@@ -6,6 +6,7 @@ import { LinkButton } from "../link-button";
 import { PawsBgCard } from "./components/paws-bg-card";
 import { Edit } from "lucide-react";
 import { MotionWrapper } from "../motion-wrapper";
+
 export function HomeHeroSection() {
   return (
     <section className="isolate">
