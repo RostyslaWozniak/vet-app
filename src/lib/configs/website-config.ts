@@ -25,7 +25,8 @@ export const websiteConfig = {
   },
   navigation: {
     start: { path: "/", label: "Start" },
-    services: { path: "/usługi", label: "Usługi" },
+    about: { path: "/o-nas", label: "O nas" },
+    services: { path: "/uslugi", label: "Usługi" },
     contact: { path: "/kontakt", label: "Kontakt" },
   },
 };

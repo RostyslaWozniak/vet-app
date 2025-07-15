@@ -5,7 +5,7 @@ import { PawsBgCard } from "./components/paws-bg-card";
 import { SectionHeadingSubtitle } from "./components/section-heading-subtitle";
 import Link from "next/link";
 import { websiteConfig } from "@/lib/configs/website-config";
-import { ContactForm } from "@/fetures/forms/contact-form";
+import { ContactForm } from "@/features/forms/contact-form";
 
 const contactLinks = [
   {

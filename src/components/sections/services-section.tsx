@@ -72,7 +72,7 @@ async function ServicesView() {
           </div>
 
           <LinkButton
-            href="/appointments"
+            href="/uslugi"
             size="lg"
             variant="link"
             className="md:border-primary absolute -top-2 right-0 underline-offset-0 md:static md:border-2"

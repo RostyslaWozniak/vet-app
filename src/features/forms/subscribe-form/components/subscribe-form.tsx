@@ -18,7 +18,7 @@ import {
 import LoadingButton from "@/components/loading-button";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { ArrowRight } from "lucide-react";
+import { PenIcon } from "lucide-react";
 import { subscribeForNewsletter } from "../actions/subscribe";
 
 export function SubscribeForm() {
@@ -72,9 +72,10 @@ export function SubscribeForm() {
         <LoadingButton
           loading={isPending}
           type="submit"
+          variant="outline"
           className="float-end h-auto w-full !px-6"
         >
-          Zapisz się <ArrowRight />
+          Zapisz się <PenIcon />
         </LoadingButton>
       </form>
     </Form>
