@@ -9,6 +9,7 @@ import {
   Phone,
 } from "lucide-react";
 import { websiteConfig } from "@/lib/configs/website-config";
+import { SubscribeForm } from "@/fetures/forms/subscribe-form";
 
 const socialLinks = [
   { icon: Facebook, label: "facebook", value: websiteConfig.social.facebook },
@@ -44,10 +45,10 @@ const contactLinks = [
 export function Footer() {
   return (
     <footer className="bg-card text-card-foreground _dark-text-shadow font-montserrat w-screen px-4 pt-12 pb-24 md:pb-8 xl:px-6">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-8 md:flex-row md:items-center md:justify-between">
-        <div>
-          {/* <SubscribeForm /> */}
-          TODO SUBSCRIBE FORM
+      <div className="mx-auto flex max-w-[1400px] flex-col gap-8 md:flex-row md:items-start md:justify-between">
+        <div className="space-y-4 sm:w-[300px]">
+          <h2 className="text-lg font-semibold">Zapisz się do newslettera</h2>
+          <SubscribeForm />
         </div>
 
         <div className="space-y-4">

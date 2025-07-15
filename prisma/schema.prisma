@@ -151,6 +151,16 @@ model Pet {
     @@map("pets")
 }
 
+model Newsletter {
+    id        String   @id @default(uuid())
+    email     String   @unique
+    permitted Boolean  @default(false)
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("newsletters")
+}
+
 enum ScheduleDayOfWeek {
     MONDAY
     TUESDAY
