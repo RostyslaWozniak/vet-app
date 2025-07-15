@@ -3,6 +3,7 @@ import { getUserFromSession } from "./core/session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/server/db";
+import { logOut } from "./actions/logout-action";
 
 export type FullUser = Exclude<
   Awaited<ReturnType<typeof getUserFromDb>>,
@@ -46,8 +47,8 @@ async function _getCurrentUser({
     const fullUser = await getUserFromDb(user.id);
     // This should never happen
     if (fullUser == null) {
-      // await removeUserFromSession(await cookies());
-      throw new Error("User not found");
+      await logOut();
+      return;
     }
     return fullUser;
   }

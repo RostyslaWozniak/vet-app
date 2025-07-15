@@ -6,6 +6,7 @@ type PawsBgCardProps = {
   bgPaws?: "bg-paws-white" | "bg-paws-primary";
   pawsOpacity?: number;
   childrenClassName?: string;
+  filter?: boolean;
 };
 
 export function PawsBgCard({
@@ -14,6 +15,7 @@ export function PawsBgCard({
   bgPaws = "bg-paws-white",
   pawsOpacity = 20,
   childrenClassName,
+  filter,
 }: PawsBgCardProps) {
   return (
     <div
@@ -31,6 +33,7 @@ export function PawsBgCard({
         style={{ opacity: `${pawsOpacity}%` }}
       />
       <div className={cn("z-10", childrenClassName)}>{children}</div>
+      {filter && <div className="absolute inset-0 bg-black/10" />}
     </div>
   );
 }

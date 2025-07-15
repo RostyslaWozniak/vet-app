@@ -69,6 +69,16 @@ function connectUserToAccount(
         },
       });
       user = newUser;
+
+      await tx.appointment.updateMany({
+        where: {
+          contactEmail: email,
+        },
+        data: {
+          userId: newUser.id,
+        },
+      });
+
       await tx.userOAuthAccount.create({
         data: {
           provider,

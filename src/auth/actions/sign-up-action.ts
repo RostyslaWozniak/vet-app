@@ -30,24 +30,37 @@ export async function signUp(unsafeData: SignUpSchema): Promise<
   const existingUser = await db.user.findUnique({ where: { email } });
 
   if (existingUser) {
-    return { error: "User already exists", user: null };
+    return {
+      error: "Konto z tym adresem e-mail jest już zarejestrowane",
+      user: null,
+    };
   }
 
-  try {
-    const salt = generateSalt();
-    const hashedPassword = await hashPassword(password, salt);
+  const salt = generateSalt();
+  const hashedPassword = await hashPassword(password, salt);
 
-    const user = await db.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        salt,
-      },
+  try {
+    const user = await db.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          salt,
+        },
+      });
+
+      await tx.appointment.updateMany({
+        where: {
+          contactEmail: email,
+        },
+        data: {
+          userId: user.id,
+        },
+      });
+
+      return user;
     });
-    if (!user) {
-      return { error: "Failed to create user", user: null };
-    }
 
     await createUserSession(user, await cookies());
     return {

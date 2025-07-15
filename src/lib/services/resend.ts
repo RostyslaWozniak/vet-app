@@ -40,7 +40,7 @@ export async function sendTextEmail({
   name?: string;
 }) {
   const { data, error } = await resend.emails.send({
-    from: `Vet App Notifications<${name}@${env.RESEND_DOMAIN}>`,
+    from: `Vet App<${name}@${env.RESEND_DOMAIN}>`,
     to: email,
     subject,
     text,

@@ -40,8 +40,7 @@ export function TimeSelection({
   return (
     <>
       <DialogWrapper
-        title="Godzina"
-        description="Wybierz wybierz godzinę"
+        title="Wybierz godzinę wizyty"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       >

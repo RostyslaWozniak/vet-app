@@ -55,8 +55,8 @@ export function DateSelection({
   return (
     <>
       <DialogWrapper
-        title="Data"
-        description="Wybierz datę"
+        title="Wybierz dzień wizyty"
+        // description="Wybierz datę"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         className="relative overflow-hidden"

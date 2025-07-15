@@ -107,7 +107,7 @@ model VetService {
 model Appointment {
     id     String  @id @default(uuid())
     userId String? @map("user_id")
-    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
     petId String? @map("pet_id")
     pet   Pet?    @relation(fields: [petId], references: [id], onDelete: SetNull)
