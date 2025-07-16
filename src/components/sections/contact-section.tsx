@@ -37,7 +37,7 @@ export function ContactSection() {
         <div className="!text-secondary-foreground flex flex-col gap-8 lg:grid-cols-2 lg:flex-row">
           <PawsBgCard
             className="bg-secondary isolate min-h-110 w-full lg:w-1/2"
-            filter
+            // filter
           >
             <H3 className="dark-text-shadow relative z-10 max-w-md">
               Jestećmy do Twojej dyspozycji
@@ -70,7 +70,7 @@ export function ContactSection() {
           <PawsBgCard
             className="bg-primary flex min-h-100 w-full items-center justify-center lg:w-1/2"
             childrenClassName="w-full space-y-4 sm:space-y-6"
-            filter
+            // filter
           >
             <H3 className="dark-text-shadow max-w-md">Skontaktuj się z nami</H3>
             <ContactForm />
