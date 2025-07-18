@@ -9,14 +9,12 @@ const adminRoutes = "/admin";
 
 export async function middleware(request: NextRequest) {
   const response = (await middlewareAuth(request)) ?? NextResponse.next();
-
   await updateUserSessionExpiration({
     set: (key, value, options) => {
       response.cookies.set({ ...options, name: key, value });
     },
     get: (key) => response.cookies.get(key),
   });
-
   return response;
 }
 

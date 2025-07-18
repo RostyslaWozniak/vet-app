@@ -16,11 +16,11 @@ export function Avatar({
 }) {
   const initials = getInitials(name);
   return (
-    <ShadcnAvatar className={cn("h-20 w-20 md:h-24 md:w-24", className)}>
+    <ShadcnAvatar
+      className={cn("h-20 w-20 text-xl md:h-24 md:w-24 md:text-2xl", className)}
+    >
       <AvatarImage src={photo ?? ""} alt={name} className="object-cover" />
-      <AvatarFallback className="text-xl md:text-2xl">
-        {initials}
-      </AvatarFallback>
+      <AvatarFallback className="">{initials}</AvatarFallback>
     </ShadcnAvatar>
   );
 }

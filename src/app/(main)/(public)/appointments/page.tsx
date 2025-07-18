@@ -8,7 +8,7 @@ import { EmptyResult } from "@/components/empty-result";
 import { api } from "@/trpc/server";
 import { LinkButton } from "@/components/link-button";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export default async function AppointmentPage({
   searchParams,

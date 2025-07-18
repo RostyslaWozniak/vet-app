@@ -29,7 +29,8 @@ export const SessionProvider = ({
   children,
   user: currentUser,
 }: SessionProviderProps) => {
-  const [user, setUser] = useState(currentUser);
+  const [user, setUser] = useState<FullUser | null>(currentUser);
+
   return (
     <SessionContext.Provider value={{ user, setUser }}>
       {children}
