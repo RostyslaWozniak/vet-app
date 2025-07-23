@@ -8,6 +8,7 @@ import { sendTextEmail } from "@/lib/services/resend";
 import { pl } from "date-fns/locale";
 
 import { format as timezoneFormat } from "date-fns-tz";
+import { env } from "@/env";
 
 export const vetAppointmentsRouter = createTRPCRouter({
   getAllOwn: vetProcedure
@@ -131,7 +132,7 @@ export const vetAppointmentsRouter = createTRPCRouter({
           await sendTextEmail({
             email: appointment.contactEmail,
             subject: "Potwierdzenie wizyty",
-            text: `Twoja wizyta została potwierdzona przez weterynarza. Zapraszamy ${format(appointment.startTime, "dd MMMM", { locale: pl })} o godzinie ${timezoneFormat(appointment.startTime, "HH:mm", { locale: pl, timeZone: "Europe/Warsaw" })} na wizytę "${appointment.service.name}".`,
+            text: `Twoja wizyta została potwierdzona przez weterynarza. Zapraszamy ${format(appointment.startTime, "dd MMMM", { locale: pl })} o godzinie ${timezoneFormat(new Date(appointment.startTime).getTime() + (env.NODE_ENV === "development" ? 0 : 2 * 60 * 60 * 1000), "HH:mm", { locale: pl, timeZone: "Europe/Warsaw" })} na wizytę "${appointment.service.name}".`,
           });
         } else if (input.status === "COMPLETED") {
           await sendTextEmail({
