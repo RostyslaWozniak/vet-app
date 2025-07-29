@@ -2,7 +2,7 @@ import { env } from "@/env";
 import { resend } from "@/lib/services/resend";
 import { tryCatch } from "@/lib/try-catch";
 import { db } from "@/server/db";
-import { format } from "date-fns";
+import { format as timezoneFormat } from "date-fns-tz";
 import { pl } from "date-fns/locale";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         from: `Vet App Przypomnienie o jutrzejszej wizycie <${process.env.RESEND_FROM_NAME}@${process.env.RESEND_DOMAIN}>`,
         to: appointment.contactEmail!,
         subject: "Przypominamy o jutrzejszej wizycie w VetApp",
-        text: `Cześć ${appointment.contactName}, przypominamy o jutrzejszej wizycie w VetApp o ${format(appointment.startTime, "HH:mm", { locale: pl })} na usłudze ${appointment.service.name}. Jeśli chcesz anulować wizytę, kliknij tutaj: ${env.BASE_URL}/profile/appointments/${appointment.id}`,
+        text: `Cześć ${appointment.contactName}, przypominamy o jutrzejszej wizycie w VetApp o ${timezoneFormat(new Date(appointment.startTime).getTime() + (env.NODE_ENV === "development" ? 0 : 2 * 60 * 60 * 1000), "HH:mm", { locale: pl, timeZone: "Europe/Warsaw" })} na usłudze ${appointment.service.name}. Jeśli chcesz anulować wizytę, kliknij tutaj: ${env.BASE_URL}/profile/appointments/${appointment.id}`,
       })),
     ),
   );

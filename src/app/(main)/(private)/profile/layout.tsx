@@ -1,5 +1,4 @@
-import { type ReactNode } from "react";
-import { ProfileHeader } from "./_components/profile-header";
+import { Suspense, type ReactNode } from "react";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { ProfileNav } from "./_components/profile-nav";
 import { MobileNav } from "@/components/mobile-nav";
@@ -14,8 +13,9 @@ export default async function PrivateLayout({
     <>
       <main className="my-4 min-h-[40rem] flex-grow lg:my-12">
         <MaxWidthWrapper className="max-w-[800px]">
-          <ProfileHeader />
-          <ProfileNav />
+          <Suspense fallback={<div>Loading</div>}>
+            <ProfileNav />
+          </Suspense>
           <div className="relative mt-6 mb-14 min-h-100">{children}</div>
         </MaxWidthWrapper>
         <MobileNav />

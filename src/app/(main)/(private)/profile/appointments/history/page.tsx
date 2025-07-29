@@ -4,6 +4,8 @@ import { EmptyResult } from "@/components/empty-result";
 import { Clock, Plus } from "lucide-react";
 import { LinkButton } from "@/components/link-button";
 import Pagination from "@/components/pagination";
+import { Suspense } from "react";
+import { AppointmentSectionSkeleton } from "../../_components/skeletons/appointment-skeletons";
 
 const APPOINTMENTS_PER_PAGE = 9;
 
@@ -16,6 +18,26 @@ export default async function HistoryAppointmentsPage({
 
   const pageNumber = parseInt(page) || 1;
 
+  return (
+    <div>
+      <Suspense
+        fallback={
+          <AppointmentSectionSkeleton
+            appointmentsToShow={APPOINTMENTS_PER_PAGE}
+          />
+        }
+      >
+        <FinishedAppointmentsSection pageNumber={pageNumber} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function FinishedAppointmentsSection({
+  pageNumber,
+}: {
+  pageNumber: number;
+}) {
   const {
     appointments: finishedAppointments,
     appointmentsCount: finishedAppointmentsCount,
@@ -25,9 +47,8 @@ export default async function HistoryAppointmentsPage({
     orderBy: "startTime",
     order: "desc",
   });
-
   return (
-    <div>
+    <>
       <AppointmentsSection
         title="Twoja historia wizyt"
         appointments={finishedAppointments}
@@ -54,6 +75,6 @@ export default async function HistoryAppointmentsPage({
           />
         </div>
       )}
-    </div>
+    </>
   );
 }
