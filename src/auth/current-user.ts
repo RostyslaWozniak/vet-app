@@ -9,7 +9,6 @@ export type FullUser = Exclude<
   Awaited<ReturnType<typeof getUserFromDb>>,
   undefined | null
 >;
-
 export type User = Exclude<
   Awaited<ReturnType<typeof getUserFromSession>>,
   undefined | null
@@ -48,7 +47,7 @@ async function _getCurrentUser({
     // This should never happen
     if (fullUser == null) {
       await logOut();
-      return;
+      return redirect("/sign-in");
     }
     return fullUser;
   }
@@ -58,7 +57,7 @@ async function _getCurrentUser({
 
 export const getCurrentUser = cache(_getCurrentUser);
 
-function getUserFromDb(id: string) {
+const getUserFromDb = cache((id: string) => {
   return db.user.findUnique({
     where: { id },
     select: {
@@ -70,4 +69,4 @@ function getUserFromDb(id: string) {
       photo: true,
     },
   });
-}
+});

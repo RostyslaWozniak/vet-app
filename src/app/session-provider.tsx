@@ -2,7 +2,7 @@
 
 import type { FullUser } from "@/auth/current-user";
 import type { $Enums } from "@prisma/client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type SessionContextType = {
   user: FullUser | null;
@@ -16,23 +16,32 @@ type SessionContextType = {
       photo: string | null;
     } | null>
   >;
+  isUserLoading: boolean;
 };
 
 const SessionContext = createContext<SessionContextType | null>(null);
 
 type SessionProviderProps = {
   children: React.ReactNode;
-  user: FullUser | null;
+  user: FullUser | null | undefined;
+  isUserLoading: boolean;
 };
 
 export const SessionProvider = ({
   children,
   user: currentUser,
+  isUserLoading,
 }: SessionProviderProps) => {
-  const [user, setUser] = useState<FullUser | null>(currentUser);
+  const [user, setUser] = useState<FullUser | null>(null);
 
+  useEffect(() => {
+    if (!isUserLoading && currentUser) {
+      setUser(currentUser);
+      console.log(currentUser);
+    }
+  }, [currentUser, isUserLoading]);
   return (
-    <SessionContext.Provider value={{ user, setUser }}>
+    <SessionContext.Provider value={{ user, setUser, isUserLoading }}>
       {children}
     </SessionContext.Provider>
   );

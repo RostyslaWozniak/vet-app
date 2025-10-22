@@ -4,11 +4,7 @@ import { ProfileNav } from "./_components/profile-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { Footer } from "@/components/footer";
 
-export default async function PrivateLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function PrivateLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <main className="my-4 min-h-[40rem] flex-grow lg:my-12">

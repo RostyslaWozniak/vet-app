@@ -54,6 +54,7 @@ export const publicScheduleRouter = createTRPCRouter({
           vetSchedule: {
             user: {
               vetProfile: {
+              
                 services: {
                   some: {
                     serviceId: service.id,

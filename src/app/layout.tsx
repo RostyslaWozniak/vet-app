@@ -6,6 +6,8 @@ import { Montserrat } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Providers } from "@/providers";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
   title: {
@@ -29,9 +31,12 @@ export default function RootLayout({
       <body className="bg-background font-montserrat flex min-h-screen flex-col overflow-x-hidden">
         <TRPCReactProvider>
           <NuqsAdapter>
-            <div className="flex h-full w-screen flex-grow flex-col">
-              {children}
-            </div>
+            <Providers>
+              <div className="flex h-full w-screen flex-grow flex-col">
+                <Header />
+                {children}
+              </div>
+            </Providers>
           </NuqsAdapter>
         </TRPCReactProvider>
         <Toaster position="top-center" richColors />

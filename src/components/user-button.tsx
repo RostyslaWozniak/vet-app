@@ -15,17 +15,18 @@ import {
 import { CatIcon, Lock, LogInIcon, LogOut, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { LinkButton } from "./link-button";
-import { api } from "@/trpc/react";
 import { Button } from "./ui/button";
+import { useSession } from "@/app/session-provider";
+import { useEffect } from "react";
 
 export function UserButton() {
-  const { data: user, isLoading } = api.public.user.getCurrentUser.useQuery();
+  const { user, isUserLoading } = useSession();
 
   const pathname = usePathname();
-
+  useEffect(() => console.log({ user }), [user]);
   return (
     <>
-      {isLoading ? (
+      {isUserLoading ? (
         <div className="aspect-square h-10 animate-pulse rounded-full bg-slate-50"></div>
       ) : user ? (
         <DropdownMenu>

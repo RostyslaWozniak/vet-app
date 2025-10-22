@@ -40,7 +40,7 @@ export function ContactSection() {
             // filter
           >
             <H3 className="dark-text-shadow relative z-10 max-w-md">
-              Jestećmy do Twojej dyspozycji
+              Jesteśmy do Twojej dyspozycji
             </H3>
             <div className="mt-12 flex-grow space-y-4">
               {contactLinks.map((item) => (

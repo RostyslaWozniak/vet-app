@@ -4,6 +4,23 @@ import { updateUserProfile } from "@/lib/schema/user";
 import { TRPCError } from "@trpc/server";
 
 export const privateUserRouter = createTRPCRouter({
+  getProfile: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.user.id,
+      },
+      select: {
+        id: true,
+        roles: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        photo: true,
+      },
+    });
+    return user;
+  }),
+
   updateProfile: privateProcedure
     .input(
       updateUserProfile.catch(({ error }) => {

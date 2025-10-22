@@ -17,7 +17,7 @@ import Link from "next/link";
 export function AppointmentCard({
   appointment,
 }: {
-  appointment: RouterOutputs["private"]["appointments"]["getAll"]["appointments"][0];
+  appointment: RouterOutputs["private"]["appointments"]["getAll"]["appointments"][number];
 }) {
   const startDate = new Date(appointment.startTime);
   const endDate = new Date(appointment.endTime);
